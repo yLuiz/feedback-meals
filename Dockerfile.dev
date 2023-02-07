@@ -1,0 +1,17 @@
+ARG image_version
+FROM node:$image_version as build
+WORKDIR  /home/app
+
+COPY package*.json ./
+RUN npm set progress=false \
+  && npm install -g @angular/cli@latest \
+  && npm install --save-dev @angular-devkit/build-angular \
+  && npm install && npm update --force 
+
+COPY --chown=node:node . .
+
+USER node
+EXPOSE 4200
+
+#Depois que rodar executar comando npm update --force
+# No Package Json: ng serve --host=0.0.0.0

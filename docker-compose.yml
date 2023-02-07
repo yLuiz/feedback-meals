@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  angular_service:
+    build:
+        context: ${ANGULAR_APP_CONTEXT}
+        dockerfile: ${ANGULAR_APP_DOCKERFILE}
+        args:
+          image_version: ${ANGULAR_APP_IMAGE_VERSION}
+          image_version_prod: ${ANGULAR_APP_IMAGE_VERSION_PRODUCTION}
+    environment:
+      NODE_ENV: ${ANGULAR_APP_NODE_ENV}
+    image: ${ANGULAR_APP_TAG}
+    container_name: ${ANGULAR_APP_CONTAINER_NAME}
+    command: tail -f /dev/null
+    ports:
+      - ${ANGULAR_APP_LOCAL_PORT}:4200
+    volumes:
+      - ${ANGULAR_APP_LOCAL_DATA}:/home/app/
+    networks:
+      - angular_app-network
+
+networks:
+  angular_app-network:
+    driver: bridge
