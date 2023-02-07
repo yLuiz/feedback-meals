@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MenuRefeicaoComponent } from './components/menu-refeicao/menu-refeicao.component';
 import { FeedbackRefeicaoComponent } from './components/feedback-refeicao/feedback-refeicao.component';
+import { StoreService } from './store/store.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,9 @@ import { FeedbackRefeicaoComponent } from './components/feedback-refeicao/feedba
     AppRoutingModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    StoreService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

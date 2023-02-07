@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { StoreService } from 'src/app/store/store.service';
 
-type Meals = "Dejejum" | "Almoço / Janta" | "Lanche";
 
 @Component({
   selector: 'app-feedback-refeicao',
@@ -9,9 +9,9 @@ type Meals = "Dejejum" | "Almoço / Janta" | "Lanche";
 })
 export class FeedbackRefeicaoComponent implements OnInit {
 
-  constructor() { }
-
-  refeicao: Meals = 'Dejejum';
+  constructor(
+    public store: StoreService
+  ) { }
 
   ngOnInit(): void {
   }

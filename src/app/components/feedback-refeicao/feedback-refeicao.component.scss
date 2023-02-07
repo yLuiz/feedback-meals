@@ -42,7 +42,7 @@ section {
   }
 }
 
-.feedback-card {
+.feedback-button-card {
 
   display: flex;
 
@@ -64,13 +64,13 @@ section {
 
   width: 202px;
   height: 269px;
+
+  img {
+    width: 80px;
+  }
   
   @media (max-width: 995px) {
     width: 138px;
     height: 179px;
-  }
-
-  img {
-    width: 80px;
   }
 }

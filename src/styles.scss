@@ -8,6 +8,7 @@
   --bg-blue: #2C89D9;
   --bg-blue-200: #649fd3;
   --bg-red: #D3455D;
+  --bg-red-200: #c65c6d;
   --card-green: var(--bg-green);
   --card-blue: var(--bg-blue);
   --card-orange: var(--bg-orange);
@@ -22,16 +23,52 @@
 
 .card-green {
   background-color: var(--card-green);
+  transition: all 0.2s ease-in-out;
 }
 .card-orange {
   background-color: var(--card-orange);
+  transition: all 0.2s ease-in-out;
 }
 .card-blue {
   background-color: var(--card-blue);
+  transition: all 0.2s ease-in-out;
 }
 
 .card-red {
   background-color: var(--card-red);
+  transition: all 0.2s ease-in-out;
+}
+
+/* CARD ACTIVE */
+
+.card-green.shine:active {
+  background-color: var(--bg-green-200);
+  box-shadow: 0 0 5px var(--bg-green-200);
+}
+.card-orange.shine:active {
+  background-color: var(--bg-orange-200);
+  box-shadow: 0 0 5px var(--bg-orange-200);
+}
+.card-blue.shine:active {
+  background-color: var(--bg-blue-200);
+  box-shadow: 0 0 5px var(--bg-blue-200);
+}
+
+.card-red.shine:active {
+  background-color: var(--bg-red-200);
+  box-shadow: 0 0 5px var(--bg-red-200);
+}
+
+/*  CARD FOCUS */
+
+.card-green.shine:focus {
+}
+.card-orange.shine:focus {
+}
+.card-blue.shine:focus {
+}
+
+.card-red.shine:focus {
 }
 
 .card {
@@ -89,7 +126,7 @@
 }
 
 .btn-green:focus {
-    box-shadow: 0 0 5px var(--bg-green-200);
+  box-shadow: 0 0 5px var(--bg-green-200);
 }
 
 .btn-orange {
@@ -101,7 +138,7 @@
 }
 
 .btn-orange:focus {
-    box-shadow: 0 0 5px var(--bg-orange-200);
+  box-shadow: 0 0 5px var(--bg-orange-200);
 }
 
 .w-100 {
