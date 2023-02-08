@@ -33,6 +33,17 @@ section {
       margin: 5em 0;
     }
 
+    @media (max-height: 460px) {
+      height: 40px;
+      // border: 1px solid #FFF;
+      margin: 10px 0 50px;
+
+      h1 {
+        font-size: 1.2em;
+      }
+    }
+
+
   }
 
   .feedback-buttons {

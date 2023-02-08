@@ -35,19 +35,31 @@
 @keyframes slideDown {
   0% {
     transform: translate(-50%, -140%);
+    @media (max-height: 460px) {
+      
+    }
   }
 
   100% {
     transform: translate(-50%, 20%);
+    @media (max-height: 460px) {
+      
+    }
   }
 }
 
 @keyframes slideUp {
   0% {
     transform: translate(-50%, 20%);
+    @media (max-height: 460px) {
+      
+    }
   }
 
   100% {
     transform: translate(-50%, -140%);
+    @media (max-height: 460px) {
+      
+    }
   }
 }
