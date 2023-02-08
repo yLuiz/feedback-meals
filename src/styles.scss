@@ -26,13 +26,6 @@
 body {
   font-family: 'Montserrat', sans-serif;
   background-color: var(--bg-primary);
-
-  @media (pointer: coarse) {
-    padding: 2rem 0;
-  }
-
-  //max-height(412px) {}
-  //max-height(290px) {}
 }
 
 .card-green {
