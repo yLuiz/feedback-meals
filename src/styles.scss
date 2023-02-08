@@ -22,6 +22,14 @@
   box-sizing: border-box;
 }
 
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--bg-primary);
+
+  padding: 5rem 0;
+}
+
 .card-green {
   background-color: var(--card-green);
   transition: all 0.2s ease-in-out;
@@ -154,9 +162,4 @@
 
 .p-0 {
   padding: 0;
-}
-
-body {
-  font-family: 'Montserrat', sans-serif;
-  background-color: var(--bg-primary);
 }
