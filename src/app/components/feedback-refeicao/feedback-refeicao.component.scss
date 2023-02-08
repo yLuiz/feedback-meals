@@ -18,7 +18,7 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 80%;
     height: 100px;
     margin: 20px 0 50px;
 
@@ -96,5 +96,6 @@ section {
 
 .span-gear {
   display: block;
-  margin-top: 20px;
+  position: absolute;
+  right: 0;
 }

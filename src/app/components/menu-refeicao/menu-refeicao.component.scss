@@ -25,24 +25,27 @@ section {
 
     flex-direction: column;
     gap: 3em;
+
+    @media (max-width: 576px) {
+      width: 288px !important;
+    }
+
+    @media (max-height: 460px) {
+      width: 90% !important;
+      flex-direction: row;
+    }
+
+    
+    @media (max-width: 360px) {
+      max-width: 288px !important;
+      width: 90vw !important;
+    }
+
   }
 
   .absolute {
     position: absolute;
     top: 30px;
     right: 30px;
-  }
-}
-
-@media (max-width: 576px) {
-  .container {
-    width: 288px !important;
-  }
-}
-
-@media (max-width: 360px) {
-  .container {
-    max-width: 288px !important;
-    width: 90vw !important;
   }
 }
