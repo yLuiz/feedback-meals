@@ -8,18 +8,27 @@ import { MenuRefeicaoComponent } from './components/menu-refeicao/menu-refeicao.
 import { FeedbackRefeicaoComponent } from './components/feedback-refeicao/feedback-refeicao.component';
 import { StoreService } from './store/store.service';
 import { MessageComponent } from './components/message/message.component';
+import { GraficoComponent } from './components/grafico/grafico.component';
+import { FusionChartsModule } from "angular-fusioncharts";
 
+import * as FusionCharts from "fusioncharts";
+import * as charts from "fusioncharts/fusioncharts.charts";
+import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
+
+FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
 @NgModule({
   declarations: [
     AppComponent,
     MenuRefeicaoComponent,
     FeedbackRefeicaoComponent,
-    MessageComponent
+    MessageComponent,
+    GraficoComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    FusionChartsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     StoreService

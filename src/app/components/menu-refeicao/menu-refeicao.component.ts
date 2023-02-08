@@ -23,12 +23,17 @@ export class MenuRefeicaoComponent implements OnInit {
     lanche: 'Lanche'
   }
 
+  goToGraphic() {
+    this.router.navigate(['/grafico']);
+  }
+
   
   goToFeedback() {
     this.router.navigate(['/feedback']);
   }
 
   setMeal(option: IMealsOption) {
+    this.store.feedbackClear();
     this.store.refeicao = this.mealsOption[option] as MealsText;
     this.goToFeedback();
   }

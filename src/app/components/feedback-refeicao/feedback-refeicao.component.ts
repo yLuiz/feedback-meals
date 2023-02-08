@@ -20,7 +20,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
   getFeedback(feedbackKey: FeedbackOptions) {
     
-    if (this.messageService.visibility) return;
+    // if (this.messageService.visibility) return;
     
     this.store.feedback = {
       refeicao: this.store.refeicao,
@@ -34,13 +34,12 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
     setTimeout(() => {
       this.messageService.hide();
-    }, 3000);
+    }, 2000);
 
     console.log(this.store.feedback);
   }
 
   goToMenu() {
-    this.store.feedbackClear();
     this.router.navigate(['menu']);
   }
 

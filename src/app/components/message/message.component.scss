@@ -25,11 +25,11 @@
 }
 
 .show {
-  animation: slideDown 1.2s forwards;
+  animation: slideDown 0.5s forwards;
 }
 
 .hide {
-  animation: slideUp 1.2s forwards;
+  animation: slideUp 0.5s forwards;
 }
 
 @keyframes slideDown {

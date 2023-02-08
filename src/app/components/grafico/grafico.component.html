@@ -1,0 +1,12 @@
+<section>
+  <button (click)="goToFeedback()" class="button btn-blue absolute">Voltar</button>
+  <div class="grafico-container">
+    <fusioncharts
+      width="100%"
+      height="100%"
+      type="Column2d"
+      [dataSource]="dataSource"
+    >
+    </fusioncharts>
+</div>
+</section>

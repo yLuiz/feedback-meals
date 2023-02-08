@@ -4,10 +4,10 @@
   --bg-green: #1AAE9E;
   --bg-green-200: #5abcb3;
   --bg-green-alpha: rgba(26, 174, 159, 0.9);
-  --bg-orange: #E88439;
-  --bg-orange-200: #e3985f;
   --bg-blue: #2C89D9;
   --bg-blue-200: #649fd3;
+  --bg-orange: #E88439;
+  --bg-orange-200: #e3985f;
   --bg-red: #D3455D;
   --bg-red-200: #c65c6d;
   --card-green: var(--bg-green);
@@ -106,10 +106,12 @@ body {
   font-weight: 600;
 
   width: 100%;
-  max-width: 100px;
   height: 40px;
 
+  padding: 10px;
+
   transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .btn-blue {

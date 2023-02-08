@@ -26,6 +26,14 @@ section {
     flex-direction: column;
     gap: 3em;
 
+    @media (max-width: 635px) {
+      button {
+        padding: 15px;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+      }
+    }
+
     @media (max-width: 576px) {
       width: 288px !important;
     }
@@ -34,7 +42,6 @@ section {
       width: 90% !important;
       flex-direction: row;
     }
-
     
     @media (max-width: 360px) {
       max-width: 288px !important;
@@ -43,8 +50,31 @@ section {
 
   }
 
+  .buttons-container {
+    display: flex; 
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-right: 18px;
+
+    @media (max-width: 900px) {
+      button {
+        font-size: 0.9em;
+        height: 100%;
+        max-height: 120px !important;
+      }
+      width: 100px;
+    }
+
+    @media (max-width: 770px) {
+      margin-right: 0px;
+    }
+  }
+
   .absolute {
     position: absolute;
+  }
+
+  .top-right-30 {
     top: 30px;
     right: 30px;
   }
