@@ -7,12 +7,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MenuRefeicaoComponent } from './components/menu-refeicao/menu-refeicao.component';
 import { FeedbackRefeicaoComponent } from './components/feedback-refeicao/feedback-refeicao.component';
 import { StoreService } from './store/store.service';
+import { MessageComponent } from './components/message/message.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MenuRefeicaoComponent,
-    FeedbackRefeicaoComponent
+    FeedbackRefeicaoComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,

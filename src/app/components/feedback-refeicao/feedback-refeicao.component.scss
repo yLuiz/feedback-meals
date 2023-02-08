@@ -19,7 +19,8 @@ section {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 200px;
+    height: 100px;
+    margin: 20px 0 50px;
 
     h1 {
       position: absolute;
@@ -73,4 +74,9 @@ section {
     width: 138px;
     height: 179px;
   }
+}
+
+.span-gear {
+  display: block;
+  margin-top: 20px;
 }

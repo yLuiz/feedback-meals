@@ -1,0 +1,53 @@
+.container {
+
+  position: absolute;
+  top: 20px;
+  left:50%;
+  transform: translateY(-150%);
+  // margin-left: -200px;
+
+  z-index: 5;
+
+  display: flex;
+  flex-direction: column;
+  
+  max-width: 400px;
+  width: 100%;
+  padding: 1em;
+  border-radius: 12px;
+  border: 2px solid var(--bg-green-200);
+  background-color: var(--bg-green-alpha);
+
+  .title, .message {
+    color: #FFF;
+  }
+
+}
+
+.show {
+  animation: slideDown 1.2s forwards;
+}
+
+.hide {
+  animation: slideUp 1.2s forwards;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translate(-50%, -140%);
+  }
+
+  100% {
+    transform: translate(-50%, 20%);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translate(-50%, 20%);
+  }
+
+  100% {
+    transform: translate(-50%, -140%);
+  }
+}
