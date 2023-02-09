@@ -48,15 +48,15 @@ export class GraficoComponent implements OnInit {
     // Chart Configuration
     const dataSource = {
       chart: {
-        caption: 'Avaliação da refeição', //Set the chart caption
-        subCaption: '', //Set the chart subcaption
-        xAxisName: 'Avaliações', //Set the x-axis name
-        yAxisName: 'Percentual', //Set the y-axis name
+        caption: 'Avaliação da refeição',
+        showValues: true,
+        subCaption: '',
+        xAxisName: 'Avaliações',
+        yAxisName: 'Percentual',
         numberSuffix: '',
         palettecolors: `${this.avalicaoColor.otimo}, ${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}, ${this.avalicaoColor.ruim}`,
-        theme: 'fusion', //Set the theme for your chart
+        theme: 'fusion',
       },
-      // Chart Data - from step 2
       data: chartData,
     };
 

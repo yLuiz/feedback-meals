@@ -18,10 +18,16 @@ export class FeedbackRefeicaoComponent implements OnInit {
     private messageService: MessageService
   ) { }
 
+  timer!: ReturnType<typeof setTimeout>;
+
   getFeedback(feedbackKey: FeedbackOptions) {
-    
-    // if (this.messageService.visibility) return;
-    
+
+    if (this.messageService.visibility) {
+      this.messageService.hide();
+      clearTimeout(this.timer);
+      return;
+    }
+        
     this.store.feedback = {
       refeicao: this.store.refeicao,
       avaliacao: {
@@ -32,11 +38,9 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
     this.messageService.show();
 
-    setTimeout(() => {
+    this.timer = setTimeout(() => {
       this.messageService.hide();
     }, 2000);
-
-    console.log(this.store.feedback);
   }
 
   goToMenu() {
