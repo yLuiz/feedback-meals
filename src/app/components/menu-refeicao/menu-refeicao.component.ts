@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { StoreService } from 'src/app/store/store.service';
 
 type IMealsOption = 'dejejum' | 'almoco' | 'lanche';
-type MealsText = "Dejejum" | "Almoço / Janta" | "Lanche";
+type MealsText = "Desjejum" | "Almoço / Janta" | "Lanche";
 
 @Component({
   selector: 'app-menu-refeicao',
@@ -18,7 +18,7 @@ export class MenuRefeicaoComponent implements OnInit {
   ) { }
 
   mealsOption = {
-    dejejum: 'Dejejum',
+    dejejum: 'Desjejum',
     almoco: 'Almoço / Janta',
     lanche: 'Lanche'
   }
