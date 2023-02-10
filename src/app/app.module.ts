@@ -17,18 +17,18 @@ import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
 @NgModule({
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FusionChartsModule,
+    ReactiveFormsModule
+  ],
   declarations: [
     AppComponent,
     MenuRefeicaoComponent,
     FeedbackRefeicaoComponent,
     MessageComponent,
     GraficoComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FusionChartsModule,
-    ReactiveFormsModule,
   ],
   providers: [
     StoreService

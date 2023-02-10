@@ -19,6 +19,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
   ) { }
 
   timer!: ReturnType<typeof setTimeout>;
+  title!: string;
 
   getFeedback(feedbackKey: FeedbackOptions) {
         
@@ -44,6 +45,8 @@ export class FeedbackRefeicaoComponent implements OnInit {
     this.router.navigate(['menu']);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.title = this.store.refeicao
+  }
 
 }

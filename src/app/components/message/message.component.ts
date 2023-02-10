@@ -11,10 +11,14 @@ export class MessageComponent implements OnInit {
   titulo: string = 'Sucesso!';
   message: string = 'Seu feedback foi registrado! ✅';
 
+  classe: string = '';
+
   constructor(
     public messageService: MessageService
   ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.classe = this.messageService.classe
+  }
 
 }
