@@ -3,7 +3,7 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.1.
 
 # Acesso
-https://vercel.com/yluiz/feedback-meals
+https://feedback-meals.vercel.app
 
 ## Development server
 
