@@ -2,9 +2,15 @@ import { Injectable } from '@angular/core';
 
 type MealsText = "Desjejum" | "Almoço / Janta" | "Lanche";
 interface IStore {
-  refeicao: MealsText;
+  refeicao: {
+    nome: MealsText,
+    id: number
+  },
   feedback: {
-    refeicao: MealsText;
+    refeicao: {
+      nome: MealsText,
+      id: number
+    };
     avaliacao: {
       otimo: number,
       bom: number,
@@ -22,9 +28,15 @@ export class StoreService {
   constructor() {}
 
   private globalVariables: IStore = {
-    refeicao: "Desjejum", 
+    refeicao: {
+      nome: "Desjejum",
+      id: 1
+    },
     feedback: {
-      refeicao: "Desjejum",
+      refeicao: {
+        nome: "Desjejum",
+        id: 1
+      },
       avaliacao: {
         otimo: 0,
         bom: 0,
@@ -38,8 +50,11 @@ export class StoreService {
     return this.globalVariables.refeicao;
   }
 
-  set refeicao(option: MealsText) {
-    this.globalVariables.refeicao = option;
+  set refeicao(refeicao: { nome: MealsText, id: number }) {
+    this.globalVariables.refeicao = {
+      id: refeicao.id,
+      nome: refeicao.nome
+    };
   }
 
   get feedback() {
@@ -55,7 +70,10 @@ export class StoreService {
 
   public feedbackClear() {
     this.globalVariables.feedback = {
-      refeicao: "Desjejum",
+      refeicao: {
+        nome: "Desjejum",
+        id: 1
+      },
       avaliacao: {
         otimo: 0,
         bom: 0,

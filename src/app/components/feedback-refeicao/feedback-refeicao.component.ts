@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StoreService } from 'src/app/store/store.service';
 import { MessageService } from '../message/message.service';
+import { FeedbackRefeicaoService } from './feedback-refeicao.service';
+import { refeicao_avaliacao, refeicao } from '../../interfaces/IRefeicaoResultado';
 
-type FeedbackOptions = "otimo" | "bom" | "regular" | "ruim";
+type FeedbackOptions = "otimo" | "bom" | "regular";
 
 @Component({
   selector: 'app-feedback-refeicao',
@@ -11,17 +13,19 @@ type FeedbackOptions = "otimo" | "bom" | "regular" | "ruim";
   styleUrls: ['./feedback-refeicao.component.scss']
 })
 export class FeedbackRefeicaoComponent implements OnInit {
+  
 
   constructor(
     public store: StoreService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private feedbackRefeicaoService: FeedbackRefeicaoService,
   ) { }
 
   timer!: ReturnType<typeof setTimeout>;
   title!: string;
 
-  getFeedback(feedbackKey: FeedbackOptions) {
+  async submitFeedback(feedbackKey: FeedbackOptions) {
         
     this.store.feedback = {
       refeicao: this.store.refeicao,
@@ -30,7 +34,12 @@ export class FeedbackRefeicaoComponent implements OnInit {
         [feedbackKey]: this.store.feedback.avaliacao[feedbackKey] + 1,
       }
     }
-    
+
+    this.feedbackRefeicaoService.submitFeedback({ 
+      rere_reav_id: refeicao_avaliacao[feedbackKey],
+      rere_refe_id: this.store.feedback.refeicao.id
+    })
+
     if (!this.messageService.visibility) {
       this.messageService.show();
 
@@ -46,7 +55,8 @@ export class FeedbackRefeicaoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.title = this.store.refeicao
+    console.log(this.store)
+    this.title = this.store.refeicao.nome;
   }
 
 }

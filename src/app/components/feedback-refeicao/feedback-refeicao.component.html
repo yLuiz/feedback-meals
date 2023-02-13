@@ -6,29 +6,23 @@
     </span>
   </div>
   <div class="feedback-buttons">
-    <button (click)="getFeedback('otimo')" class="feedback-button-card card-green shine">
+    <button (click)="submitFeedback('otimo')" class="feedback-button-card card-green shine">
       <div class="image-container">
         <img class="happy-emoji" src="../../../assets/emojis/happy_cut.png" alt="">
       </div>
       <p>ÓTIMO</p>
     </button>
-    <button (click)="getFeedback('bom')" class="feedback-button-card card-blue shine">
+    <button (click)="submitFeedback('bom')" class="feedback-button-card card-blue shine">
       <div class="image-container">
         <img src="../../../assets/emojis/feliz.png" alt="">
       </div>
       <p>BOM</p>
     </button>
-    <button (click)="getFeedback('regular')" class="feedback-button-card card-orange shine">
-      <div class="image-container">
-        <img src="../../../assets/emojis/confused.png" alt="">
-      </div>
-      <p>REGULAR</p>
-    </button>
-    <button (click)="getFeedback('ruim')" class="feedback-button-card card-red shine">
+    <button (click)="submitFeedback('regular')" class="feedback-button-card card-red shine">
       <div class="image-container">
         <img src="../../../assets/emojis/sad.png" alt="">
       </div>
-      <p>RUIM</p>
+      <p>REGULAR</p>
     </button>
   </div>
 </section>

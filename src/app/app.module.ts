@@ -15,10 +15,15 @@ import * as FusionCharts from "fusioncharts";
 import * as charts from "fusioncharts/fusioncharts.charts";
 import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'localhost:3000', options: {}};
+
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
 @NgModule({
   imports: [
     BrowserModule,
+    SocketIoModule.forRoot(config),
     AppRoutingModule,
     FusionChartsModule,
     ReactiveFormsModule
