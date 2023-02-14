@@ -35,7 +35,7 @@ export class MenuRefeicaoComponent implements OnInit {
   }
 
   setMeal(option: MealsOption) {
-    // this.store.feedbackClear();
+    this.store.feedbackClear();
     this.socket.emit('limparGrafico', {
       refeicao: option
     });
@@ -47,6 +47,7 @@ export class MenuRefeicaoComponent implements OnInit {
 
     this.store.refeicao = refeicaoPropriedades;
     this.store.feedback.refeicao = refeicaoPropriedades;
+
     this.goToFeedback();
   }
 

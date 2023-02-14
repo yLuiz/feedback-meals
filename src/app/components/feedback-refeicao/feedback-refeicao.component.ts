@@ -4,6 +4,7 @@ import { StoreService } from 'src/app/store/store.service';
 import { MessageService } from '../message/message.service';
 import { FeedbackRefeicaoService } from './feedback-refeicao.service';
 import { refeicao_avaliacao, refeicao } from '../../interfaces/IRefeicaoResultado';
+import { MotivoAvaliacaoService } from '../motivo-avaliacao/motivo-avaliacao.service';
 
 type FeedbackOptions = "otimo" | "bom" | "regular";
 
@@ -20,12 +21,15 @@ export class FeedbackRefeicaoComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private feedbackRefeicaoService: FeedbackRefeicaoService,
+    public motivoAvaliacaoService: MotivoAvaliacaoService
   ) { }
 
   timer!: ReturnType<typeof setTimeout>;
   title!: string;
 
   async submitFeedback(feedbackKey: FeedbackOptions) {
+
+    if (this.messageService.visibility) return;
         
     this.store.feedback = {
       refeicao: this.store.refeicao,
@@ -38,6 +42,9 @@ export class FeedbackRefeicaoComponent implements OnInit {
     this.feedbackRefeicaoService.submitFeedback({ 
       rere_reav_id: refeicao_avaliacao[feedbackKey],
       rere_refe_id: this.store.feedback.refeicao.id
+    }).then(() => {
+      if(feedbackKey !== "otimo")
+        this.mostrarMotivoPopUp();
     })
 
     if (!this.messageService.visibility) {
@@ -48,6 +55,10 @@ export class FeedbackRefeicaoComponent implements OnInit {
       }, 2000);
     }
 
+  }
+
+  mostrarMotivoPopUp() {
+    this.motivoAvaliacaoService.mostrar();
   }
 
   goToMenu() {

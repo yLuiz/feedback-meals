@@ -16,6 +16,7 @@ import * as charts from "fusioncharts/fusioncharts.charts";
 import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { MotivoAvaliacaoComponent } from './components/motivo-avaliacao/motivo-avaliacao.component';
 
 const config: SocketIoConfig = { url: 'localhost:3000', options: {}};
 
@@ -33,7 +34,8 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
     MenuRefeicaoComponent,
     FeedbackRefeicaoComponent,
     MessageComponent,
-    GraficoComponent
+    GraficoComponent,
+    MotivoAvaliacaoComponent
   ],
   providers: [
     StoreService

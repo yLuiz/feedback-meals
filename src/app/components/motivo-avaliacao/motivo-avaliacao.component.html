@@ -1,0 +1,12 @@
+<div *ngIf="motivoAvaliacaoService.visibility" class={{motivoAvaliacaoService.classe}}>
+  <ul>
+    <li class="motivo-item" *ngFor="let motivo of motivos">
+      <span id={{motivo.nome}} (click)="selecionarMotivo(motivo)" >{{ motivo.descricao }}</span>
+    </li>
+  </ul>
+  <div class="acao">
+    <button (click)="enviarMotivos()" class="button botao-confirmar">
+      Confirmar
+    </button>
+  </div>
+</div>
