@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { mealsOption } from './interfaces/IRefeicao';
+import { refeicao } from './interfaces/IRefeicaoResultado';
+import { StoreService } from './store/store.service';
+import { MealsOption, MealsText } from './types/types';
 
 @Component({
   selector: 'app-root',
@@ -10,15 +14,25 @@ export class AppComponent implements OnInit {
 
   title = 'feedback-meals';
 
-  constructor(private socket: Socket) {}
-
-  getMessage() {
-    return this.socket.on('message', (data: any) => {
-      console.log(data);
-    });
-  };
+  constructor(
+    private socket: Socket,
+    private store: StoreService
+  ) {}
 
   ngOnInit(): void {
-    this.getMessage();
+    this.socket.on('pegarRefeicao', (response: { refeicao: MealsOption }) => {
+      this.store.refeicao = {
+        id: refeicao[response.refeicao],
+        nome: mealsOption[response.refeicao] as MealsText
+      }
+
+      this.store.feedback = {
+        ...this.store.feedback,
+        refeicao: {
+          id: refeicao[response.refeicao],
+          nome: mealsOption[response.refeicao] as MealsText
+        }
+      }
+    })
   }
 }

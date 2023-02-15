@@ -68,7 +68,7 @@ export class GraficoComponent implements OnInit {
         showValues: true,
         subCaption: '',
         xAxisName: 'Avaliações',
-        yAxisName: 'Percentual',
+        yAxisName: '',
         numberSuffix: '',
         palettecolors: `${this.avalicaoColor.otimo}, ${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
         theme: 'fusion',
@@ -93,7 +93,13 @@ export class GraficoComponent implements OnInit {
     });
 
     this.socket.on("atualizarGrafico", (response: SocketResposne) => {
-      this.chartData[response.reav_id - 1].value += 1;
+      this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id).then((response) => {
+        this.chartData.forEach(data => data.value = 0);
+        response.data.map(avaliacao => {
+          this.setValoresGrafico(avaliacao.rere_reav_id);
+          this.dataSource.data = this.chartData;
+        })
+      });
     });
 
     this.socket.on("limparGrafico", (payload: { refeicao: MealsOption }) => {

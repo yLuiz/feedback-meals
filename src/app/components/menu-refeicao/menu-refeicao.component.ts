@@ -31,9 +31,7 @@ export class MenuRefeicaoComponent implements OnInit {
 
   setMeal(option: MealsOption) {
     this.store.feedbackClear();
-    this.socket.emit('limparGrafico', {
-      refeicao: option
-    });
+    this.socket.emit('limparGrafico', { refeicao: option });
 
     const refeicaoPropriedades = {
       nome: mealsOption[option] as MealsText,

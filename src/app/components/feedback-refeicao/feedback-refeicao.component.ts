@@ -3,9 +3,11 @@ import { Router } from '@angular/router';
 import { StoreService } from 'src/app/store/store.service';
 import { MessageService } from '../message/message.service';
 import { FeedbackRefeicaoService } from './feedback-refeicao.service';
-import { refeicao_avaliacao } from '../../interfaces/IRefeicaoResultado';
+import { refeicao, refeicao_avaliacao } from '../../interfaces/IRefeicaoResultado';
 import { MotivoAvaliacaoService } from '../motivo-avaliacao/motivo-avaliacao.service';
-import { FeedbackOptions } from 'src/app/types/types';
+import { FeedbackOptions, MealsOption, MealsText } from 'src/app/types/types';
+import { mealsOption } from 'src/app/interfaces/IRefeicao';
+import { Socket } from 'ngx-socket-io';
 
 
 @Component({
@@ -17,6 +19,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
   
 
   constructor(
+    private socket: Socket,
     public store: StoreService,
     private router: Router,
     private messageService: MessageService,
@@ -63,7 +66,20 @@ export class FeedbackRefeicaoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.title = this.store.refeicao.nome;
+
+    this.title = this.store.refeicao.nome
+
+    this.socket.on('pegarRefeicao', (response: { refeicao: MealsOption }) => {
+      const refeicaoPropriedades = {
+        nome: mealsOption[response.refeicao] as MealsText,
+        id: refeicao[response.refeicao]
+      }
+  
+      this.store.refeicao = refeicaoPropriedades;
+      this.store.feedback.refeicao = refeicaoPropriedades;
+
+      this.title = response.refeicao;
+    });
   }
 
 }
