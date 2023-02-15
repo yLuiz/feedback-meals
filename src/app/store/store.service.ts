@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { MealsText } from '../types/types';
 
-type MealsText = "Desjejum" | "Almoço / Janta" | "Lanche";
 interface IStore {
   refeicao: {
     nome: MealsText,

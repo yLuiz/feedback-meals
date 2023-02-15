@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import api from 'src/api/api';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,7 @@ export class MotivoAvaliacaoService {
 
   constructor() { }
 
+  private refeicaoResultadoId: number = 0;
   private motivoClasse = 'motivo-container';
   private motivoVisibility = false;
 
@@ -18,7 +20,18 @@ export class MotivoAvaliacaoService {
     return this.motivoVisibility;
   }
 
-  public mostrar() {
+  get refeId() {
+    return this.refeicaoResultadoId;
+  }
+
+  set refeId(value: number) {
+    this.refeicaoResultadoId = value;
+  }
+
+  public mostrar(rere_id: number) {
+
+    this.refeId = rere_id;
+
     this.motivoVisibility = true;
     this.motivoClasse = 'motivo-container show-container';
   }
@@ -28,6 +41,10 @@ export class MotivoAvaliacaoService {
     setTimeout(() => {
       this.motivoVisibility = false;
     }, timer);
+  }
+
+  public cadastrarMotivoAvaliacao(data: { motivos: string[] }) {
+    return api.patch('refeicao-resultado', data);
   }
 
 }

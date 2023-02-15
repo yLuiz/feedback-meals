@@ -19,7 +19,7 @@
   
   @media (max-width: 1106px) {
     width: 90%;
-    height: 90%;
+    height: auto;
   }
 
   @media (max-height: 552px) {
@@ -68,6 +68,17 @@
     max-width: 300px;
     height: 50px;
   }
+}
+
+.btn-fechar {
+  align-self: flex-end;
+
+  margin-top: 10px;
+  margin-right: 10px;
+
+  background-color: var(--bg-red);
+  max-width: 40px;
+  color: #FFF;
 }
 
 .motivo-item {

@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { StoreService } from 'src/app/store/store.service';
 import { MessageService } from '../message/message.service';
 import { FeedbackRefeicaoService } from './feedback-refeicao.service';
-import { refeicao_avaliacao, refeicao } from '../../interfaces/IRefeicaoResultado';
+import { refeicao_avaliacao } from '../../interfaces/IRefeicaoResultado';
 import { MotivoAvaliacaoService } from '../motivo-avaliacao/motivo-avaliacao.service';
+import { FeedbackOptions } from 'src/app/types/types';
 
-type FeedbackOptions = "otimo" | "bom" | "regular";
 
 @Component({
   selector: 'app-feedback-refeicao',
@@ -27,7 +27,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
   timer!: ReturnType<typeof setTimeout>;
   title!: string;
 
-  async submitFeedback(feedbackKey: FeedbackOptions) {
+  submitFeedback(feedbackKey: FeedbackOptions) {
 
     if (this.messageService.visibility) return;
         
@@ -42,9 +42,11 @@ export class FeedbackRefeicaoComponent implements OnInit {
     this.feedbackRefeicaoService.submitFeedback({ 
       rere_reav_id: refeicao_avaliacao[feedbackKey],
       rere_refe_id: this.store.feedback.refeicao.id
-    }).then(() => {
-      if(feedbackKey !== "otimo")
-        this.mostrarMotivoPopUp();
+    }).then(response => {
+      if(feedbackKey !== "otimo") {
+        this.motivoAvaliacaoService.mostrar(response.data.rere_id);
+        console.log(this.motivoAvaliacaoService.refeId);
+      }
     })
 
     if (!this.messageService.visibility) {
@@ -54,11 +56,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
         this.messageService.hide();
       }, 2000);
     }
-
-  }
-
-  mostrarMotivoPopUp() {
-    this.motivoAvaliacaoService.mostrar();
   }
 
   goToMenu() {
@@ -66,7 +63,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.store)
     this.title = this.store.refeicao.nome;
   }
 

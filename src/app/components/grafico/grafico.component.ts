@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
+import { mealsOption } from 'src/app/interfaces/IRefeicao';
 import { refeicao, refeicao_avaliacao } from 'src/app/interfaces/IRefeicaoResultado';
 import { StoreService } from 'src/app/store/store.service';
 import { MealsOption, MealsText } from 'src/app/types/types';
@@ -26,12 +27,6 @@ export class GraficoComponent implements OnInit {
 
   avaliacoes: any;
 
-  mealsOption = {
-    desjejum: "Desjejum",
-    almoco: "Almoço / Janta",
-    lanche: "Lanche"
-  }
-
   dataSource!: any;
   chartData: Array<any> = [
     {
@@ -53,6 +48,10 @@ export class GraficoComponent implements OnInit {
   }
 
   setValoresGrafico(rere_reav_id: number) {
+    // this.chartData.forEach(item => {
+    //   if (item.id === rere_reav_id)
+    //     item.value += 1;
+    // })
     this.chartData[rere_reav_id - 1].value += 1;
   }
 
@@ -80,6 +79,13 @@ export class GraficoComponent implements OnInit {
 
   ngOnInit(): void {
 
+    const refeicaoAtual = localStorage.getItem("refeicaoAtual") as MealsOption;
+    this.store.refeicao = {
+      id: refeicao[refeicaoAtual],
+      nome: mealsOption[refeicaoAtual] as MealsText
+    };
+    this.dataSource.chart.caption = this.store.refeicao.nome;
+
     this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id).then((response) => {
       response.data.map(avaliacao => {
         this.setValoresGrafico(avaliacao.rere_reav_id);
@@ -87,14 +93,16 @@ export class GraficoComponent implements OnInit {
     });
 
     this.socket.on("atualizarGrafico", (response: SocketResposne) => {
-      this.chartData[response.reav_id - 1].value += 1
+      this.chartData[response.reav_id - 1].value += 1;
     });
 
     this.socket.on("limparGrafico", (payload: { refeicao: MealsOption }) => {
 
-      this.store.refeicao.nome = this.mealsOption[payload.refeicao] as MealsText;
+      localStorage.setItem("refeicaoAtual", payload.refeicao);
+
+      this.store.refeicao.nome = mealsOption[payload.refeicao] as MealsText;
       this.store.refeicao.id = refeicao[payload.refeicao];
-      this.dataSource.chart.caption = this.mealsOption[payload.refeicao];      
+      this.dataSource.chart.caption = mealsOption[payload.refeicao];      
 
       this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id).then((response) => {
         this.chartData.forEach(data => data.value = 0);

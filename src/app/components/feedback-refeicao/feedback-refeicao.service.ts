@@ -14,8 +14,8 @@ export class FeedbackRefeicaoService {
 
   constructor() { }
 
-  async submitFeedback({ rere_refe_id, rere_reav_id }: IRefeicaoResultadoRequest) {
-    await api.post('refeicao-resultado', {
+  submitFeedback({ rere_refe_id, rere_reav_id }: IRefeicaoResultadoRequest) {
+    return api.post<{ rere_id: number }>('refeicao-resultado', {
       refe_id: rere_refe_id,
       reav_id: rere_reav_id,
     })

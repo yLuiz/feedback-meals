@@ -1,4 +1,5 @@
 <div *ngIf="motivoAvaliacaoService.visibility" class={{motivoAvaliacaoService.classe}}>
+  <button (click)="fecharPopUp()" class="button btn-fechar">X</button>
   <ul>
     <li class="motivo-item" *ngFor="let motivo of motivos">
       <span id={{motivo.nome}} (click)="selecionarMotivo(motivo)" >{{ motivo.descricao }}</span>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
+import { mealsOption } from 'src/app/interfaces/IRefeicao';
 import { refeicao } from 'src/app/interfaces/IRefeicaoResultado';
 import { StoreService } from 'src/app/store/store.service';
 import { MealsOption, MealsText } from 'src/app/types/types';
@@ -20,12 +21,6 @@ export class MenuRefeicaoComponent implements OnInit {
     private socket: Socket
   ) { }
 
-  mealsOption = {
-    desjejum: "Desjejum",
-    almoco: "Almoço / Janta",
-    lanche: "Lanche"
-  }
-
   goToGraphic() {
     this.router.navigate(['/grafico']);
   }
@@ -41,7 +36,7 @@ export class MenuRefeicaoComponent implements OnInit {
     });
 
     const refeicaoPropriedades = {
-      nome: this.mealsOption[option] as MealsText,
+      nome: mealsOption[option] as MealsText,
       id: refeicao[option]
     }
 
@@ -53,9 +48,7 @@ export class MenuRefeicaoComponent implements OnInit {
 
   ngOnInit(): void {
     this.menuRefeicaoService.pegarTodasRefeicoes().then((reponse) => {
-      reponse.data.map(refeicao => {
-        // console.log(refeicao);
-      })
+      reponse.data.map(refeicao => {});
     });
   }
 

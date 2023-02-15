@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import api from 'src/api/api';
 import { MotivoAvaliacaoService } from './motivo-avaliacao.service';
 
 interface IMotivo {
@@ -66,7 +67,12 @@ export class MotivoAvaliacaoComponent implements OnInit {
       descricao: 'Lanche'
       
     }
-  ]
+  ];
+
+  fecharPopUp() {
+    this.motivoAvaliacaoService.esconder(500);
+    this.motivosSelecionados = [];
+  };
 
   selecionarMotivo(motivo: IMotivo) {
     if (this.motivosSelecionados.includes(motivo.nome)) {
@@ -82,17 +88,20 @@ export class MotivoAvaliacaoComponent implements OnInit {
         const spanSelecionado = document.getElementById(motivo);
         spanSelecionado?.classList.add('selecionado');
       });
-    }   
+    }
   }
 
   enviarMotivos() {
-    this.motivosSelecionados = [];
-    this.motivoAvaliacaoService.esconder(500);
-    console.log("enviarMotivos");
+    this.motivoAvaliacaoService.cadastrarMotivoAvaliacao({ motivos: this.motivosSelecionados })
+      .then((response) => {
+        this.motivoAvaliacaoService.esconder(500);
+        this.motivosSelecionados = [];
+      });
   }
 
   ngOnInit(): void {
-    this.motivoAvaliacaoService.mostrar();
+    const idRandom = 1;
+    // this.motivoAvaliacaoService.mostrar(idRandom);
   }
 
 }
