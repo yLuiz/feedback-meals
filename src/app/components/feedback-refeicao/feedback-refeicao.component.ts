@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { StoreService } from 'src/app/store/store.service';
 import { MessageService } from '../message/message.service';
 import { FeedbackRefeicaoService } from './feedback-refeicao.service';
-import { refeicao, refeicao_avaliacao } from '../../interfaces/IRefeicaoResultado';
+import { refeicao, refeicao_avaliacao } from '../../references/refeicao';
 import { MotivoAvaliacaoService } from '../motivo-avaliacao/motivo-avaliacao.service';
 import { FeedbackOptions, MealsOption, MealsText } from 'src/app/types/types';
 import { mealsOption } from 'src/app/interfaces/IRefeicao';
@@ -48,7 +48,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
     }).then(response => {
       if(feedbackKey !== "otimo") {
         this.motivoAvaliacaoService.mostrar(response.data.rere_id);
-        console.log(this.motivoAvaliacaoService.refeId);
+        console.log(this.motivoAvaliacaoService.rereId);
       }
     })
 
@@ -78,8 +78,12 @@ export class FeedbackRefeicaoComponent implements OnInit {
       this.store.refeicao = refeicaoPropriedades;
       this.store.feedback.refeicao = refeicaoPropriedades;
 
-      this.title = response.refeicao;
+      this.title = mealsOption[response.refeicao];
     });
+
+    this.socket.on('limparGrafico', (response: { refeicao: MealsOption }) => {
+      this.title = mealsOption[response.refeicao];
+    })
   }
 
 }

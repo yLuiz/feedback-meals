@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { mealsOption } from './interfaces/IRefeicao';
-import { refeicao } from './interfaces/IRefeicaoResultado';
+import { refeicao } from './references/refeicao';
 import { StoreService } from './store/store.service';
 import { MealsOption, MealsText } from './types/types';
 

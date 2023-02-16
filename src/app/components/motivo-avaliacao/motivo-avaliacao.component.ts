@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import api from 'src/api/api';
+import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
 import { MotivoAvaliacaoService } from './motivo-avaliacao.service';
-
-interface IMotivo {
-  id: number;
-  nome: string;
-  descricao: string;
-}
 
 @Component({
   selector: 'app-motivo-avaliacao',
@@ -19,89 +13,55 @@ export class MotivoAvaliacaoComponent implements OnInit {
     public motivoAvaliacaoService: MotivoAvaliacaoService
   ) { }
 
-  motivosSelecionados: string[] = [];
-  motivos: IMotivo[] = [
-    {
-      id: 1,
-      nome: 'proteina',
-      descricao: 'Proteína (Carne, Frango, Peixe e etc)'
-      
-    },
-    {
-      id: 2,
-      nome: 'complemento',
-      descricao: 'Complemento (Arroz, Feijão, Macarrão e etc)'
-    },
-    {
-      id: 3,
-      nome: 'organizacao',
-      descricao: 'Organização & Limpeza'
-    },
-    {
-      id: 4,
-      nome: 'dieta',
-      descricao: 'Dieta'
-      
-    },
-    {
-      id: 5,
-      nome: 'salada',
-      descricao: 'Salada'
-      
-    },
-    {
-      id: 6,
-      nome: 'suco',
-      descricao: 'Suco/Café'
-      
-    },
-    {
-      id: 7,
-      nome: 'sobremesa',
-      descricao: 'Sobremesa'
-      
-    },
-    {
-      id: 8,
-      nome: 'lanche',
-      descricao: 'Lanche'
-      
-    }
-  ];
+  motivosSelecionados: IAvaliacaoMotivo[] = [];
+  avaliacaoMotivos: IAvaliacaoMotivo[] = [];
 
   fecharPopUp() {
     this.motivoAvaliacaoService.esconder(500);
     this.motivosSelecionados = [];
   };
 
-  selecionarMotivo(motivo: IMotivo) {
-    if (this.motivosSelecionados.includes(motivo.nome)) {
-      const spanSelecionado = document.getElementById(motivo.nome);
+  selecionarMotivo(motivo: IAvaliacaoMotivo) {
+    if (this.motivosSelecionados.includes(motivo)) {
+      const spanSelecionado = document.getElementById(`motivo_${motivo.ream_id}`);
       spanSelecionado?.classList.remove('selecionado');
       
-      this.motivosSelecionados = this.motivosSelecionados.filter(item => item !== motivo.nome);
+      this.motivosSelecionados = this.motivosSelecionados.filter(item => item.ream_id !== motivo.ream_id);
 
     } else {
-      this.motivosSelecionados.push(motivo.nome);
+      this.motivosSelecionados.push(motivo);
 
       this.motivosSelecionados.forEach(motivo => {
-        const spanSelecionado = document.getElementById(motivo);
+        const spanSelecionado = document.getElementById(`motivo_${motivo.ream_id}`);
         spanSelecionado?.classList.add('selecionado');
       });
     }
   }
 
+  setMotivos() {
+    this.motivoAvaliacaoService.pegarMotivosAvaliacao()
+      .then(response => {
+        console.log(response.data);
+        this.avaliacaoMotivos = response.data;
+      })
+  }
+
   enviarMotivos() {
-    this.motivoAvaliacaoService.cadastrarMotivoAvaliacao({ motivos: this.motivosSelecionados })
+    const motivosCadastro = this.motivosSelecionados.map(motivo => {
+      return {
+        rerm_ream_id: motivo.ream_id,
+        rerm_rere_id: this.motivoAvaliacaoService.rereId
+      } as ICadastroMotivo;
+    })
+    this.motivoAvaliacaoService.cadastrarMotivoAvaliacao({ motivos: motivosCadastro })
       .then((response) => {
         this.motivoAvaliacaoService.esconder(500);
         this.motivosSelecionados = [];
+        console.log(response.data);
       });
   }
 
   ngOnInit(): void {
-    const idRandom = 1;
-    // this.motivoAvaliacaoService.mostrar(idRandom);
+    this.setMotivos();
   }
-
 }

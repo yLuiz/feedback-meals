@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import api from 'src/api/api';
+import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
 
 @Injectable({
   providedIn: 'root'
@@ -20,17 +21,17 @@ export class MotivoAvaliacaoService {
     return this.motivoVisibility;
   }
 
-  get refeId() {
+  get rereId() {
     return this.refeicaoResultadoId;
   }
 
-  set refeId(value: number) {
+  set rereId(value: number) {
     this.refeicaoResultadoId = value;
   }
 
   public mostrar(rere_id: number) {
 
-    this.refeId = rere_id;
+    this.rereId = rere_id;
 
     this.motivoVisibility = true;
     this.motivoClasse = 'motivo-container show-container';
@@ -43,8 +44,12 @@ export class MotivoAvaliacaoService {
     }, timer);
   }
 
-  public cadastrarMotivoAvaliacao(data: { motivos: string[] }) {
-    return api.patch('refeicao-resultado', data);
+  public cadastrarMotivoAvaliacao(data: { motivos: ICadastroMotivo[] }) {
+    return api.post('refeicao-resultado-motivo', data);
+  }
+
+  public pegarMotivosAvaliacao() {
+    return api.get<IAvaliacaoMotivo[]>('refeicao-avaliacao-motivo');
   }
 
 }

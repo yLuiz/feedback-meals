@@ -1,8 +1,8 @@
 <div *ngIf="motivoAvaliacaoService.visibility" class={{motivoAvaliacaoService.classe}}>
   <button (click)="fecharPopUp()" class="button btn-fechar">X</button>
   <ul>
-    <li class="motivo-item" *ngFor="let motivo of motivos">
-      <span id={{motivo.nome}} (click)="selecionarMotivo(motivo)" >{{ motivo.descricao }}</span>
+    <li class="motivo-item" *ngFor="let avaliacao_motivo of avaliacaoMotivos">
+      <span id="motivo_{{avaliacao_motivo.ream_id}}" (click)="selecionarMotivo(avaliacao_motivo)" >{{ avaliacao_motivo.ream_motivo }}</span>
     </li>
   </ul>
   <div class="acao">
