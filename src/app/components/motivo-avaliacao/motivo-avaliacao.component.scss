@@ -58,6 +58,11 @@
 
   .botao-confirmar {
     position: absolute;
+    display: flex;
+    
+    align-items: center;
+    justify-content: center;
+
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
@@ -67,6 +72,11 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     max-width: 300px;
     height: 50px;
+  }
+
+  .botao-confirmar.disabled {
+    background-color: #0092005f;
+    border: 1px solid #0092005f;
   }
 }
 

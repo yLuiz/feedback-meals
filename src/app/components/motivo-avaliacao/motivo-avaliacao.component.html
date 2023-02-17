@@ -6,8 +6,11 @@
     </li>
   </ul>
   <div class="acao">
-    <button (click)="enviarMotivos()" class="button botao-confirmar">
-      Confirmar
+    <button (click)="enviarMotivos()" class="button botao-confirmar {{enviandoMotivos ? 'disabled' : ''}}">
+      <span *ngIf="enviandoMotivos else confirmar" class="loader"></span>
+      <ng-template #confirmar>
+        Confirmar
+      </ng-template>
     </button>
   </div>
 </div>
