@@ -41,7 +41,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
   setMotivos() {
     this.motivoAvaliacaoService.pegarMotivosAvaliacao()
       .then(response => {
-        console.log(response.data);
         this.avaliacaoMotivos = response.data;
       })
   }
@@ -57,7 +56,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
       .then((response) => {
         this.motivoAvaliacaoService.esconder(500);
         this.motivosSelecionados = [];
-        console.log(response.data);
       });
   }
 

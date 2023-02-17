@@ -48,7 +48,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
     }).then(response => {
       if(feedbackKey !== "otimo") {
         this.motivoAvaliacaoService.mostrar(response.data.rere_id);
-        console.log(this.motivoAvaliacaoService.rereId);
       }
     })
 
