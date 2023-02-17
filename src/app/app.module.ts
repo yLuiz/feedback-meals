@@ -17,10 +17,9 @@ import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { MotivoAvaliacaoComponent } from './components/motivo-avaliacao/motivo-avaliacao.component';
+import { environment } from 'src/environments/environment';
 
-// const config: SocketIoConfig = { url: 'localhost:3000', options: {}};
-const config: SocketIoConfig = { url: 'https://feedback-meals-backend-production.up.railway.app', options: {}};
-
+const config: SocketIoConfig = { url: environment.api_url, options: {}};
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
 @NgModule({
