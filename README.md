@@ -9,7 +9,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Variaveis de ambiente
 Crie o arquivo .env caso não tenha no projeto.
-Depois de criado, coloque a na variavel DATABASE_URL a sua url de conexão do seu banco.
+Depois de criado, coloque a variavel DATABASE_URL a sua url de conexão do seu banco.
 
 
 ## Build
