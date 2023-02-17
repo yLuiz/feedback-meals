@@ -11,6 +11,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 Crie o arquivo .env caso não tenha no projeto.
 Depois de criado, coloque a variavel DATABASE_URL a sua url de conexão do seu banco.
 
+<br><br> Na pasta envrionment terá dois arquivos: environment.ts e environment.prod.ts
+<br>Ambos terão a mesma estrutura: 
+``` bash 
+
+```
+
 
 ## Build
 Para fazer o build rode o comando `ng build` ou `npm run build`. Após isso, será gerado o diretório `dist/`.
