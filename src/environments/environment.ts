@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  // api_url: 'https://feedback-meals-backend-production.up.railway.app'
-  api_url: 'http://localhost:3000'
+  api_url: ""
 };
 
 /*
