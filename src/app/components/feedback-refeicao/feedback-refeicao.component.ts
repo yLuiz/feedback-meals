@@ -79,10 +79,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
       this.title = mealsOption[response.refeicao];
     });
-
-    this.socket.on('limparGrafico', (response: { refeicao: MealsOption }) => {
-      this.title = mealsOption[response.refeicao];
-    })
   }
 
 }

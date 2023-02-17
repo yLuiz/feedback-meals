@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IRefeicaoHorario } from '../interfaces/IRefeicaoHorario';
 import { MealsText } from '../types/types';
 
 interface IStore {
@@ -17,7 +18,8 @@ interface IStore {
       regular: number,
       ruim: number,
     };
-  }
+  },
+  horarios: IRefeicaoHorario[]
 }
 
 @Injectable({
@@ -43,7 +45,8 @@ export class StoreService {
         regular: 0,
         ruim: 0
       }
-    }
+    },
+    horarios: []
   };
 
   get refeicao() {
@@ -66,6 +69,14 @@ export class StoreService {
       refeicao: data.refeicao,
       avaliacao: data.avaliacao
     }
+  }
+
+  get horarios() {
+    return this.globalVariables.horarios;
+  }
+
+  set horarios(horarios: IRefeicaoHorario[]) {
+    this.globalVariables.horarios = horarios;
   }
 
   public feedbackClear() {

@@ -54,13 +54,13 @@ export class GraficoComponent implements OnInit {
   constructor(
     private router: Router,
     private socket: Socket,
-    private store: StoreService,
+    public store: StoreService,
     private graficoService: GraficoService
   ) {
     // Chart Configuration
     this.dataSource = {
       chart: {
-        caption: this.store.refeicao.nome,
+        caption: `Refeição ${ this.store.refeicao.nome }`,
         showValues: true,
         subCaption: '',
         xAxisName: 'Avaliações',
@@ -75,21 +75,22 @@ export class GraficoComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id).then((response) => {
-      response.data.map(avaliacao => {
-        this.setValoresGrafico(avaliacao.rere_reav_id);
-      })
-    });
-
-    this.socket.on("atualizarGrafico", (response: SocketResposne) => {
-      this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id).then((response) => {
-        console.log(response.data);
-        this.chartData.forEach(data => data.value = 0);
+    this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id)
+      .then(response => {
         response.data.map(avaliacao => {
           this.setValoresGrafico(avaliacao.rere_reav_id);
-          this.dataSource.data = this.chartData;
         })
-      });
+    });
+
+    this.socket.on("atualizarValorGrafico", (response: SocketResposne) => {
+      this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id)
+        .then(response => {
+          this.chartData.forEach(data => data.value = 0);
+          response.data.map(avaliacao => {
+            this.setValoresGrafico(avaliacao.rere_reav_id);
+            this.dataSource.data = this.chartData;
+          })
+        });
     });
 
     this.socket.on("pegarRefeicao", (payload: { refeicao: MealsOption }) => {

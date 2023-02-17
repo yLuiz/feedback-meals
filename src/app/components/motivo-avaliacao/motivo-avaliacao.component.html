@@ -7,10 +7,9 @@
   </ul>
   <div class="acao">
     <button (click)="enviarMotivos()" class="button botao-confirmar {{enviandoMotivos ? 'disabled' : ''}}">
-      <span *ngIf="enviandoMotivos else confirmar" class="loader"></span>
-      <ng-template #confirmar>
-        Confirmar
-      </ng-template>
+      <span *ngIf="enviandoMotivos" class="loader"></span>
+      <span class="check-icon" *ngIf="!enviandoMotivos && motivosEnviado"><i class="bi bi-check-circle"></i></span>
+      <span *ngIf="podeEnviarMotivos">Confirmar</span>
     </button>
   </div>
 </div>

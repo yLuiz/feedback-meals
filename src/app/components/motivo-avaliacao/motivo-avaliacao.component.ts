@@ -14,6 +14,9 @@ export class MotivoAvaliacaoComponent implements OnInit {
   ) { }
 
   enviandoMotivos = false;
+  motivosEnviado = false;
+  podeEnviarMotivos = true;
+
   motivosSelecionados: IAvaliacaoMotivo[] = [];
   avaliacaoMotivos: IAvaliacaoMotivo[] = [];
 
@@ -48,8 +51,9 @@ export class MotivoAvaliacaoComponent implements OnInit {
 
   enviarMotivos() {
 
-    if (this.enviandoMotivos) return;
+    if (!this.podeEnviarMotivos) return;
 
+    this.podeEnviarMotivos = false;
     this.enviandoMotivos = true;
 
     const motivosCadastro = this.motivosSelecionados.map(motivo => {
@@ -60,11 +64,20 @@ export class MotivoAvaliacaoComponent implements OnInit {
     })
     this.motivoAvaliacaoService.cadastrarMotivoAvaliacao({ motivos: motivosCadastro })
       .then((response) => {
-        this.motivoAvaliacaoService.esconder(500);
+        const time = 500;
+        
         this.motivosSelecionados = [];
+
+        this.motivosEnviado = true;
+        this.enviandoMotivos = false;
+
         setTimeout(() => {
-          this.enviandoMotivos = false;
-        }, 500);
+          this.motivoAvaliacaoService.esconder(time);
+          setTimeout(() => {
+            this.motivosEnviado = false;
+            this.podeEnviarMotivos = true;
+          }, time);
+        }, time);
       });
   }
 

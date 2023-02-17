@@ -119,14 +119,14 @@
     cursor: pointer;
   }
 
-  @media (max-width: 750px) {
-    width: auto;
-  }
-
   span.selecionado {
     background-color: green;
     border: 1px solid #a7dca7;
     box-shadow: 0 0 10px var(--bg-green-alpha);
+  }
+
+  @media (max-width: 750px) {
+    width: auto;
   }
 
   @media (max-height: 530px) {
@@ -151,6 +151,10 @@
       font-size: 0.8rem;
     }
   }
+}
+
+.check-icon > svg {
+  font-size: 3rem;
 }
 
 .show-container {
