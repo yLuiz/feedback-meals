@@ -5,7 +5,8 @@ import { Server, Socket } from 'socket.io';
 
 const options = {
   cors: {
-    origin: ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"],
+    origin: "https://feedback-meals.vercel.app",
+    // origin: ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"],
     methods: ["GET"],
     credentials: true,
     allowHeaders: ["my-header-custom"]
