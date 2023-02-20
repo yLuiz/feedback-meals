@@ -1,0 +1,24 @@
+.vscode
+Makefile
+*.md
+LICENSE
+# Docker
+.dockerignore
+Dockerfile*
+docker-compose*
+.env
+.env.example
+# Git
+.git
+.gitattributes
+.gitignore
+# Node
+.npmrc
+dist
+build
+## Logs
+logs
+*.log
+
+## Dependency directories
+node_modules
