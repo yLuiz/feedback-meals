@@ -7,8 +7,8 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: "http://localhost:3002"
-    // origin: ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"]
+    // origin: "http://localhost:3002"
+    origin: ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"]
   });
 
   await app.listen(process.env.PORT || 3000);
