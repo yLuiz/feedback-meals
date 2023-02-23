@@ -26,7 +26,7 @@ model refeicao_avaliacao_motivo {
   ream_id                   Int                                    @id @default(autoincrement())
   ream_motivo               String?                                @db.VarChar(45)
   ream_status               refeicao_avaliacao_motivo_ream_status? @default(ATIVO)
-  refeicao_resultado_motivo refeicao_resultado_motivo[]            @ignore
+  refeicao_resultado_motivo refeicao_resultado_motivo[]
 }
 
 model refeicao_resultado {

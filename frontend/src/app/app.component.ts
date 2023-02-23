@@ -24,8 +24,6 @@ export class AppComponent implements OnInit {
 
     api.get<IRefeicaoHorario[]>('refeicao-horario')
       .then(response => {
-
-        console.log(response.data)
         
         this.store.horarios = response.data.map(horario => {
           return {
@@ -34,20 +32,6 @@ export class AppComponent implements OnInit {
             reho_hora_fim: new Date(`${horario.reho_hora_fim}`)
           }
         });
-
-        // Aqui é apenas testes de manipulação de data.
-
-        
-
-
-        const hora = this.store.horarios[0].reho_hora_inicio.getUTCHours();
-        const minutos = this.store.horarios[0].reho_hora_inicio.getUTCMinutes();
-
-        const horaAtual = new Date().getHours();
-        const minutoAtual = new Date().getMinutes();
-
-        console.log(`${hora}:${minutos}`);
-        console.log(`${horaAtual}:${minutoAtual}`);
       })
 
     this.socket.on('pegarRefeicao', (response: { refeicao: MealsOption }) => {

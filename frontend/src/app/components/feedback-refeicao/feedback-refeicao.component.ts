@@ -8,6 +8,8 @@ import { MotivoAvaliacaoService } from '../motivo-avaliacao/motivo-avaliacao.ser
 import { FeedbackOptions, MealsOption, MealsText } from 'src/app/types/types';
 import { mealsOption } from 'src/app/interfaces/IRefeicao';
 import { Socket } from 'ngx-socket-io';
+import { IRefeicaoHorario } from 'src/app/interfaces/IRefeicaoHorario';
+import api from 'src/api/api';
 
 
 @Component({
@@ -27,6 +29,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
     public motivoAvaliacaoService: MotivoAvaliacaoService
   ) { }
 
+  horarios: IRefeicaoHorario[] = [];
   timer!: ReturnType<typeof setTimeout>;
   title!: string;
 
@@ -64,6 +67,49 @@ export class FeedbackRefeicaoComponent implements OnInit {
     this.router.navigate(['menu']);
   }
 
+  horaMaior(dateA: Date, dateB: Date) {
+    if (dateA.getHours() == dateB.getUTCHours()) {
+      if (dateA.getMinutes() > dateB.getUTCMinutes()) {
+        console.log(`${dateA.getHours()}:${dateA.getUTCMinutes()}`);
+        console.log(`${dateB.getUTCHours()}:${dateB.getUTCMinutes()}`);
+
+        return true;
+      } else {
+        console.log(`${dateA.getHours()}:${dateA.getUTCMinutes()}`);
+        console.log(`${dateB.getUTCHours()}:${dateB.getUTCMinutes()}`);
+
+        return false;
+      }
+    } else if (dateA.getHours() > dateB.getUTCHours()) {
+      console.log(`${dateA.getHours()}:${dateA.getUTCMinutes()}`);
+      console.log(`${dateB.getUTCHours()}:${dateB.getUTCMinutes()}`);
+
+      return true;
+    } else {
+      console.log(`${dateA.getHours()}:${dateA.getUTCMinutes()}`);
+      console.log(`${dateB.getUTCHours()}:${dateB.getUTCMinutes()}`);
+
+      return false;
+    }
+  }
+
+  async setRefeicaoTitulo() {
+    this.horarios = await api.get<IRefeicaoHorario[]>('refeicao-horario')
+      .then(response => {
+        return response.data.map(horario => {
+          return {
+            ...horario,
+            reho_hora_inicio: new Date(`${horario.reho_hora_inicio}`),
+            reho_hora_fim: new Date(`${horario.reho_hora_fim}`)
+          }
+        });
+      });
+
+    const horario = this.horarios.find(item => item.reho_id === 3) as IRefeicaoHorario;
+    const almoco = this.horaMaior(new Date(), horario.reho_hora_inicio) && !this.horaMaior(new Date(), horario.reho_hora_fim);
+    console.log(almoco);
+  }
+
   ngOnInit(): void {
 
     this.title = this.store.refeicao.nome
@@ -79,6 +125,8 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
       this.title = mealsOption[response.refeicao];
     });
+
+    this.setRefeicaoTitulo();
   }
 
 }
