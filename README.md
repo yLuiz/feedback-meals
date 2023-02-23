@@ -20,7 +20,7 @@ export const environment = {
   api_url: "http://0.0.0.0:3000"
 };
 ```
-<br> No atributo 'api_url' coloque a url de sua API. <br>
+<br> No atributo `api_url` coloque a url de sua API. <br>
 
 ## Build
 Para fazer o build rode o comando `ng build` ou `npm run build`. Após isso, será gerado o diretório `dist/`.
