@@ -1,0 +1,14 @@
+ARG image_version
+FROM node:$image_version as build
+WORKDIR  /home/app
+
+COPY package*.json ./
+RUN npm set progress=false \
+    && npm i -g @nestjs/cli \
+    && npm install --quiet \
+    npm install source-map-support -P
+
+COPY --chown=node:node . .
+
+USER node
+EXPOSE 3000
