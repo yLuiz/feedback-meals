@@ -1,6 +1,7 @@
 # Feedback Meals
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.3.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.3. <br>
+This project was generated with [Nest CLI](https://github.com/nestjs/nest-cli) version 8.2.8.
 
 ## Instalação
 ``` bash
@@ -24,7 +25,7 @@ export const environment = {
 ## Build
 Para fazer o build rode o comando `ng build` ou `npm run build`. Após isso, será gerado o diretório `dist/`.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Para obter mais ajuda sobre o Angular CLI use `ng help` ou vá para página a [Angular CLI Overview and Command Reference](https://angular.io/cli).
 
 # BACKEND
 
@@ -46,3 +47,10 @@ Caso você faça qualquer tipo de alteração no arquivo `schema.prisma`, você 
 npx prisma generate
 ```
 Este comando irá atualizar todo o schema caso você tenha feito alguma alteração nele ou em arquivos relacionados à ele como o próprio `.env`.
+
+## Build
+O Nestjs por padrão gera um pasta `dist` quando você inicializa a aplicação e para isso, basta dar o comando:
+``` bash
+npm run start:dev
+```
+Após isso, será gerado o build e aplicação irá iniciar normalmente, caso não haja alguma configuração errada, é claro.
