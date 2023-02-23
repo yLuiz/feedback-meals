@@ -38,12 +38,17 @@
 
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    // gap: 40px;
 
     width: 100%;
     padding: 50px 10px;
 
     overflow-y: auto;
+
+    li {
+      margin: 20px;
+    }
+
   }
 
   .acao {

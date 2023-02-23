@@ -83,5 +83,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
 
   ngOnInit(): void {
     this.setMotivos();
+    this.motivoAvaliacaoService.mostrar(1)
   }
 }

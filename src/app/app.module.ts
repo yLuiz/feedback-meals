@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,7 +40,10 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
     MotivoAvaliacaoComponent
   ],
   providers: [
-    StoreService
+    StoreService,
+    {
+      provide: LocationStrategy, useClass: HashLocationStrategy
+    }
   ],
   bootstrap: [AppComponent]
 })

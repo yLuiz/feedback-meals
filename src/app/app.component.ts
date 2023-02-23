@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    api.get<IRefeicaoHorario[]>('/refeicao-horario')
+    api.get<IRefeicaoHorario[]>('refeicao-horario')
       .then(response => {
 
         console.log(response.data)
