@@ -11,4 +11,9 @@ export class RefeicaoHorarioController {
   pegarRefeicaoHorarios() {
     return this.refeicaoHorarioService.pegarHorarios();
   }
+
+  @Get('atual')
+  pegarRefeicaoAtual() {
+    return this.refeicaoHorarioService.pegarRefeicaoAtual();
+  }
 }

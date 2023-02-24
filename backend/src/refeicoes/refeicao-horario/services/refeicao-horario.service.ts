@@ -16,4 +16,12 @@ export class RefeicaoHorarioService {
     });
   }
 
+  pegarRefeicaoAtual() {
+    return this.prisma.$queryRaw`
+      SELECT *
+      FROM refeicao_horarios as reho
+      INNER JOIN refeicao ON refeicao.refe_id = reho.reho_refe_id
+      WHERE 
+      TIME(NOW()) BETWEEN reho_hora_inicio AND reho_hora_fim`
+  }
 }

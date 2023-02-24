@@ -1,8 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { corsOrigins } from './main';
 
+// const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
+const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
 
 const options = {
   cors: {
