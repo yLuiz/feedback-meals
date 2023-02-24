@@ -8,9 +8,7 @@ This project was generated with [Nest CLI](https://github.com/nestjs/nest-cli) v
  npm install
 ```
 
-# FRONTEND
-
-
+# FRONT-END
 
 <br><br> Na pasta envrionment terá dois arquivos: `environment.ts` e `environment.prod.ts`
 <br>Ambos terão a mesma estrutura: 
@@ -20,14 +18,14 @@ export const environment = {
   api_url: "http://0.0.0.0:3000"
 };
 ```
-<br> No atributo 'api_url' coloque a url de sua API. <br>
+<br> No atributo `api_url` coloque a url de sua API. <br>
 
 ## Build
 Para fazer o build rode o comando `ng build` ou `npm run build`. Após isso, será gerado o diretório `dist/`.
 
 Para obter mais ajuda sobre o Angular CLI use `ng help` ou vá para página a [Angular CLI Overview and Command Reference](https://angular.io/cli).
 
-# BACKEND
+# BACK-END
 
 ## Instalação
 ``` bash
