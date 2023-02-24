@@ -8,9 +8,7 @@ This project was generated with [Nest CLI](https://github.com/nestjs/nest-cli) v
  npm install
 ```
 
-# FRONTEND
-
-
+# FRONT-END
 
 <br><br> Na pasta envrionment terá dois arquivos: `environment.ts` e `environment.prod.ts`
 <br>Ambos terão a mesma estrutura: 
@@ -27,7 +25,7 @@ Para fazer o build rode o comando `ng build` ou `npm run build`. Após isso, ser
 
 Para obter mais ajuda sobre o Angular CLI use `ng help` ou vá para página a [Angular CLI Overview and Command Reference](https://angular.io/cli).
 
-# BACKEND
+# BACK-END
 
 ## Instalação
 ``` bash
