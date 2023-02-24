@@ -67,39 +67,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
     this.router.navigate(['menu']);
   }
 
-  horaMaior(dateA: Date, dateB: Date) {
-    if (dateA.getHours() == dateB.getUTCHours()) {
-      if (dateA.getMinutes() > dateB.getUTCMinutes()) {
-        
-
-        return true;
-      } else {
-        return false;
-      }
-    } else if (dateA.getHours() > dateB.getUTCHours()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  async setRefeicaoTitulo() {
-    this.horarios = await api.get<IRefeicaoHorario[]>('refeicao-horario')
-      .then(response => {
-        return response.data.map(horario => {
-          return {
-            ...horario,
-            reho_hora_inicio: new Date(`${horario.reho_hora_inicio}`),
-            reho_hora_fim: new Date(`${horario.reho_hora_fim}`)
-          }
-        });
-      });
-
-    const horario = this.horarios.find(item => item.reho_id === 3) as IRefeicaoHorario;
-    const almoco = this.horaMaior(new Date(), horario.reho_hora_inicio) && !this.horaMaior(new Date(), horario.reho_hora_fim);
-    console.log(almoco);
-  }
-
   ngOnInit(): void {
 
     this.title = this.store.refeicao.nome
@@ -115,8 +82,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
       this.title = mealsOption[response.refeicao];
     });
-
-    this.setRefeicaoTitulo();
   }
 
 }

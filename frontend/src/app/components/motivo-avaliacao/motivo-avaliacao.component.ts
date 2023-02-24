@@ -45,7 +45,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
   setMotivos() {
     this.motivoAvaliacaoService.pegarMotivosAvaliacao()
       .then(response => {
-        console.log(response);
         this.avaliacaoMotivos = response.data;
       }).catch(err => console.log(err));
   }
@@ -84,5 +83,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
 
   ngOnInit(): void {
     this.setMotivos();
+    this.motivoAvaliacaoService.mostrar(1);
   }
 }
