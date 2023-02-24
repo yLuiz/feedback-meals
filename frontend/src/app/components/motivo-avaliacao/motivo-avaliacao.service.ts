@@ -49,7 +49,7 @@ export class MotivoAvaliacaoService {
   }
 
   public pegarMotivosAvaliacao() {
-    return api.get<IAvaliacaoMotivo[]>('refeicao-avaliacao-motivo');
+    return api.get<IAvaliacaoMotivo[]>(`refeicao-avaliacao-motivo`);
   }
 
 }

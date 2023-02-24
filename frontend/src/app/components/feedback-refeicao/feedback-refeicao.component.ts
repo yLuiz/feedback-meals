@@ -32,10 +32,13 @@ export class FeedbackRefeicaoComponent implements OnInit {
   horarios: IRefeicaoHorario[] = [];
   timer!: ReturnType<typeof setTimeout>;
   title!: string;
+  loadingMotivos: boolean = false;
 
   submitFeedback(feedbackKey: FeedbackOptions) {
 
     if (this.messageService.visibility) return;
+    this.loadingMotivos = true;
+
         
     this.store.feedback = {
       refeicao: this.store.refeicao,
@@ -51,6 +54,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
     }).then(response => {
       if(feedbackKey !== "otimo") {
         this.motivoAvaliacaoService.mostrar(response.data.rere_id);
+        this.loadingMotivos = false;
       }
     })
 

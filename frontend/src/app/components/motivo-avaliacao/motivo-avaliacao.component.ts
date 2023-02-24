@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
+import { StoreService } from 'src/app/store/store.service';
 import { MotivoAvaliacaoService } from './motivo-avaliacao.service';
 
 @Component({
@@ -10,11 +11,12 @@ import { MotivoAvaliacaoService } from './motivo-avaliacao.service';
 export class MotivoAvaliacaoComponent implements OnInit {
 
   constructor(
-    public motivoAvaliacaoService: MotivoAvaliacaoService
+    public motivoAvaliacaoService: MotivoAvaliacaoService,
+    private store: StoreService
   ) { }
 
   enviandoMotivos = false;
-  motivosEnviado = false;
+  motivosEnviados = false;
   podeEnviarMotivos = true;
 
   motivosSelecionados: IAvaliacaoMotivo[] = [];
@@ -43,10 +45,12 @@ export class MotivoAvaliacaoComponent implements OnInit {
   }
 
   setMotivos() {
-    this.motivoAvaliacaoService.pegarMotivosAvaliacao()
-      .then(response => {
-        this.avaliacaoMotivos = response.data;
-      }).catch(err => console.log(err));
+
+  this.motivoAvaliacaoService.pegarMotivosAvaliacao()
+    .then(response => {
+      console.log(response.data);
+      this.avaliacaoMotivos = response.data;
+    }).catch(err => console.log(err));
   }
 
   enviarMotivos() {
@@ -63,18 +67,18 @@ export class MotivoAvaliacaoComponent implements OnInit {
       } as ICadastroMotivo;
     })
     this.motivoAvaliacaoService.cadastrarMotivoAvaliacao({ motivos: motivosCadastro })
-      .then((response) => {
+      .then(() => {
         const time = 500;
         
         this.motivosSelecionados = [];
 
-        this.motivosEnviado = true;
+        this.motivosEnviados = true;
         this.enviandoMotivos = false;
 
         setTimeout(() => {
           this.motivoAvaliacaoService.esconder(time);
           setTimeout(() => {
-            this.motivosEnviado = false;
+            this.motivosEnviados = false;
             this.podeEnviarMotivos = true;
           }, time);
         }, time);

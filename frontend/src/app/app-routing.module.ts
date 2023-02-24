@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: 'feedback', component: FeedbackRefeicaoComponent },
   { path: 'grafico', component: GraficoComponent },
   { path: 'menu', component: MenuRefeicaoComponent },
-  { path: '**', redirectTo: 'menu' }
+  { path: '**', redirectTo: '/menu' }
 ];
 
 @NgModule({
