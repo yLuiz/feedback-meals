@@ -1,5 +1,6 @@
 export interface IAvaliacaoMotivo {
   ream_id: number;
+  ream_refe_id: number;
   ream_motivo: string;
   ream_status: "1" | "0";
 }

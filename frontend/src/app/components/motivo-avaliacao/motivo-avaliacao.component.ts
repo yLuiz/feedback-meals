@@ -45,12 +45,12 @@ export class MotivoAvaliacaoComponent implements OnInit {
   }
 
   setMotivos() {
-
-  this.motivoAvaliacaoService.pegarMotivosAvaliacao()
-    .then(response => {
-      console.log(response.data);
-      this.avaliacaoMotivos = response.data;
-    }).catch(err => console.log(err));
+    this.motivoAvaliacaoService.pegarMotivosAvaliacao()
+      .then(response => {
+        this.avaliacaoMotivos = response.data.filter(motivo => motivo.ream_refe_id === this.store.refeicao.id || motivo.ream_refe_id === null);
+        console.log(response.data);
+      })
+      .catch(err => console.log(err));
   }
 
   enviarMotivos() {
@@ -87,6 +87,5 @@ export class MotivoAvaliacaoComponent implements OnInit {
 
   ngOnInit(): void {
     this.setMotivos();
-    this.motivoAvaliacaoService.mostrar(1);
   }
 }
