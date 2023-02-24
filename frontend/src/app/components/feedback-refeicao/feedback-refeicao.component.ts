@@ -70,25 +70,15 @@ export class FeedbackRefeicaoComponent implements OnInit {
   horaMaior(dateA: Date, dateB: Date) {
     if (dateA.getHours() == dateB.getUTCHours()) {
       if (dateA.getMinutes() > dateB.getUTCMinutes()) {
-        console.log(`${dateA.getHours()}:${dateA.getUTCMinutes()}`);
-        console.log(`${dateB.getUTCHours()}:${dateB.getUTCMinutes()}`);
+        
 
         return true;
       } else {
-        console.log(`${dateA.getHours()}:${dateA.getUTCMinutes()}`);
-        console.log(`${dateB.getUTCHours()}:${dateB.getUTCMinutes()}`);
-
         return false;
       }
     } else if (dateA.getHours() > dateB.getUTCHours()) {
-      console.log(`${dateA.getHours()}:${dateA.getUTCMinutes()}`);
-      console.log(`${dateB.getUTCHours()}:${dateB.getUTCMinutes()}`);
-
       return true;
     } else {
-      console.log(`${dateA.getHours()}:${dateA.getUTCMinutes()}`);
-      console.log(`${dateB.getUTCHours()}:${dateB.getUTCMinutes()}`);
-
       return false;
     }
   }

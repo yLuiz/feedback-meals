@@ -1,12 +1,12 @@
 import { Logger } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { corsOrigins } from './main';
 
 
 const options = {
   cors: {
-    // origin: "http://147.1.5.47",
-    origin: ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"],
+    origin: corsOrigins,
     methods: ["GET"],
     credentials: true,
     allowHeaders: ["my-header-custom"]
