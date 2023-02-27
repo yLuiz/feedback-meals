@@ -23,7 +23,7 @@ export class MotivoAvaliacaoComponent implements OnInit {
   avaliacaoMotivos: IAvaliacaoMotivo[] = [];
 
   fecharPopUp() {
-    this.motivoAvaliacaoService.esconder(500);
+    this.motivoAvaliacaoService.esconder(100);
     this.motivosSelecionados = [];
   };
 

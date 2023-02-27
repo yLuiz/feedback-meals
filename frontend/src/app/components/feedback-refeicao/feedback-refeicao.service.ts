@@ -14,10 +14,11 @@ export class FeedbackRefeicaoService {
 
   constructor() { }
 
-  submitFeedback({ rere_refe_id, rere_reav_id }: IRefeicaoResultadoRequest) {
+  submitFeedback({ rere_refe_id, rere_reav_id, rere_reho_id }: IRefeicaoResultadoRequest) {
     return api.post<{ rere_id: number }>('refeicao-resultado', {
       refe_id: rere_refe_id,
       reav_id: rere_reav_id,
+      reho_id: rere_reho_id
     })
   }
 }

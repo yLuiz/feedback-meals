@@ -1,6 +1,7 @@
 export interface IRefeicaoResultadoRequest {
   rere_refe_id: number;
   rere_reav_id: number;
+  rere_reho_id: number;
 }
 
 export interface IRefeicaoResultadoResponse {

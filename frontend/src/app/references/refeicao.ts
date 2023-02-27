@@ -1,4 +1,5 @@
 export const refeicao = {
+  aguardando: 0,
   desjejum: 1,
   almoco: 2,
   lanche: 3

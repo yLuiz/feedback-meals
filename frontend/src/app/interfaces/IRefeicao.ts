@@ -1,7 +1,8 @@
 export const mealsOption = {
   desjejum: "Desjejum",
   almoco: "Almoço / Janta",
-  lanche: "Lanche"
+  lanche: "Lanche",
+  aguardando: "Aguardando Refeição"
 }
 
 export interface IRefeicao {

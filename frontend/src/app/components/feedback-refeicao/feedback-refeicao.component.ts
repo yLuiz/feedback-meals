@@ -9,6 +9,7 @@ import { FeedbackOptions, MealsOption, MealsText } from 'src/app/types/types';
 import { mealsOption } from 'src/app/interfaces/IRefeicao';
 import { Socket } from 'ngx-socket-io';
 import { IRefeicaoHorario } from 'src/app/interfaces/IRefeicaoHorario';
+import api from 'src/api/api';
 
 
 @Component({
@@ -33,9 +34,14 @@ export class FeedbackRefeicaoComponent implements OnInit {
   title!: string;
   loadingMotivos: boolean = false;
 
-  submitFeedback(feedbackKey: FeedbackOptions) {
+  async submitFeedback(feedbackKey: FeedbackOptions) {
 
     if (feedbackKey !== 'otimo') this.loadingMotivos = true;
+
+    this.messageService.show();
+    setTimeout(() => {
+      this.messageService.hide();
+    }, 800);
         
     this.store.feedback = {
       refeicao: this.store.refeicao,
@@ -45,15 +51,23 @@ export class FeedbackRefeicaoComponent implements OnInit {
       }
     }
 
+    let horarioId;
+    await api.get('refeicao-horario/atual')
+      .then(response => {
+        horarioId = response.data.reho_id
+      })
+      .catch(err => console.log(err));
+
     this.feedbackRefeicaoService.submitFeedback({ 
       rere_reav_id: refeicao_avaliacao[feedbackKey],
-      rere_refe_id: this.store.feedback.refeicao.id
+      rere_refe_id: this.store.feedback.refeicao.id,
+      rere_reho_id: 2
     }).then(response => {
       if(feedbackKey !== "otimo") {
         this.motivoAvaliacaoService.mostrar(response.data.rere_id);
         this.loadingMotivos = false;
 
-        this.motivoAvaliacaoService.esconder(1000 * 30);
+        this.motivoAvaliacaoService.esconder(1000 * 12);
       }
     });
   }
