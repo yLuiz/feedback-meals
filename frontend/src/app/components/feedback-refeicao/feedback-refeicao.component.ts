@@ -9,7 +9,6 @@ import { FeedbackOptions, MealsOption, MealsText } from 'src/app/types/types';
 import { mealsOption } from 'src/app/interfaces/IRefeicao';
 import { Socket } from 'ngx-socket-io';
 import { IRefeicaoHorario } from 'src/app/interfaces/IRefeicaoHorario';
-import api from 'src/api/api';
 
 
 @Component({
@@ -36,9 +35,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
   submitFeedback(feedbackKey: FeedbackOptions) {
 
-    if (this.messageService.visibility) return;
-    this.loadingMotivos = true;
-
+    if (feedbackKey !== 'otimo') this.loadingMotivos = true;
         
     this.store.feedback = {
       refeicao: this.store.refeicao,
@@ -55,16 +52,10 @@ export class FeedbackRefeicaoComponent implements OnInit {
       if(feedbackKey !== "otimo") {
         this.motivoAvaliacaoService.mostrar(response.data.rere_id);
         this.loadingMotivos = false;
+
+        this.motivoAvaliacaoService.esconder(1000 * 30);
       }
-    })
-
-    if (!this.messageService.visibility) {
-      this.messageService.show();
-
-      this.timer = setTimeout(() => {
-        this.messageService.hide();
-      }, 2000);
-    }
+    });
   }
 
   goToMenu() {

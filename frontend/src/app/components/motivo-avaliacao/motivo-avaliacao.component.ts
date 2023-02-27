@@ -48,7 +48,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
     this.motivoAvaliacaoService.pegarMotivosAvaliacao()
       .then(response => {
         this.avaliacaoMotivos = response.data.filter(motivo => motivo.ream_refe_id === this.store.refeicao.id || motivo.ream_refe_id === null);
-        console.log(response.data);
       })
       .catch(err => console.log(err));
   }

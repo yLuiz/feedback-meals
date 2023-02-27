@@ -38,10 +38,13 @@ export class MotivoAvaliacaoService {
   }
 
   public esconder(timer: number) {
-    this.motivoClasse = 'motivo-container hide-container';
+    setTimeout(() => {
+      this.motivoClasse = 'motivo-container hide-container';
+    }, timer);
+
     setTimeout(() => {
       this.motivoVisibility = false;
-    }, timer);
+    }, timer + 1000);
   }
 
   public cadastrarMotivoAvaliacao(data: { motivos: ICadastroMotivo[] }) {

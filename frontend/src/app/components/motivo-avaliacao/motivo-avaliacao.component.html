@@ -1,15 +1,15 @@
 <div *ngIf="motivoAvaliacaoService.visibility" class={{motivoAvaliacaoService.classe}}>
-  <button (click)="fecharPopUp()" class="button btn-fechar">X</button>
   <ul>
     <li class="motivo-item" *ngFor="let avaliacao_motivo of avaliacaoMotivos">
       <span id="motivo_{{avaliacao_motivo.ream_id}}" (click)="selecionarMotivo(avaliacao_motivo)" >{{ avaliacao_motivo.ream_motivo }}</span>
     </li>
   </ul>
   <div class="acao">
-    <button (click)="enviarMotivos()" class="button botao-confirmar {{enviandoMotivos ? 'disabled' : ''}}">
+    <button (click)="enviarMotivos()" class="button botao-confirmar {{ enviandoMotivos ? 'disabled' : ''}}">
       <span *ngIf="enviandoMotivos" class="loader"></span>
       <span class="check-icon" *ngIf="!enviandoMotivos && motivosEnviados"><i class="bi bi-check-circle"></i></span>
       <span *ngIf="podeEnviarMotivos">Confirmar</span>
     </button>
+    <button (click)="fecharPopUp()" class="button botao-fechar">Sair</button>
   </div>
 </div>

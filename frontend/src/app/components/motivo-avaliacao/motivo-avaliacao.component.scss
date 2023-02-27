@@ -53,46 +53,42 @@
   .acao {
     position: relative;
     display: flex;
-    align-self: flex-end;
-    justify-content: flex-end;
+    align-self: center;
+    justify-content: center;
     padding: 10px;
     width: 100%;
     min-height: 70px;
   }
 
-  .botao-confirmar {
-    position: absolute;
+  .botao-fechar, .botao-confirmar {
     display: flex;
     
     align-items: center;
     justify-content: center;
 
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #38bf38;
-    border: 1px solid #66bc66;
+    margin: 0 15px;
+
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    max-width: 300px;
+    max-width: 200px;
     height: 50px;
   }
 
-  .botao-confirmar.disabled {
-    background-color: #0092005f;
-    border: 1px solid #0092005f;
+  .botao-fechar {
+    background-color: var(--bg-red);
+    border: 1px solid var(--bg-red-200);
   }
-}
 
-.btn-fechar {
-  align-self: flex-end;
-
-  margin-top: 10px;
-  margin-right: 10px;
-
-  background-color: var(--bg-red);
-  max-width: 40px;
-  color: #FFF;
+  .botao-confirmar {
+    background-color: #38bf38;
+    border: 1px solid #66bc66;
+  
+    .botao-confirmar.disabled {
+      background-color: #0092005f;
+      border: 1px solid #0092005f;
+    }
+  }
+  
 }
 
 .motivo-item {
