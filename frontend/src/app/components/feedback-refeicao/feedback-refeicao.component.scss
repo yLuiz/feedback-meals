@@ -8,8 +8,6 @@
   background-color: rgba(0, 0, 0, 0.6);
 }
 
-
-
 section {
   
   position: relative;
@@ -32,7 +30,7 @@ section {
     justify-content: center;
     width: 80%;
     height: 100px;
-    margin: 20px 0 50px;
+    margin: 100px 0 50px;
 
     h1 {
       position: absolute;
@@ -62,7 +60,6 @@ section {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    // gap: 3em;
 
     button {
       margin: 0 1.5em;
@@ -81,8 +78,6 @@ section {
   font-weight: 700;
   font-size: 1.1em;
 
-  // gap: 2em;
-
   border: none;
   outline: none;
   color: #FFF;
@@ -99,6 +94,10 @@ section {
 
   .image-container {
     user-select: none;
+  }
+
+  &.disabled {
+    opacity: 0.5;
   }
 
   p {

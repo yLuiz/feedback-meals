@@ -4,7 +4,7 @@ import { Socket } from 'ngx-socket-io';
 import { mealsOption } from 'src/app/interfaces/IRefeicao';
 import { refeicao } from 'src/app/references/refeicao';
 import { StoreService } from 'src/app/store/store.service';
-import { MealsOption, MealsText } from 'src/app/types/types';
+import { RefeicaoOpcoes, RefeicaoTexto } from 'src/app/types/types';
 import { MenuRefeicaoService } from './menu-refeicao.service';
 
 @Component({
@@ -29,12 +29,12 @@ export class MenuRefeicaoComponent implements OnInit {
     this.router.navigate(['/feedback']);
   }
 
-  setMeal(option: MealsOption) {
+  setMeal(option: RefeicaoOpcoes) {
     this.store.feedbackClear();
     this.socket.emit('mudarRefeicao', { refeicao: option });
 
     const refeicaoPropriedades = {
-      nome: mealsOption[option] as MealsText,
+      nome: mealsOption[option] as RefeicaoTexto,
       id: refeicao[option]
     }
 

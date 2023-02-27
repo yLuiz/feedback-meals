@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { IRefeicaoHorario } from '../interfaces/IRefeicaoHorario';
-import { MealsText } from '../types/types';
+import { RefeicaoTexto } from '../types/types';
+import { mealsOption } from '../interfaces/IRefeicao';
+import { refeicao } from '../references/refeicao';
 
 interface IStore {
+  avaliacaoHabilitada: boolean,
   refeicao: {
-    nome: MealsText,
+    nome: RefeicaoTexto,
     id: number
   },
   feedback: {
     refeicao: {
-      nome: MealsText,
+      nome: RefeicaoTexto,
       id: number
     };
     avaliacao: {
@@ -30,14 +33,15 @@ export class StoreService {
   constructor() {}
 
   private globalVariables: IStore = {
+    avaliacaoHabilitada: false,
     refeicao: {
-      nome: "Desjejum",
-      id: 1
+      nome: mealsOption['aguardando'] as RefeicaoTexto,
+      id: refeicao['aguardando']
     },
     feedback: {
       refeicao: {
-        nome: "Desjejum",
-        id: 1
+        nome: mealsOption['aguardando'] as RefeicaoTexto,
+        id: refeicao['aguardando']
       },
       avaliacao: {
         otimo: 0,
@@ -49,11 +53,19 @@ export class StoreService {
     horarios: []
   };
 
+  get avaliacaoHabilitada() {
+    return this.globalVariables.avaliacaoHabilitada;
+  }
+
+  set avaliacaoHabilitada(value: boolean) {
+    this.globalVariables.avaliacaoHabilitada = value;
+  }
+
   get refeicao() {
     return this.globalVariables.refeicao;
   }
 
-  set refeicao(refeicao: { nome: MealsText, id: number }) {
+  set refeicao(refeicao: { nome: RefeicaoTexto, id: number }) {
     this.globalVariables.refeicao = {
       id: refeicao.id,
       nome: refeicao.nome
@@ -82,8 +94,8 @@ export class StoreService {
   public feedbackClear() {
     this.globalVariables.feedback = {
       refeicao: {
-        nome: "Desjejum",
-        id: 1
+        nome: mealsOption['aguardando'] as RefeicaoTexto,
+        id: refeicao['aguardando']
       },
       avaliacao: {
         otimo: 0,

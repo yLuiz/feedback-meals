@@ -12,19 +12,25 @@
     </span>
   </div>
   <div class="feedback-buttons">
-    <button (click)="submitFeedback('otimo')" class="feedback-button-card card-green shine">
+    <button (click)="submitFeedback('otimo')" 
+      [ngClass]="{'feedback-button-card card-green shine': true, 'disabled': !store.avaliacaoHabilitada}"
+    >
       <div class="image-container">
         <img class="happy-emoji" src="./assets/emojis/happy_cut.png" alt="super-feliz">
       </div>
       <p>ÓTIMO</p>
     </button>
-    <button (click)="submitFeedback('bom')" class="feedback-button-card card-blue shine">
+    <button (click)="submitFeedback('bom')" 
+      [ngClass]="{'feedback-button-card card-blue shine': true, 'disabled': !store.avaliacaoHabilitada}"
+    >
       <div class="image-container">
         <img src="./assets/emojis/feliz.png" alt="feliz">
       </div>
       <p>BOM</p>
     </button>
-    <button (click)="submitFeedback('regular')" class="feedback-button-card card-red shine">
+    <button (click)="submitFeedback('regular')" 
+      [ngClass]="{'feedback-button-card card-red shine': true, 'disabled': !store.avaliacaoHabilitada}"
+    >
       <div class="image-container">
         <img src="./assets/emojis/sad.png" alt="triste">
       </div>

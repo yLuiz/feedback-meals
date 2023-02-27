@@ -23,8 +23,9 @@ export class MotivoAvaliacaoComponent implements OnInit {
   avaliacaoMotivos: IAvaliacaoMotivo[] = [];
 
   fecharPopUp() {
-    this.motivoAvaliacaoService.esconder(100);
+    this.motivoAvaliacaoService.esconder(50);
     this.motivosSelecionados = [];
+    this.motivoAvaliacaoService.motivosEnviados = true;
   };
 
   selecionarMotivo(motivo: IAvaliacaoMotivo) {
@@ -53,7 +54,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
   }
 
   enviarMotivos() {
-
     if (!this.podeEnviarMotivos) return;
 
     this.podeEnviarMotivos = false;
@@ -71,8 +71,9 @@ export class MotivoAvaliacaoComponent implements OnInit {
         
         this.motivosSelecionados = [];
 
-        this.motivosEnviados = true;
         this.enviandoMotivos = false;
+        this.motivosEnviados = true;
+        this.motivoAvaliacaoService.motivosEnviados = true;
 
         setTimeout(() => {
           this.motivoAvaliacaoService.esconder(time);

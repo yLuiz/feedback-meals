@@ -5,7 +5,7 @@ import { mealsOption } from './interfaces/IRefeicao';
 import { IRefeicaoHorario } from './interfaces/IRefeicaoHorario';
 import { refeicao } from './references/refeicao';
 import { StoreService } from './store/store.service';
-import { MealsOption, MealsText } from './types/types';
+import { RefeicaoOpcoes, RefeicaoTexto } from './types/types';
 
 @Component({
   selector: 'app-root',
@@ -34,17 +34,17 @@ export class AppComponent implements OnInit {
         });
       })
 
-    this.socket.on('pegarRefeicao', (response: { refeicao: MealsOption }) => {
+    this.socket.on('pegarRefeicao', (response: { refeicao: RefeicaoOpcoes }) => {
       this.store.refeicao = {
         id: refeicao[response.refeicao],
-        nome: mealsOption[response.refeicao] as MealsText
+        nome: mealsOption[response.refeicao] as RefeicaoTexto
       }
 
       this.store.feedback = {
         ...this.store.feedback,
         refeicao: {
           id: refeicao[response.refeicao],
-          nome: mealsOption[response.refeicao] as MealsText
+          nome: mealsOption[response.refeicao] as RefeicaoTexto
         }
       }
     })

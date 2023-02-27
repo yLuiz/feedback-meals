@@ -12,6 +12,15 @@ export class MotivoAvaliacaoService {
   private refeicaoResultadoId: number = 0;
   private motivoClasse = 'motivo-container';
   private motivoVisibility = false;
+  private motivosEnviadosVariavel = false;
+
+  set motivosEnviados(value: boolean) {
+    this.motivosEnviadosVariavel = value;
+  }
+
+  get motivosEnviados() {
+    return this.motivosEnviadosVariavel;
+  }
 
   get classe() {
     return this.motivoClasse;
@@ -35,6 +44,7 @@ export class MotivoAvaliacaoService {
 
     this.motivoVisibility = true;
     this.motivoClasse = 'motivo-container show-container';
+    
   }
 
   public esconder(timer: number) {

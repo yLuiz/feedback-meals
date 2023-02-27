@@ -4,7 +4,7 @@ import { Socket } from 'ngx-socket-io';
 import { mealsOption } from 'src/app/interfaces/IRefeicao';
 import { refeicao, refeicao_avaliacao } from 'src/app/references/refeicao';
 import { StoreService } from 'src/app/store/store.service';
-import { MealsOption, MealsText } from 'src/app/types/types';
+import { RefeicaoOpcoes, RefeicaoTexto } from 'src/app/types/types';
 import { GraficoService } from './grafico.service';
 
 interface SocketResposne {
@@ -93,9 +93,9 @@ export class GraficoComponent implements OnInit {
         });
     });
 
-    this.socket.on("pegarRefeicao", (payload: { refeicao: MealsOption }) => {
+    this.socket.on("pegarRefeicao", (payload: { refeicao: RefeicaoOpcoes }) => {
 
-      this.store.refeicao.nome = mealsOption[payload.refeicao] as MealsText;
+      this.store.refeicao.nome = mealsOption[payload.refeicao] as RefeicaoTexto;
       this.store.refeicao.id = refeicao[payload.refeicao];
       this.dataSource.chart.caption = mealsOption[payload.refeicao];      
 
