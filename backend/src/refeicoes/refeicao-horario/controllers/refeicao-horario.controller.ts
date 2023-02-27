@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { RefeicaoHorarioService } from '../services/refeicao-horario.service';
+import { IRefeicaoAtual, RefeicaoHorarioService } from '../services/refeicao-horario.service';
 
 @Controller('refeicao-horario')
 export class RefeicaoHorarioController {
@@ -14,6 +14,6 @@ export class RefeicaoHorarioController {
 
   @Get('atual')
   pegarRefeicaoAtual() {
-    return this.refeicaoHorarioService.pegarRefeicaoAtual();
+    return this.refeicaoHorarioService.pegarRefeicaoAtual() as IRefeicaoAtual;
   }
 }

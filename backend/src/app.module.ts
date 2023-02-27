@@ -13,9 +13,13 @@ import { RefeicaoAvaliacaoMotivoService } from './refeicoes/refeicao-avaliacao-m
 import { RefeicaoAvaliacaoMotivoController } from './refeicoes/refeicao-avaliacao-motivo/controllers/refeicao-avaliacao-motivo.controller';
 import { RefeicaoHorarioService } from './refeicoes/refeicao-horario/services/refeicao-horario.service';
 import { RefeicaoHorarioController } from './refeicoes/refeicao-horario/controllers/refeicao-horario.controller';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [AppGateway],
+  imports: [
+    AppGateway,
+    ScheduleModule.forRoot()
+  ],
   controllers: [RefeicaoController, RefeicaoAvaliacaoController, RefeicaoResultadoController, RefeicaoResultadoMotivoController, RefeicaoAvaliacaoMotivoController, RefeicaoHorarioController],
   providers: [ PrismaService, RefeicaoService, RefeicaoAvaliacaoService, RefeicaoResultadoService, AppGateway, RefeicaoResultadoMotivoService, RefeicaoAvaliacaoMotivoService, RefeicaoHorarioService],
 })
