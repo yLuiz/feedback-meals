@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { RefeicaoOpcoes } from './types/types';
 
 // const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
 const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
@@ -19,7 +20,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
   constructor() {}
 
-  private refeicaoAtual: string = 'desjejum';
+  private refeicaoAtual: RefeicaoOpcoes = 'aguardando';
 
   @WebSocketServer()
   server: Server;
@@ -27,7 +28,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   private logger: Logger = new Logger('AppGateway');
 
   @SubscribeMessage('mudarRefeicao')
-  mudarRefeicao(client: Socket, payload: { refeicao: string }) {
+  mudarRefeicao(client: Socket, payload: { refeicao: RefeicaoOpcoes }) {
     this.refeicaoAtual = payload.refeicao;
     this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual});
   }

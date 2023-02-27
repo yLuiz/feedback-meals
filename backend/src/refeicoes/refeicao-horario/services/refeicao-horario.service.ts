@@ -18,7 +18,7 @@ export class RefeicaoHorarioService {
 
   pegarRefeicaoAtual() {
     return this.prisma.$queryRaw`
-      SELECT *
+      SELECT reho_id
       FROM refeicao_horarios as reho
       INNER JOIN refeicao ON refeicao.refe_id = reho.reho_refe_id
       WHERE 

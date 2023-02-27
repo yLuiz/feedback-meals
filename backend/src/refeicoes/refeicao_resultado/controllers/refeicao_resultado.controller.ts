@@ -27,11 +27,11 @@ export class RefeicaoResultadoController {
   cadastrarRefeicaoResultado(@Body() body: { 
     refe_id: number,
     reav_id: number,
-    rere_reho_id: number
+    reho_id: number
   }) {
 
-    const { refe_id, reav_id, rere_reho_id } = body;
+    const { refe_id, reav_id, reho_id } = body;
 
-    return this.refeicaoResultadoService.cadastrarAvaliacao(refe_id, reav_id, rere_reho_id);
+    return this.refeicaoResultadoService.cadastrarAvaliacao(refe_id, reav_id, reho_id);
   }
 }
