@@ -44,8 +44,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     this.logger.log("Init")
   }
 
-  handleConnection(client: any, ...args: any[]) {
+  emitPegarRefeicao() {
     this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual });
+  }
+
+  handleConnection(client: any, ...args: any[]) {
+    this.emitPegarRefeicao();
     this.logger.log("Connected " + client.id);
   }
 

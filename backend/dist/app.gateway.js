@@ -40,8 +40,11 @@ let AppGateway = class AppGateway {
     afterInit(server) {
         this.logger.log("Init");
     }
-    handleConnection(client, ...args) {
+    emitPegarRefeicao() {
         this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual });
+    }
+    handleConnection(client, ...args) {
+        this.emitPegarRefeicao();
         this.logger.log("Connected " + client.id);
     }
     handleDisconnect(client) {

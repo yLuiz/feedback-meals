@@ -11,6 +11,7 @@ export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, O
     }): void;
     atualizarValorGrafico(refe_id: number, reav_id: number): void;
     afterInit(server: Server): void;
+    emitPegarRefeicao(): void;
     handleConnection(client: any, ...args: any[]): void;
     handleDisconnect(client: any): void;
 }
