@@ -4,14 +4,14 @@
     <span class="loading"></span>
   </div>
 </div>
-<section>
+<section id="section-feedback">
   <div class="title">
     <h1>{{ title }}</h1>
     <span class="span-gear" (click)="goToMenu()">
       <i class="bi bi-gear-fill"></i>
     </span>
   </div>
-  <div class="feedback-buttons">
+  <div id="feedback-buttons" class="feedback-buttons">
     <button (click)="submitFeedback('otimo')" 
       [ngClass]="{'feedback-button-card card-green shine': true, 'disabled': !store.avaliacaoHabilitada}"
     >

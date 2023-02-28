@@ -27,7 +27,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
   ) { }
 
   horarios: IRefeicaoHorario[] = [];
-  timer!: ReturnType<typeof setTimeout>;
   title!: string;
   loadingMotivos: boolean = false;
   avaliacaoHabilitada: boolean = false;
@@ -80,13 +79,28 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
     this.title = this.store.refeicao.nome
 
-    this.socket.on('pegarRefeicao', (response: { refeicao: RefeicaoOpcoes }) => {
+    this.socket.on('pegarRefeicao', (response: { refeicao: RefeicaoOpcoes, horarioId: number }) => {
       const refeicaoPropriedades = {
         nome: mealsOption[response.refeicao] as RefeicaoTexto,
-        id: refeicao[response.refeicao]
+        id: refeicao[response.refeicao],
+        horarioId: response.horarioId,
       }
 
       if (response.refeicao !== 'aguardando') this.store.avaliacaoHabilitada = true;
+
+      if (response.refeicao === 'aguardando') {
+        const container = document.getElementById('feedback-buttons');
+        if (container) {
+          container.style.display = 'none';
+          document.getElementById('section-feedback')!.style.justifyContent = 'center';
+        }
+      } else {
+        const container = document.getElementById('feedback-buttons');
+        if (container) {
+          container.style.display = 'flex';
+          document.getElementById('section-feedback')!.style.justifyContent = 'flex-start';
+        }
+      }
   
       this.store.refeicao = refeicaoPropriedades;
       this.store.feedback.refeicao = refeicaoPropriedades;

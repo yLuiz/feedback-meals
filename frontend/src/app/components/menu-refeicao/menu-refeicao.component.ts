@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
+import api from 'src/api/api';
 import { mealsOption } from 'src/app/interfaces/IRefeicao';
 import { refeicao } from 'src/app/references/refeicao';
 import { StoreService } from 'src/app/store/store.service';
@@ -35,7 +36,8 @@ export class MenuRefeicaoComponent implements OnInit {
 
     const refeicaoPropriedades = {
       nome: mealsOption[option] as RefeicaoTexto,
-      id: refeicao[option]
+      id: refeicao[option],
+      horarioId: 0
     }
 
     this.store.refeicao = refeicaoPropriedades;
@@ -45,9 +47,7 @@ export class MenuRefeicaoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.menuRefeicaoService.pegarTodasRefeicoes().then((reponse) => {
-      reponse.data.map(refeicao => {});
-    });
+    this.socket.on('pegarRefeicao', (responsee: { refeicao: RefeicaoOpcoes, horarioId: number}) => {});
   }
 
 }

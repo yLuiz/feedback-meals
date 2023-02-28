@@ -6,4 +6,5 @@ export declare class RefeicaoHorarioController {
         refeicao: import(".prisma/client").refeicao;
     })[]>;
     pegarRefeicaoAtual(): Promise<IRefeicaoAtual>;
+    pegarHorarioPorRefeicao(refe_id: number): Promise<import(".prisma/client").refeicao_horarios[]>;
 }

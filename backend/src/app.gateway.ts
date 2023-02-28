@@ -29,12 +29,21 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     this.refeicaoAtual = value;
   }
 
+  get refeicao() {
+    return this.refeicaoAtual;
+  }
+
   private logger: Logger = new Logger('AppGateway');
 
   @SubscribeMessage('mudarRefeicao')
-  mudarRefeicao(client: Socket, payload: { refeicao: RefeicaoOpcoes }) {
+  mudarRefeicao(client: Socket, payload: { refeicao: RefeicaoOpcoes, horarioId: number }) {
     this.refeicaoAtual = payload.refeicao;
-    this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual});
+
+    this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual, horarioId: payload.horarioId });
+  }
+
+  emitMudarRefeicao(refeicao: RefeicaoOpcoes , horarioId: number) {
+    this.server.emit('pegarRefeicao', { refeicao, horarioId });
   }
 
   atualizarValorGrafico(refe_id: number, reav_id: number) {

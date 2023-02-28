@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RefeicaoService } from '../services/refeicao.service';
 
@@ -10,5 +10,10 @@ export class RefeicaoController {
   @Get()
   pegarTodasRefeicoes() {
     return this.refeicaoService.pegarTodas();
+  }
+
+  @Get(':refe_id')
+  pegarRefeicaoPorId(@Param('refe_id') refe_id: number) {
+    return this.refeicaoService.pegarRefeicaoPorId(refe_id);
   }
 }

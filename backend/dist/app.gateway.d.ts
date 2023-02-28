@@ -6,10 +6,13 @@ export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, O
     private refeicaoAtual;
     server: Server;
     set refeicao(value: RefeicaoOpcoes);
+    get refeicao(): RefeicaoOpcoes;
     private logger;
     mudarRefeicao(client: Socket, payload: {
         refeicao: RefeicaoOpcoes;
+        horarioId: number;
     }): void;
+    emitMudarRefeicao(refeicao: RefeicaoOpcoes, horarioId: number): void;
     atualizarValorGrafico(refe_id: number, reav_id: number): void;
     afterInit(server: Server): void;
     emitPegarRefeicao(): void;

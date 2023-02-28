@@ -4,17 +4,17 @@ import { RefeicaoTexto } from '../types/types';
 import { mealsOption } from '../interfaces/IRefeicao';
 import { refeicao } from '../references/refeicao';
 
+interface IRefeicaoStore {
+  nome: RefeicaoTexto;
+  id: number;
+  horarioId: number;
+}
+
 interface IStore {
-  avaliacaoHabilitada: boolean,
-  refeicao: {
-    nome: RefeicaoTexto,
-    id: number
-  },
+  avaliacaoHabilitada: boolean;
+  refeicao: IRefeicaoStore;
   feedback: {
-    refeicao: {
-      nome: RefeicaoTexto,
-      id: number
-    };
+    refeicao: IRefeicaoStore;
     avaliacao: {
       otimo: number,
       bom: number,
@@ -30,18 +30,27 @@ interface IStore {
 })
 export class StoreService {
   
-  constructor() {}
+  private refeicoes: any[];
+
+  constructor() {
+
+    this.refeicoes = [];
+
+  }
+
 
   private globalVariables: IStore = {
     avaliacaoHabilitada: false,
     refeicao: {
       nome: mealsOption['aguardando'] as RefeicaoTexto,
-      id: refeicao['aguardando']
+      id: refeicao['aguardando'],
+      horarioId: 0
     },
     feedback: {
       refeicao: {
         nome: mealsOption['aguardando'] as RefeicaoTexto,
-        id: refeicao['aguardando']
+        id: refeicao['aguardando'],
+        horarioId: 0
       },
       avaliacao: {
         otimo: 0,
@@ -65,10 +74,11 @@ export class StoreService {
     return this.globalVariables.refeicao;
   }
 
-  set refeicao(refeicao: { nome: RefeicaoTexto, id: number }) {
+  set refeicao(refeicao: { nome: RefeicaoTexto, id: number, horarioId: number }) {
     this.globalVariables.refeicao = {
       id: refeicao.id,
-      nome: refeicao.nome
+      nome: refeicao.nome,
+      horarioId: refeicao.horarioId
     };
   }
 
@@ -95,7 +105,8 @@ export class StoreService {
     this.globalVariables.feedback = {
       refeicao: {
         nome: mealsOption['aguardando'] as RefeicaoTexto,
-        id: refeicao['aguardando']
+        id: refeicao['aguardando'],
+        horarioId: 0
       },
       avaliacao: {
         otimo: 0,

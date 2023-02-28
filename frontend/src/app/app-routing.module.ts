@@ -7,8 +7,8 @@ import { MenuRefeicaoComponent } from './components/menu-refeicao/menu-refeicao.
 const routes: Routes = [
   { path: 'feedback', component: FeedbackRefeicaoComponent },
   { path: 'grafico', component: GraficoComponent },
-  { path: 'menu', component: MenuRefeicaoComponent },
-  { path: '**', redirectTo: '/menu' }
+  // { path: 'menu', component: MenuRefeicaoComponent },
+  { path: '**', redirectTo: '/feedback' }
 ];
 
 @NgModule({

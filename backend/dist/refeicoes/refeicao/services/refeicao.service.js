@@ -19,6 +19,13 @@ let RefeicaoService = class RefeicaoService {
     async pegarTodas() {
         return await this.prisma.refeicao.findMany();
     }
+    async pegarRefeicaoPorId(refe_id) {
+        return await this.prisma.refeicao.findFirst({
+            where: {
+                refe_id,
+            }
+        });
+    }
 };
 RefeicaoService = __decorate([
     (0, common_1.Injectable)(),

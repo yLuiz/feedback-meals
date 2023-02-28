@@ -22,8 +22,6 @@ export class RefeicaoHorarioService {
     private appGateway: AppGateway
   ) {}
 
-  private readonly logger = new Logger(RefeicaoHorarioService.name);
-
   @Cron('0 * * * * *')
   async consultarHorario() {
     let refeicaoAtual = await this.pegarRefeicaoAtual();
@@ -33,14 +31,13 @@ export class RefeicaoHorarioService {
     }
 
     if (!refeicaoAtual) {
-      this.appGateway.mudarRefeicao(null, { refeicao: 'aguardando' })
+      this.appGateway.emitMudarRefeicao('aguardando' , 0);
       this.appGateway.refeicao = 'aguardando';
       return;
     }
 
-    this.appGateway.mudarRefeicao(null, { refeicao: refeicaoAtual.refe_refeicao as RefeicaoOpcoes })
+    this.appGateway.emitMudarRefeicao(refeicaoAtual.refe_refeicao as RefeicaoOpcoes, refeicaoAtual.reho_id);
     this.appGateway.refeicao = refeicaoAtual.refe_refeicao as RefeicaoOpcoes;
-
   }
 
   pegarHorarios() {
@@ -49,6 +46,18 @@ export class RefeicaoHorarioService {
         refeicao: true
       }
     });
+  }
+
+  async pegarHorariosPorRefeicao(refe_id: number) {
+    if (!refe_id) {
+      return [];
+    }
+
+    return await this.prisma.refeicao_horarios.findMany({
+      where: {
+        reho_refe_id: refe_id
+      }
+    })
   }
 
   async pegarRefeicaoAtual() {

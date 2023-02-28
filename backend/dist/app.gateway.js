@@ -30,9 +30,15 @@ let AppGateway = class AppGateway {
     set refeicao(value) {
         this.refeicaoAtual = value;
     }
+    get refeicao() {
+        return this.refeicaoAtual;
+    }
     mudarRefeicao(client, payload) {
         this.refeicaoAtual = payload.refeicao;
-        this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual });
+        this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual, horarioId: payload.horarioId });
+    }
+    emitMudarRefeicao(refeicao, horarioId) {
+        this.server.emit('pegarRefeicao', { refeicao, horarioId });
     }
     atualizarValorGrafico(refe_id, reav_id) {
         this.server.emit('atualizarValorGrafico', {

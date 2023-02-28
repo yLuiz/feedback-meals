@@ -11,4 +11,12 @@ export class RefeicaoService {
   async pegarTodas() {
     return await this.prisma.refeicao.findMany();
   }
+
+  async pegarRefeicaoPorId(refe_id: number) {
+    return await this.prisma.refeicao.findFirst({
+      where: {
+        refe_id,
+      }
+    })
+  }
 }

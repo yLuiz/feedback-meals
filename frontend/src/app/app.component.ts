@@ -34,17 +34,21 @@ export class AppComponent implements OnInit {
         });
       })
 
-    this.socket.on('pegarRefeicao', (response: { refeicao: RefeicaoOpcoes }) => {
+    this.socket.on('pegarRefeicao', (response: { refeicao: RefeicaoOpcoes, horarioId: number }) => {
       this.store.refeicao = {
         id: refeicao[response.refeicao],
-        nome: mealsOption[response.refeicao] as RefeicaoTexto
+        nome: mealsOption[response.refeicao] as RefeicaoTexto,
+        horarioId: response.horarioId
       }
+
+      if (response.refeicao !== 'aguardando') this.store.avaliacaoHabilitada = true;
 
       this.store.feedback = {
         ...this.store.feedback,
         refeicao: {
           id: refeicao[response.refeicao],
-          nome: mealsOption[response.refeicao] as RefeicaoTexto
+          nome: mealsOption[response.refeicao] as RefeicaoTexto,
+          horarioId: response.horarioId
         }
       }
     })

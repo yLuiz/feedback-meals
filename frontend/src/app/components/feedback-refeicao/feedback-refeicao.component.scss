@@ -97,7 +97,7 @@ section {
   }
 
   &.disabled {
-    opacity: 0.5;
+    display: none;
     user-select: none;
   }
 

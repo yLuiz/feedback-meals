@@ -13,10 +13,10 @@ export declare class RefeicaoHorarioService {
     private prisma;
     private appGateway;
     constructor(prisma: PrismaService, appGateway: AppGateway);
-    private readonly logger;
     consultarHorario(): Promise<void>;
     pegarHorarios(): import(".prisma/client").Prisma.PrismaPromise<(import(".prisma/client").refeicao_horarios & {
         refeicao: import(".prisma/client").refeicao;
     })[]>;
+    pegarHorariosPorRefeicao(refe_id: number): Promise<import(".prisma/client").refeicao_horarios[]>;
     pegarRefeicaoAtual(): Promise<IRefeicaoAtual>;
 }
