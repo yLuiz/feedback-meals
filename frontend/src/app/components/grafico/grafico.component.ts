@@ -82,6 +82,10 @@ export class GraficoComponent implements OnInit {
         })
     });
 
+    this.socket.emit('ultimaRefeicao', (response: IRefeicaoStore) => {
+      
+    })
+
     this.socket.on("atualizarValorGrafico", (response: SocketResposne) => {
       this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id)
         .then(response => {
@@ -99,7 +103,6 @@ export class GraficoComponent implements OnInit {
 
           this.dataSource.chart.caption = mealsOption[payload.refeicao];  
           this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id).then((response) => {
-            console.log(response);
             this.chartData.forEach(data => data.value = 0);
             response.data.map(avaliacao => {
               this.setValoresGrafico(avaliacao.rere_reav_id);
