@@ -4,13 +4,14 @@ import { RefeicaoTexto } from '../types/types';
 import { mealsOption } from '../interfaces/IRefeicao';
 import { refeicao } from '../references/refeicao';
 
-interface IRefeicaoStore {
+export interface IRefeicaoStore {
   nome: RefeicaoTexto;
   id: number;
   horarioId: number;
 }
 
 interface IStore {
+  ultimaRefeicao: IRefeicaoStore,
   avaliacaoHabilitada: boolean;
   refeicao: IRefeicaoStore;
   feedback: {
@@ -40,6 +41,11 @@ export class StoreService {
 
 
   private globalVariables: IStore = {
+    ultimaRefeicao: {
+      horarioId: 1,
+      id: 1,
+      nome: mealsOption['desjejum'] as RefeicaoTexto
+    },
     avaliacaoHabilitada: false,
     refeicao: {
       nome: mealsOption['aguardando'] as RefeicaoTexto,

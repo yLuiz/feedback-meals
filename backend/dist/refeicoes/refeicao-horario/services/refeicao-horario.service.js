@@ -8,12 +8,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RefeicaoHorarioService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../../prisma/prisma.service");
 const schedule_1 = require("@nestjs/schedule");
 const app_gateway_1 = require("../../../app.gateway");
+const IRefeicao_1 = require("../../../interfaces/IRefeicao");
 let RefeicaoHorarioService = class RefeicaoHorarioService {
     constructor(prisma, appGateway) {
         this.prisma = prisma;
@@ -32,6 +36,12 @@ let RefeicaoHorarioService = class RefeicaoHorarioService {
         }
         this.appGateway.emitMudarRefeicao(refeicaoAtual.refe_refeicao, refeicaoAtual.reho_id);
         this.appGateway.refeicao = refeicaoAtual.refe_refeicao;
+        const refeicao = refeicaoAtual.refe_refeicao.split('/')[0];
+        this.appGateway.ultimaRefeicao = {
+            horarioId: refeicaoAtual.reho_id,
+            id: refeicaoAtual.refe_id,
+            nome: IRefeicao_1.mealsOption[refeicao]
+        };
     }
     pegarHorarios() {
         return this.prisma.refeicao_horarios.findMany({
@@ -68,6 +78,7 @@ __decorate([
 ], RefeicaoHorarioService.prototype, "consultarHorario", null);
 RefeicaoHorarioService = __decorate([
     (0, common_1.Injectable)(),
+    __param(1, (0, common_1.Inject)((0, common_1.forwardRef)(() => app_gateway_1.AppGateway))),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         app_gateway_1.AppGateway])
 ], RefeicaoHorarioService);

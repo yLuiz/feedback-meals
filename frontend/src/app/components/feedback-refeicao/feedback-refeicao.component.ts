@@ -72,12 +72,19 @@ export class FeedbackRefeicaoComponent implements OnInit {
   }
 
   goToMenu() {
-    this.router.navigate(['menu']);
+    this.router.navigate(['grafico']);
   }
 
   ngOnInit(): void {
 
     this.title = this.store.refeicao.nome
+    if (!this.store.refeicao.id) {
+      const container = document.getElementById('feedback-buttons');
+      if (container) {
+        container.style.display = 'none';
+        document.getElementById('section-feedback')!.style.justifyContent = 'center';
+      }
+    }
 
     this.socket.on('pegarRefeicao', (response: { refeicao: RefeicaoOpcoes, horarioId: number }) => {
       const refeicaoPropriedades = {

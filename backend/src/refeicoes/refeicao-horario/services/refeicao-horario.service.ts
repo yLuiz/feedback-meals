@@ -1,8 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Cron } from '@nestjs/schedule';
 import { AppGateway } from 'src/app.gateway';
-import { RefeicaoOpcoes } from 'src/types/types';
+import { RefeicaoOpcoes, RefeicaoTexto } from 'src/types/types';
+import { mealsOption } from 'src/interfaces/IRefeicao';
 
 export interface IRefeicaoAtual {
   reho_id: number;
@@ -19,7 +20,8 @@ export class RefeicaoHorarioService {
 
   constructor(
     private prisma: PrismaService,
-    private appGateway: AppGateway
+    @Inject(forwardRef(() => AppGateway))
+    private appGateway: AppGateway,
   ) {}
 
   @Cron('0 * * * * *')
@@ -38,6 +40,15 @@ export class RefeicaoHorarioService {
 
     this.appGateway.emitMudarRefeicao(refeicaoAtual.refe_refeicao as RefeicaoOpcoes, refeicaoAtual.reho_id);
     this.appGateway.refeicao = refeicaoAtual.refe_refeicao as RefeicaoOpcoes;
+
+    const refeicao = refeicaoAtual.refe_refeicao.split('/')[0];
+
+
+    this.appGateway.ultimaRefeicao = {
+      horarioId: refeicaoAtual.reho_id,
+      id: refeicaoAtual.refe_id,
+      nome: mealsOption[refeicao] as RefeicaoTexto
+    }
   }
 
   pegarHorarios() {

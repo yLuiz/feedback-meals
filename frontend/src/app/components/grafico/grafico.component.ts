@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 import { mealsOption } from 'src/app/interfaces/IRefeicao';
 import { refeicao, refeicao_avaliacao } from 'src/app/references/refeicao';
-import { StoreService } from 'src/app/store/store.service';
+import { IRefeicaoStore, StoreService } from 'src/app/store/store.service';
 import { RefeicaoOpcoes, RefeicaoTexto } from 'src/app/types/types';
 import { GraficoService } from './grafico.service';
 
@@ -28,19 +28,19 @@ export class GraficoComponent implements OnInit {
   avaliacoes: any;
 
   dataSource!: any;
-  chartData: Array<any> = [
+  chartData: Array<{ label: string, value: number}> = [
     {
-      label: 'Ótimo',
-      value: 0,
+      label: "Ótimo",
+      value: 0
     },
     {
-      label: 'Bom',
-      value: 0,
+      label: "Bom",
+      value: 0
     },
     {
-      label: 'Regular',
-      value: 0,
-    },
+      label: "Regular",
+      value: 0
+    }
   ];
 
   goToFeedback() {
@@ -94,18 +94,18 @@ export class GraficoComponent implements OnInit {
     });
 
     this.socket.on("pegarRefeicao", (payload: { refeicao: RefeicaoOpcoes }) => {
+        this.store.refeicao.nome = mealsOption[payload.refeicao] as RefeicaoTexto;
+        this.store.refeicao.id = refeicao[payload.refeicao];
 
-      this.store.refeicao.nome = mealsOption[payload.refeicao] as RefeicaoTexto;
-      this.store.refeicao.id = refeicao[payload.refeicao];
-      this.dataSource.chart.caption = mealsOption[payload.refeicao];      
-
-      this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id).then((response) => {
-        this.chartData.forEach(data => data.value = 0);
-        response.data.map(avaliacao => {
-          this.setValoresGrafico(avaliacao.rere_reav_id);
-          this.dataSource.data = this.chartData;
-        })
-      });
+          this.dataSource.chart.caption = mealsOption[payload.refeicao];  
+          this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id).then((response) => {
+            console.log(response);
+            this.chartData.forEach(data => data.value = 0);
+            response.data.map(avaliacao => {
+              this.setValoresGrafico(avaliacao.rere_reav_id);
+              this.dataSource.data = this.chartData;
+            })
+          });
     });
   }
 }

@@ -27,12 +27,26 @@ let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            app_gateway_1.AppGateway,
-            schedule_1.ScheduleModule.forRoot()
+        imports: [schedule_1.ScheduleModule.forRoot()],
+        controllers: [
+            refeicao_controller_1.RefeicaoController,
+            refeicao_avaliacao_controller_1.RefeicaoAvaliacaoController,
+            refeicao_resultado_controller_1.RefeicaoResultadoController,
+            refeicao_resultado_motivo_controller_1.RefeicaoResultadoMotivoController,
+            refeicao_avaliacao_motivo_controller_1.RefeicaoAvaliacaoMotivoController,
+            refeicao_horario_controller_1.RefeicaoHorarioController,
         ],
-        controllers: [refeicao_controller_1.RefeicaoController, refeicao_avaliacao_controller_1.RefeicaoAvaliacaoController, refeicao_resultado_controller_1.RefeicaoResultadoController, refeicao_resultado_motivo_controller_1.RefeicaoResultadoMotivoController, refeicao_avaliacao_motivo_controller_1.RefeicaoAvaliacaoMotivoController, refeicao_horario_controller_1.RefeicaoHorarioController],
-        providers: [prisma_service_1.PrismaService, refeicao_service_1.RefeicaoService, refeicao_avaliacao_service_1.RefeicaoAvaliacaoService, refeicao_resultado_service_1.RefeicaoResultadoService, app_gateway_1.AppGateway, refeicao_resultado_motivo_service_1.RefeicaoResultadoMotivoService, refeicao_avaliacao_motivo_service_1.RefeicaoAvaliacaoMotivoService, refeicao_horario_service_1.RefeicaoHorarioService],
+        providers: [
+            prisma_service_1.PrismaService,
+            refeicao_service_1.RefeicaoService,
+            refeicao_horario_service_1.RefeicaoHorarioService,
+            refeicao_avaliacao_service_1.RefeicaoAvaliacaoService,
+            refeicao_resultado_service_1.RefeicaoResultadoService,
+            app_gateway_1.AppGateway,
+            refeicao_resultado_motivo_service_1.RefeicaoResultadoMotivoService,
+            refeicao_avaliacao_motivo_service_1.RefeicaoAvaliacaoMotivoService,
+        ],
+        exports: [refeicao_horario_service_1.RefeicaoHorarioService],
     })
 ], AppModule);
 exports.AppModule = AppModule;

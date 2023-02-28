@@ -16,11 +16,25 @@ import { RefeicaoHorarioController } from './refeicoes/refeicao-horario/controll
 import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [
-    AppGateway,
-    ScheduleModule.forRoot()
+  imports: [ScheduleModule.forRoot()],
+  controllers: [
+    RefeicaoController,
+    RefeicaoAvaliacaoController,
+    RefeicaoResultadoController,
+    RefeicaoResultadoMotivoController,
+    RefeicaoAvaliacaoMotivoController,
+    RefeicaoHorarioController,
   ],
-  controllers: [RefeicaoController, RefeicaoAvaliacaoController, RefeicaoResultadoController, RefeicaoResultadoMotivoController, RefeicaoAvaliacaoMotivoController, RefeicaoHorarioController],
-  providers: [ PrismaService, RefeicaoService, RefeicaoAvaliacaoService, RefeicaoResultadoService, AppGateway, RefeicaoResultadoMotivoService, RefeicaoAvaliacaoMotivoService, RefeicaoHorarioService],
+  providers: [
+    PrismaService,
+    RefeicaoService,
+    RefeicaoHorarioService,
+    RefeicaoAvaliacaoService,
+    RefeicaoResultadoService,
+    AppGateway,
+    RefeicaoResultadoMotivoService,
+    RefeicaoAvaliacaoMotivoService,
+  ],
+  exports: [RefeicaoHorarioService],
 })
 export class AppModule {}

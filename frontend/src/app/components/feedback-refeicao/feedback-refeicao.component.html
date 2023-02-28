@@ -13,7 +13,7 @@
   </div>
   <div id="feedback-buttons" class="feedback-buttons">
     <button (click)="submitFeedback('otimo')" 
-      [ngClass]="{'feedback-button-card card-green shine': true, 'disabled': !store.avaliacaoHabilitada}"
+      class="feedback-button-card card-green shine"
     >
       <div class="image-container">
         <img class="happy-emoji" src="./assets/emojis/happy_cut.png" alt="super-feliz">
@@ -21,7 +21,7 @@
       <p>ÓTIMO</p>
     </button>
     <button (click)="submitFeedback('bom')" 
-      [ngClass]="{'feedback-button-card card-blue shine': true, 'disabled': !store.avaliacaoHabilitada}"
+      class="feedback-button-card card-blue shine"
     >
       <div class="image-container">
         <img src="./assets/emojis/feliz.png" alt="feliz">
@@ -29,7 +29,7 @@
       <p>BOM</p>
     </button>
     <button (click)="submitFeedback('regular')" 
-      [ngClass]="{'feedback-button-card card-red shine': true, 'disabled': !store.avaliacaoHabilitada}"
+      class="feedback-button-card card-red shine"
     >
       <div class="image-container">
         <img src="./assets/emojis/sad.png" alt="triste">
