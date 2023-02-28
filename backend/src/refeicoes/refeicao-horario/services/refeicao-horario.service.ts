@@ -24,7 +24,7 @@ export class RefeicaoHorarioService {
 
   private readonly logger = new Logger(RefeicaoHorarioService.name);
 
-  @Cron('*/10 * * * * *')
+  @Cron('0 * * * * *')
   async consultarHorario() {
     let refeicaoAtual = await this.pegarRefeicaoAtual();
     console.log(refeicaoAtual);

@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = "mysql://root:my@teste@147.1.0.83:3306/refeicoes?schema=public"
 }
 
 model refeicao {
