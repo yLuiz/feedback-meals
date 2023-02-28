@@ -5,5 +5,5 @@ export declare class RefeicaoHorarioController {
     pegarRefeicaoHorarios(): import(".prisma/client").Prisma.PrismaPromise<(import(".prisma/client").refeicao_horarios & {
         refeicao: import(".prisma/client").refeicao;
     })[]>;
-    pegarRefeicaoAtual(): IRefeicaoAtual;
+    pegarRefeicaoAtual(): Promise<IRefeicaoAtual>;
 }

@@ -25,6 +25,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   @WebSocketServer()
   server: Server;
 
+  set refeicao(value: RefeicaoOpcoes) {
+    this.refeicaoAtual = value;
+  }
+
   private logger: Logger = new Logger('AppGateway');
 
   @SubscribeMessage('mudarRefeicao')

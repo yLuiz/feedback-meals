@@ -11,12 +11,12 @@ export interface IRefeicaoAtual {
 }
 export declare class RefeicaoHorarioService {
     private prisma;
-    private socket;
-    constructor(prisma: PrismaService, socket: AppGateway);
+    private appGateway;
+    constructor(prisma: PrismaService, appGateway: AppGateway);
     private readonly logger;
-    consultarHorario(): void;
+    consultarHorario(): Promise<void>;
     pegarHorarios(): import(".prisma/client").Prisma.PrismaPromise<(import(".prisma/client").refeicao_horarios & {
         refeicao: import(".prisma/client").refeicao;
     })[]>;
-    pegarRefeicaoAtual(): IRefeicaoAtual;
+    pegarRefeicaoAtual(): Promise<IRefeicaoAtual>;
 }

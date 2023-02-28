@@ -27,6 +27,9 @@ let AppGateway = class AppGateway {
         this.refeicaoAtual = 'aguardando';
         this.logger = new common_1.Logger('AppGateway');
     }
+    set refeicao(value) {
+        this.refeicaoAtual = value;
+    }
     mudarRefeicao(client, payload) {
         this.refeicaoAtual = payload.refeicao;
         this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual });

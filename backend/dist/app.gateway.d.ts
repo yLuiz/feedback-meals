@@ -5,6 +5,7 @@ export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, O
     constructor();
     private refeicaoAtual;
     server: Server;
+    set refeicao(value: RefeicaoOpcoes);
     private logger;
     mudarRefeicao(client: Socket, payload: {
         refeicao: RefeicaoOpcoes;

@@ -16,14 +16,24 @@ const prisma_service_1 = require("../../../prisma/prisma.service");
 const schedule_1 = require("@nestjs/schedule");
 const app_gateway_1 = require("../../../app.gateway");
 let RefeicaoHorarioService = RefeicaoHorarioService_1 = class RefeicaoHorarioService {
-    constructor(prisma, socket) {
+    constructor(prisma, appGateway) {
         this.prisma = prisma;
-        this.socket = socket;
+        this.appGateway = appGateway;
         this.logger = new common_1.Logger(RefeicaoHorarioService_1.name);
     }
-    consultarHorario() {
-        const refeicaoAtual = this.pegarRefeicaoAtual();
+    async consultarHorario() {
+        let refeicaoAtual = await this.pegarRefeicaoAtual();
         console.log(refeicaoAtual);
+        if (refeicaoAtual && refeicaoAtual.refe_refeicao === "almoco/janta") {
+            refeicaoAtual.refe_refeicao = "almoco";
+        }
+        if (!refeicaoAtual) {
+            this.appGateway.mudarRefeicao(null, { refeicao: 'aguardando' });
+            this.appGateway.refeicao = 'aguardando';
+            return;
+        }
+        this.appGateway.mudarRefeicao(null, { refeicao: refeicaoAtual.refe_refeicao });
+        this.appGateway.refeicao = refeicaoAtual.refe_refeicao;
     }
     pegarHorarios() {
         return this.prisma.refeicao_horarios.findMany({
@@ -32,8 +42,8 @@ let RefeicaoHorarioService = RefeicaoHorarioService_1 = class RefeicaoHorarioSer
             }
         });
     }
-    pegarRefeicaoAtual() {
-        const query = this.prisma.$queryRaw `
+    async pegarRefeicaoAtual() {
+        const query = await this.prisma.$queryRaw `
       SELECT *
       FROM refeicao_horarios as reho
       INNER JOIN refeicao ON refeicao.refe_id = reho.reho_refe_id
@@ -43,10 +53,10 @@ let RefeicaoHorarioService = RefeicaoHorarioService_1 = class RefeicaoHorarioSer
     }
 };
 __decorate([
-    (0, schedule_1.Cron)('*/5 * * * * *'),
+    (0, schedule_1.Cron)('*/10 * * * * *'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], RefeicaoHorarioService.prototype, "consultarHorario", null);
 RefeicaoHorarioService = RefeicaoHorarioService_1 = __decorate([
     (0, common_1.Injectable)(),

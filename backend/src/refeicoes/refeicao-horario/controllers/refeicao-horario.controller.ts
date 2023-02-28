@@ -4,7 +4,8 @@ import { IRefeicaoAtual, RefeicaoHorarioService } from '../services/refeicao-hor
 @Controller('refeicao-horario')
 export class RefeicaoHorarioController {
   constructor(
-    private refeicaoHorarioService: RefeicaoHorarioService
+    private refeicaoHorarioService: RefeicaoHorarioService,
+
   ) {}
 
   @Get()
@@ -14,6 +15,6 @@ export class RefeicaoHorarioController {
 
   @Get('atual')
   pegarRefeicaoAtual() {
-    return this.refeicaoHorarioService.pegarRefeicaoAtual() as IRefeicaoAtual;
+    return this.refeicaoHorarioService.pegarRefeicaoAtual() as Promise<IRefeicaoAtual>;
   }
 }

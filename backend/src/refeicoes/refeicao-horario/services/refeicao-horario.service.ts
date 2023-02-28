@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Cron } from '@nestjs/schedule';
 import { AppGateway } from 'src/app.gateway';
+import { RefeicaoOpcoes } from 'src/types/types';
 
 export interface IRefeicaoAtual {
   reho_id: number;
@@ -18,15 +19,28 @@ export class RefeicaoHorarioService {
 
   constructor(
     private prisma: PrismaService,
-    private socket: AppGateway
+    private appGateway: AppGateway
   ) {}
 
   private readonly logger = new Logger(RefeicaoHorarioService.name);
 
-  @Cron('*/5 * * * * *')
-  consultarHorario() {
-    const refeicaoAtual = this.pegarRefeicaoAtual();
-    console.log(refeicaoAtual)  
+  @Cron('*/10 * * * * *')
+  async consultarHorario() {
+    let refeicaoAtual = await this.pegarRefeicaoAtual();
+    console.log(refeicaoAtual);
+    if (refeicaoAtual && refeicaoAtual.refe_refeicao === "almoco/janta") {
+      refeicaoAtual.refe_refeicao = "almoco";
+    }
+
+    if (!refeicaoAtual) {
+      this.appGateway.mudarRefeicao(null, { refeicao: 'aguardando' })
+      this.appGateway.refeicao = 'aguardando';
+      return;
+    }
+
+    this.appGateway.mudarRefeicao(null, { refeicao: refeicaoAtual.refe_refeicao as RefeicaoOpcoes })
+    this.appGateway.refeicao = refeicaoAtual.refe_refeicao as RefeicaoOpcoes;
+
   }
 
   pegarHorarios() {
@@ -37,8 +51,8 @@ export class RefeicaoHorarioService {
     });
   }
 
-  pegarRefeicaoAtual() {
-      const query = this.prisma.$queryRaw`
+  async pegarRefeicaoAtual() {
+      const query = await this.prisma.$queryRaw`
       SELECT *
       FROM refeicao_horarios as reho
       INNER JOIN refeicao ON refeicao.refe_id = reho.reho_refe_id
