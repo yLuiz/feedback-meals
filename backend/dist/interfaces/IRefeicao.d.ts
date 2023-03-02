@@ -1,4 +1,4 @@
-export declare const mealsOption: {
+export declare const refeicaoOpcoes: {
     desjejum: string;
     almoco: string;
     lanche: string;

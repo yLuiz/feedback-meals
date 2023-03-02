@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refeicao = exports.mealsOption = void 0;
-exports.mealsOption = {
+exports.refeicao = exports.refeicaoOpcoes = void 0;
+exports.refeicaoOpcoes = {
     desjejum: "Desjejum",
     almoco: "Almoço / Janta",
     lanche: "Lanche",

@@ -22,27 +22,27 @@ let RefeicaoHorarioService = class RefeicaoHorarioService {
     constructor(prisma, appGateway) {
         this.prisma = prisma;
         this.appGateway = appGateway;
+        this.logger = new common_1.Logger();
     }
     async consultarHorario() {
         let refeicaoAtual = await this.pegarRefeicaoAtual();
-        console.log(refeicaoAtual);
-        if (refeicaoAtual && refeicaoAtual.refe_refeicao === "almoco/janta") {
-            refeicaoAtual.refe_refeicao = "almoco";
-        }
+        this.logger.debug(refeicaoAtual);
         if (!refeicaoAtual) {
             this.appGateway.emitMudarRefeicao('aguardando', 0);
             this.appGateway.refeicao = 'aguardando';
             return;
         }
-        this.appGateway.emitMudarRefeicao(refeicaoAtual.refe_refeicao, refeicaoAtual.reho_id);
-        this.appGateway.refeicao = refeicaoAtual.refe_refeicao;
         const refeicao = refeicaoAtual.refe_refeicao.split('/')[0];
+        refeicaoAtual.refe_refeicao = refeicao;
         this.appGateway.ultimaRefeicao = {
             horarioId: refeicaoAtual.reho_id,
             id: refeicaoAtual.refe_id,
-            nome: IRefeicao_1.mealsOption[refeicao]
+            nome: IRefeicao_1.refeicaoOpcoes[refeicao]
         };
+        this.appGateway.emitMudarRefeicao(refeicaoAtual.refe_refeicao, refeicaoAtual.reho_id);
+        this.appGateway.refeicao = refeicaoAtual.refe_refeicao;
     }
+    ;
     pegarHorarios() {
         return this.prisma.refeicao_horarios.findMany({
             include: {

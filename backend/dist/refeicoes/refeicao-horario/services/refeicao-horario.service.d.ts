@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AppGateway } from 'src/app.gateway';
 export interface IRefeicaoAtual {
@@ -12,6 +13,7 @@ export interface IRefeicaoAtual {
 export declare class RefeicaoHorarioService {
     private prisma;
     private appGateway;
+    logger: Logger;
     constructor(prisma: PrismaService, appGateway: AppGateway);
     consultarHorario(): Promise<void>;
     pegarHorarios(): import(".prisma/client").Prisma.PrismaPromise<(import(".prisma/client").refeicao_horarios & {

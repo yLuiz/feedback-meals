@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Cron } from '@nestjs/schedule';
 import { AppGateway } from 'src/app.gateway';
 import { RefeicaoOpcoes, RefeicaoTexto } from 'src/types/types';
-import { mealsOption } from 'src/interfaces/IRefeicao';
+import { refeicaoOpcoes } from 'src/interfaces/IRefeicao';
 
 export interface IRefeicaoAtual {
   reho_id: number;
@@ -18,6 +18,8 @@ export interface IRefeicaoAtual {
 @Injectable()
 export class RefeicaoHorarioService {
 
+  logger = new Logger();
+
   constructor(
     private prisma: PrismaService,
     @Inject(forwardRef(() => AppGateway))
@@ -26,30 +28,29 @@ export class RefeicaoHorarioService {
 
   @Cron('0 * * * * *')
   async consultarHorario() {
+
     let refeicaoAtual = await this.pegarRefeicaoAtual();
-    console.log(refeicaoAtual);
-    if (refeicaoAtual && refeicaoAtual.refe_refeicao === "almoco/janta") {
-      refeicaoAtual.refe_refeicao = "almoco";
-    }
+
+    this.logger.debug(refeicaoAtual);
 
     if (!refeicaoAtual) {
       this.appGateway.emitMudarRefeicao('aguardando' , 0);
       this.appGateway.refeicao = 'aguardando';
       return;
     }
-
-    this.appGateway.emitMudarRefeicao(refeicaoAtual.refe_refeicao as RefeicaoOpcoes, refeicaoAtual.reho_id);
-    this.appGateway.refeicao = refeicaoAtual.refe_refeicao as RefeicaoOpcoes;
-
+    
     const refeicao = refeicaoAtual.refe_refeicao.split('/')[0];
-
-
+    refeicaoAtual.refe_refeicao = refeicao;
+    
     this.appGateway.ultimaRefeicao = {
       horarioId: refeicaoAtual.reho_id,
       id: refeicaoAtual.refe_id,
-      nome: mealsOption[refeicao] as RefeicaoTexto
-    }
-  }
+      nome: refeicaoOpcoes[refeicao] as RefeicaoTexto
+    };
+
+    this.appGateway.emitMudarRefeicao(refeicaoAtual.refe_refeicao as RefeicaoOpcoes, refeicaoAtual.reho_id);
+    this.appGateway.refeicao = refeicaoAtual.refe_refeicao as RefeicaoOpcoes;
+  };
 
   pegarHorarios() {
     return this.prisma.refeicao_horarios.findMany({

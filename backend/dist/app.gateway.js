@@ -18,7 +18,8 @@ const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 const IRefeicao_1 = require("./interfaces/IRefeicao");
 const refeicao_horario_service_1 = require("./refeicoes/refeicao-horario/services/refeicao-horario.service");
-const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
+const refeicao_service_1 = require("./refeicoes/refeicao/services/refeicao.service");
+const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
 const options = {
     cors: {
         origin: corsOrigins,
@@ -28,13 +29,14 @@ const options = {
     }
 };
 let AppGateway = class AppGateway {
-    constructor(refeicaoHorarioService) {
+    constructor(refeicaoHorarioService, refeicaoService) {
         this.refeicaoHorarioService = refeicaoHorarioService;
+        this.refeicaoService = refeicaoService;
         this.refeicaoAtual = 'aguardando';
         this.ultimaRefeicaoVariavel = {
             horarioId: 1,
             id: 1,
-            nome: IRefeicao_1.mealsOption['desjejum']
+            nome: IRefeicao_1.refeicaoOpcoes['desjejum']
         };
         this.logger = new common_1.Logger('AppGateway');
     }
@@ -56,13 +58,13 @@ let AppGateway = class AppGateway {
             this.ultimaRefeicao = {
                 horarioId: payload.horarioId,
                 id: IRefeicao_1.refeicao[payload.refeicao],
-                nome: IRefeicao_1.mealsOption[payload.refeicao]
+                nome: IRefeicao_1.refeicaoOpcoes[payload.refeicao]
             };
         }
-        this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual, horarioId: payload.horarioId });
+        this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual, horarioId: payload.horarioId, ultimaRefeicao: this.ultimaRefeicao });
     }
     emitMudarRefeicao(refeicao, horarioId) {
-        this.server.emit('pegarRefeicao', { refeicao, horarioId });
+        this.server.emit('pegarRefeicao', { refeicao, horarioId, ultimaRefeicao: this.ultimaRefeicao });
     }
     atualizarValorGrafico(refe_id, reav_id) {
         this.server.emit('atualizarValorGrafico', {
@@ -73,14 +75,7 @@ let AppGateway = class AppGateway {
     afterInit(server) {
         this.logger.log("Init");
     }
-    subUltimaRefeicao(client, payload) {
-        return this.ultimaRefeicao;
-    }
-    emitPegarRefeicao() {
-        this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual });
-    }
     handleConnection(client, ...args) {
-        this.emitPegarRefeicao();
         this.refeicaoHorarioService.consultarHorario();
         this.logger.log("Connected " + client.id);
     }
@@ -98,16 +93,11 @@ __decorate([
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", void 0)
 ], AppGateway.prototype, "mudarRefeicao", null);
-__decorate([
-    (0, websockets_1.SubscribeMessage)('ultimaRefeicao'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
-    __metadata("design:returntype", void 0)
-], AppGateway.prototype, "subUltimaRefeicao", null);
 AppGateway = __decorate([
     (0, websockets_1.WebSocketGateway)(options),
     __param(0, (0, common_1.Inject)((0, common_1.forwardRef)(() => refeicao_horario_service_1.RefeicaoHorarioService))),
-    __metadata("design:paramtypes", [refeicao_horario_service_1.RefeicaoHorarioService])
+    __metadata("design:paramtypes", [refeicao_horario_service_1.RefeicaoHorarioService,
+        refeicao_service_1.RefeicaoService])
 ], AppGateway);
 exports.AppGateway = AppGateway;
 //# sourceMappingURL=app.gateway.js.map
