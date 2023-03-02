@@ -126,7 +126,12 @@ section {
   opacity: 0.02;
   font-size: 2em;
   position: absolute;
-  right: -30px;
+  top: 110px;
+  right: 130px;
+
+  img {
+    width: 40px;
+  }
 }
 
 .loader-row {

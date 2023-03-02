@@ -92,6 +92,8 @@ export class GraficoComponent implements OnInit {
 
     this.socket.on("pegarRefeicao", (payload: IPegarRefeicaoEvent) => {
 
+      console.log(this.store.ultimaRefeicao);
+
       if (payload.refeicao !== 'aguardando') {
         this.store.ultimaRefeicao = payload.ultimaRefeicao;
         this.setDadosGrafico(refeicaoOpcao[payload.refeicao], this.refeicao[payload.refeicao]);

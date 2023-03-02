@@ -5,11 +5,11 @@
   </div>
 </div>
 <section id="section-feedback">
+  <span class="span-gear" (click)="goToMenu()">
+    <img src="./assets/icons/gear-fill.svg">
+  </span>
   <div class="title">
     <h1>{{ title }}</h1>
-    <span class="span-gear" (click)="goToMenu()">
-      <i class="bi bi-gear-fill"></i>
-    </span>
   </div>
   <div id="feedback-buttons" class="feedback-buttons">
     <button (click)="submitFeedback('otimo')" 
