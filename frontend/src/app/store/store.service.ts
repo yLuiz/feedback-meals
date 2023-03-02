@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
+import { IRefeicao, refeicaoOpcao } from '../interfaces/IRefeicao';
 import { IRefeicaoHorario } from '../interfaces/IRefeicaoHorario';
 import { RefeicaoTexto } from '../types/types';
-import { mealsOption } from '../interfaces/IRefeicao';
-import { refeicao } from '../references/refeicao';
 
 export interface IRefeicaoStore {
   nome: RefeicaoTexto;
   id: number;
   horarioId: number;
 }
+
+const refeicao = { aguardando: 0 }
 
 interface IStore {
   ultimaRefeicao: IRefeicaoStore,
@@ -31,30 +32,27 @@ interface IStore {
 })
 export class StoreService {
   
-  private refeicoes: any[];
+  private refeicoes: IRefeicao[];
 
   constructor() {
-
     this.refeicoes = [];
-
   }
-
 
   private globalVariables: IStore = {
     ultimaRefeicao: {
       horarioId: 1,
       id: 1,
-      nome: mealsOption['desjejum'] as RefeicaoTexto
+      nome: refeicaoOpcao['desjejum'] as RefeicaoTexto
     },
     avaliacaoHabilitada: false,
     refeicao: {
-      nome: mealsOption['aguardando'] as RefeicaoTexto,
+      nome: refeicaoOpcao['aguardando'] as RefeicaoTexto,
       id: refeicao['aguardando'],
       horarioId: 0
     },
     feedback: {
       refeicao: {
-        nome: mealsOption['aguardando'] as RefeicaoTexto,
+        nome: refeicaoOpcao['aguardando'] as RefeicaoTexto,
         id: refeicao['aguardando'],
         horarioId: 0
       },
@@ -67,6 +65,14 @@ export class StoreService {
     },
     horarios: []
   };
+
+  get ultimaRefeicao() {
+    return this.globalVariables.ultimaRefeicao;
+  }
+
+  set ultimaRefeicao(value: IRefeicaoStore) {
+    this.globalVariables.ultimaRefeicao = value;
+  }
 
   get avaliacaoHabilitada() {
     return this.globalVariables.avaliacaoHabilitada;
@@ -110,7 +116,7 @@ export class StoreService {
   public feedbackClear() {
     this.globalVariables.feedback = {
       refeicao: {
-        nome: mealsOption['aguardando'] as RefeicaoTexto,
+        nome: refeicaoOpcao['aguardando'] as RefeicaoTexto,
         id: refeicao['aguardando'],
         horarioId: 0
       },
@@ -122,6 +128,4 @@ export class StoreService {
       }
     }
   }
-
-
 }

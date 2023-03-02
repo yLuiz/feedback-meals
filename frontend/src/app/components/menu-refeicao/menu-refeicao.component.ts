@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 import api from 'src/api/api';
-import { mealsOption } from 'src/app/interfaces/IRefeicao';
-import { refeicao } from 'src/app/references/refeicao';
+import { refeicaoOpcao } from 'src/app/interfaces/IRefeicao';
+import { RefeicaoService } from 'src/app/references/refeicao.service';
+// import { refeicao } from 'src/app/references/refeicao';
 import { StoreService } from 'src/app/store/store.service';
-import { RefeicaoOpcoes, RefeicaoTexto } from 'src/app/types/types';
+import { RefeicaoOpcoes, RefeicaoTexto, RefeicaoType } from 'src/app/types/types';
 import { MenuRefeicaoService } from './menu-refeicao.service';
 
 @Component({
@@ -19,8 +20,11 @@ export class MenuRefeicaoComponent implements OnInit {
     private router: Router,
     private store: StoreService,
     private menuRefeicaoService: MenuRefeicaoService,
+    private refeicaoService: RefeicaoService,
     private socket: Socket
   ) { }
+
+  refeicao!: RefeicaoType;
 
   goToGraphic() {
     this.router.navigate(['/grafico']);
@@ -32,11 +36,11 @@ export class MenuRefeicaoComponent implements OnInit {
 
   setMeal(option: RefeicaoOpcoes) {
     this.store.feedbackClear();
-    this.socket.emit('mudarRefeicao', { refeicao: option });
+    // this.socket.emit('mudarRefeicao', { refeicao: option });
 
     const refeicaoPropriedades = {
-      nome: mealsOption[option] as RefeicaoTexto,
-      id: refeicao[option],
+      nome: refeicaoOpcao[option] as RefeicaoTexto,
+      id: this.refeicao[option],
       horarioId: 0
     }
 

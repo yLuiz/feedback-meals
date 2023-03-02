@@ -3,12 +3,14 @@ import { Router } from '@angular/router';
 import { StoreService } from 'src/app/store/store.service';
 import { MessageService } from '../message/message.service';
 import { FeedbackRefeicaoService } from './feedback-refeicao.service';
-import { refeicao, refeicao_avaliacao } from '../../references/refeicao';
+import { refeicao_avaliacao } from '../../references/refeicao';
 import { MotivoAvaliacaoService } from '../motivo-avaliacao/motivo-avaliacao.service';
-import { AvaliacaoOpcoes, RefeicaoOpcoes, RefeicaoTexto } from 'src/app/types/types';
-import { mealsOption } from 'src/app/interfaces/IRefeicao';
+import { AvaliacaoOpcoes, RefeicaoOpcoes, RefeicaoTexto, RefeicaoType } from 'src/app/types/types';
+import { refeicaoOpcao } from 'src/app/interfaces/IRefeicao';
 import { Socket } from 'ngx-socket-io';
 import { IRefeicaoHorario } from 'src/app/interfaces/IRefeicaoHorario';
+import { RefeicaoService } from 'src/app/references/refeicao.service';
+import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
 
 
 @Component({
@@ -23,13 +25,15 @@ export class FeedbackRefeicaoComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private feedbackRefeicaoService: FeedbackRefeicaoService,
-    public motivoAvaliacaoService: MotivoAvaliacaoService
+    public motivoAvaliacaoService: MotivoAvaliacaoService,
+    private refeicaoService: RefeicaoService
   ) { }
 
   horarios: IRefeicaoHorario[] = [];
   title!: string;
   loadingMotivos: boolean = false;
   avaliacaoHabilitada: boolean = false;
+  refeicao!: RefeicaoType;
 
   async submitFeedback(feedbackKey: AvaliacaoOpcoes) {
 
@@ -54,7 +58,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
     this.feedbackRefeicaoService.submitFeedback({ 
       rere_reav_id: refeicao_avaliacao[feedbackKey],
       rere_refe_id: this.store.feedback.refeicao.id,
-      rere_reho_id: 2
+      rere_reho_id: this.store.refeicao.horarioId
     }).then(response => {
       if(feedbackKey !== "otimo") {
         this.motivoAvaliacaoService.mostrar(response.data.rere_id);
@@ -75,7 +79,9 @@ export class FeedbackRefeicaoComponent implements OnInit {
     this.router.navigate(['grafico']);
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+
+    this.refeicao = await this.refeicaoService.consultarRefeicoes();
 
     this.title = this.store.refeicao.nome
     if (!this.store.refeicao.id) {
@@ -86,14 +92,12 @@ export class FeedbackRefeicaoComponent implements OnInit {
       }
     }
 
-    this.socket.on('pegarRefeicao', (response: { refeicao: RefeicaoOpcoes, horarioId: number }) => {
+    this.socket.on('pegarRefeicao', (response: IPegarRefeicaoEvent) => {
       const refeicaoPropriedades = {
-        nome: mealsOption[response.refeicao] as RefeicaoTexto,
-        id: refeicao[response.refeicao],
+        nome: refeicaoOpcao[response.refeicao] as RefeicaoTexto,
+        id: this.refeicao[response.refeicao],
         horarioId: response.horarioId,
       }
-
-      if (response.refeicao !== 'aguardando') this.store.avaliacaoHabilitada = true;
 
       if (response.refeicao === 'aguardando') {
         const container = document.getElementById('feedback-buttons');
@@ -102,6 +106,9 @@ export class FeedbackRefeicaoComponent implements OnInit {
           document.getElementById('section-feedback')!.style.justifyContent = 'center';
         }
       } else {
+
+        this.store.avaliacaoHabilitada = true;
+
         const container = document.getElementById('feedback-buttons');
         if (container) {
           container.style.display = 'flex';
@@ -112,7 +119,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
       this.store.refeicao = refeicaoPropriedades;
       this.store.feedback.refeicao = refeicaoPropriedades;
 
-      this.title = mealsOption[response.refeicao];
+      this.title = refeicaoOpcao[response.refeicao];
     });
   }
 

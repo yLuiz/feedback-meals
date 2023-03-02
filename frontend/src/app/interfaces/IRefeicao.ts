@@ -1,4 +1,4 @@
-export const mealsOption = {
+export const refeicaoOpcao = {
   desjejum: "Desjejum",
   almoco: "Almoço / Janta",
   lanche: "Lanche",

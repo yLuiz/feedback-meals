@@ -67,7 +67,7 @@ export class MotivoAvaliacaoComponent implements OnInit {
     })
     this.motivoAvaliacaoService.cadastrarMotivoAvaliacao({ motivos: motivosCadastro })
       .then(() => {
-        const time = 500;
+        const time = 50;
         
         this.motivosSelecionados = [];
 
@@ -80,7 +80,7 @@ export class MotivoAvaliacaoComponent implements OnInit {
           setTimeout(() => {
             this.motivosEnviados = false;
             this.podeEnviarMotivos = true;
-          }, time);
+          }, 500);
         }, time);
       });
   }

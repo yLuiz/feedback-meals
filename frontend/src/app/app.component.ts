@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import api from 'src/api/api';
-import { mealsOption } from './interfaces/IRefeicao';
+import { refeicaoOpcao } from './interfaces/IRefeicao';
 import { IRefeicaoHorario } from './interfaces/IRefeicaoHorario';
-import { refeicao } from './references/refeicao';
+import { IPegarRefeicaoEvent } from './interfaces/Socket.interfaces';
+import { RefeicaoService } from './references/refeicao.service';
 import { StoreService } from './store/store.service';
-import { RefeicaoOpcoes, RefeicaoTexto } from './types/types';
+import { RefeicaoOpcoes, RefeicaoTexto, RefeicaoType } from './types/types';
 
 @Component({
   selector: 'app-root',
@@ -14,13 +15,17 @@ import { RefeicaoOpcoes, RefeicaoTexto } from './types/types';
 export class AppComponent implements OnInit {
 
   title = 'feedback-meals';
+  refeicao!: RefeicaoType;
 
   constructor(
     private socket: Socket,
-    private store: StoreService
+    private store: StoreService,
+    private refeicaoService: RefeicaoService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+
+    this.refeicao = await this.refeicaoService.consultarRefeicoes();
 
     api.get<IRefeicaoHorario[]>('refeicao-horario')
       .then(response => {
@@ -34,21 +39,24 @@ export class AppComponent implements OnInit {
         });
       })
 
-    this.socket.on('pegarRefeicao', (response: { refeicao: RefeicaoOpcoes, horarioId: number }) => {
+    this.socket.on('pegarRefeicao', (payload: IPegarRefeicaoEvent) => {
+
+      if (payload.refeicao !== 'aguardando') this.store.avaliacaoHabilitada = true;
+
       this.store.refeicao = {
-        id: refeicao[response.refeicao],
-        nome: mealsOption[response.refeicao] as RefeicaoTexto,
-        horarioId: response.horarioId
+        id: this.refeicao[payload.refeicao],
+        nome: refeicaoOpcao[payload.refeicao] as RefeicaoTexto,
+        horarioId: payload.horarioId
       }
 
-      if (response.refeicao !== 'aguardando') this.store.avaliacaoHabilitada = true;
+      this.store.ultimaRefeicao = payload.ultimaRefeicao;
 
       this.store.feedback = {
         ...this.store.feedback,
         refeicao: {
-          id: refeicao[response.refeicao],
-          nome: mealsOption[response.refeicao] as RefeicaoTexto,
-          horarioId: response.horarioId
+          id: this.refeicao[payload.refeicao],
+          nome: refeicaoOpcao[payload.refeicao] as RefeicaoTexto,
+          horarioId: payload.horarioId
         }
       }
     })

@@ -1,4 +1,7 @@
 <div *ngIf="motivoAvaliacaoService.visibility" class={{motivoAvaliacaoService.classe}}>
+  <div>
+    <h1>O que podemos melhorar?</h1>
+  </div>
   <ul>
     <li class="motivo-item" *ngFor="let avaliacao_motivo of avaliacaoMotivos">
       <span id="motivo_{{avaliacao_motivo.ream_id}}" (click)="selecionarMotivo(avaliacao_motivo)" >{{ avaliacao_motivo.ream_motivo }}</span>

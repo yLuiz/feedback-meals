@@ -8,6 +8,7 @@
   border: 2px solid var(--bg-blue);
 
   width: 60%;
+  padding-bottom: 20px;
 
   top: 5%;
   right: 50%;
@@ -27,6 +28,18 @@
     height: 100%;
 
     top: 0;
+  }
+
+  > div {
+
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+
+    h1 {
+      font-size: 1.4rem;
+      color: #FFF;
+    }
   }
 
   ul {
