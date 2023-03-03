@@ -86,7 +86,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     });
   }
 
-  
+  // async emitPegarRefeicao() {
+
+  //   const horario = await this.refeicaoHorarioService.pegarRefeicaoAtual();
+
+  //   this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual, horarioId: horario?.reho_id || 0, ultimaRefeicao: this.ultimaRefeicao });
+  // }
 
   afterInit(server: Server) {
     this.logger.log("Init");
@@ -94,7 +99,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
   handleConnection(client: any, ...args: any[]) {
 
-    
+    // this.emitPegarRefeicao();
     this.refeicaoHorarioService.consultarHorario();
 
     this.logger.log("Connected " + client.id);

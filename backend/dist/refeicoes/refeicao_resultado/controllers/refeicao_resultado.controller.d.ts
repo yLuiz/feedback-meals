@@ -15,5 +15,6 @@ export declare class RefeicaoResultadoController {
         reho_id: number;
     }): Promise<{
         rere_id: number;
+        rere_data_registro: Date;
     }>;
 }

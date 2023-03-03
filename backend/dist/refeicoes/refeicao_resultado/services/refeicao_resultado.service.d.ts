@@ -7,6 +7,7 @@ export declare class RefeicaoResultadoService {
     pegarTodas(): Promise<import(".prisma/client").refeicao_resultado[]>;
     cadastrarAvaliacao(refe_id: number, reav_id: number, reho_id: number): Promise<{
         rere_id: number;
+        rere_data_registro: Date;
     }>;
     pegarAvaliacoesPorRefeicao(refe_id: number): Promise<import(".prisma/client").refeicao_resultado[]>;
     pegarDetalhesRefeicaoResultado(): Promise<{

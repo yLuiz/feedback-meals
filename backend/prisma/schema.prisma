@@ -49,7 +49,7 @@ model refeicao_resultado {
   rere_id                   Int                             @id @default(autoincrement())
   rere_refe_id              Int
   rere_reav_id              Int
-  rere_data_registro        DateTime?                       @db.DateTime(0)
+  rere_data_registro        DateTime?                       @default(now()) @db.DateTime()
   rere_status               refeicao_resultado_rere_status? @default(dbgenerated("1"))
   rere_reho_id              Int?
   refeicao                  refeicao                        @relation(fields: [rere_refe_id], references: [refe_id], onDelete: NoAction, map: "fk_refeicao_resultado_refeicao")

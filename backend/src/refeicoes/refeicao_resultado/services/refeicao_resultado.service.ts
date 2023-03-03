@@ -24,12 +24,13 @@ export class RefeicaoResultadoService {
         rere_refe_id: refe_id,
         rere_reav_id: reav_id,
         rere_reho_id: reho_id,
-        rere_data_registro: new Date()
+        // rere_data_registro: new Date()
       }
     });
     this.AppGateway.atualizarValorGrafico(refe_id, reav_id);
+    console.log(refeicao_resultado)
 
-    return { rere_id: refeicao_resultado.rere_id };
+    return { rere_id: refeicao_resultado.rere_id, rere_data_registro: refeicao_resultado.rere_data_registro };
   }
 
   async pegarAvaliacoesPorRefeicao(refe_id: number) {
