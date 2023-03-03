@@ -2,6 +2,9 @@ section {
   display: flex;
   width: 100%;
   height: 100vh;
+  gap: 50px;
+
+  flex-direction: column;
 
   align-items: center;
   justify-content: center;
@@ -30,6 +33,17 @@ section {
       height: 100%;
       padding: 30px;
     }
+  }
+
+  .avaliacao-container {
+    display: flex;
+    gap: 40px;
+  }
+
+  .grafico-avaliacao {
+    width: 700px;
+    height: 300px;
+    margin: 10px;
   }
 
   .absolute {

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 import api from 'src/api/api';
 import { refeicaoOpcao } from 'src/app/interfaces/IRefeicao';
+import { IAvaliacaoMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
 import { ITipoAvaliacao } from 'src/app/interfaces/ITipoAvaliacao';
 import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
 import { RefeicaoService } from 'src/app/references/refeicao.service';
@@ -32,7 +33,9 @@ export class GraficoComponent implements OnInit {
   refeicao!: RefeicaoType;
 
   dataSource!: any;
+  dataSourceAv!: any;
   chartData: Array<{ label: string, value: number}> = [];
+  chartDataAv: Array<{ label: string, value: number}> = [];
 
   goToFeedback() {
     this.router.navigate(['/feedback'])
@@ -63,6 +66,22 @@ export class GraficoComponent implements OnInit {
       },
       data: this.chartData,
     };
+
+    this.dataSourceAv = {
+      chart: {
+        caption: `Melhoras`,
+        showValues: true,
+        subCaption: '',
+        xAxisName: '',
+        yAxisName: '',
+        numberSuffix: '',
+        labeldisplay: 'Slant',
+        
+        palettecolors: `${this.avalicaoColor.otimo}, ${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
+        theme: 'fusion',
+      },
+      data: this.chartData,
+    };
   }
 
   setDadosGrafico(captionChart: string, refe_id: number): void {
@@ -72,13 +91,12 @@ export class GraficoComponent implements OnInit {
       this.chartData.forEach(data => data.value = 0);
       response.data.map(avaliacao => {
         this.incrementarValoresGrafico(avaliacao.rere_reav_id);
-        this.dataSource.data = this.chartData;
       });
+      this.dataSource.data = this.chartData;
     });
   }
 
   async ngOnInit(): Promise<void> {
-
     this.refeicao = await this.refeicaoService.consultarRefeicoes();
 
     const tipos = await api.get<ITipoAvaliacao[]>('refeicao-avaliacao');
@@ -88,9 +106,26 @@ export class GraficoComponent implements OnInit {
         value: 0
       }
     });
-    this.dataSource.data = this.chartData;
+    
+    const motivos = await api.get<IAvaliacaoMotivo[]>('refeicao-avaliacao-motivo');
+    this.chartDataAv = motivos.data.map(motivo => {
 
+      if (motivo.ream_motivo === 'Sem refeição') {
+        return {
+          label: motivo.ream_motivo,
+          value: 0
+        }
+      }
+
+      return {
+        label: motivo.ream_motivo.split(' ')[0].split('(')[0],
+        value: 0
+      }
+    });
+    
     this.socket.on("pegarRefeicao", (payload: IPegarRefeicaoEvent) => {
+
+      console.log(this.store.ultimaRefeicao);
 
       if (payload.refeicao !== 'aguardando') {
         this.store.ultimaRefeicao = payload.ultimaRefeicao;
@@ -112,5 +147,9 @@ export class GraficoComponent implements OnInit {
           })
         });
     });
+
+    this.dataSourceAv.data = this.chartDataAv;
   }
+
+  
 }

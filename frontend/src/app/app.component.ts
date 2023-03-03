@@ -6,7 +6,7 @@ import { IRefeicaoHorario } from './interfaces/IRefeicaoHorario';
 import { IPegarRefeicaoEvent } from './interfaces/Socket.interfaces';
 import { RefeicaoService } from './references/refeicao.service';
 import { StoreService } from './store/store.service';
-import { RefeicaoOpcoes, RefeicaoTexto, RefeicaoType } from './types/types';
+import { RefeicaoTexto, RefeicaoType } from './types/types';
 
 @Component({
   selector: 'app-root',
