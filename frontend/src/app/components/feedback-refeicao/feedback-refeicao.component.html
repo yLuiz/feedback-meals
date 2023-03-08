@@ -1,10 +1,12 @@
 <app-motivo-avaliacao></app-motivo-avaliacao>
-<div *ngIf="loadingMotivos" class="background-disable">
+<app-error-dialog></app-error-dialog>
+
+<div *ngIf="(!errorDialogService.visivel && !refeicao) || loadingMotivos" class="background-disable">
   <div class="loader-row">
     <span class="loading"></span>
   </div>
 </div>
-<section id="section-feedback">
+<section *ngIf="!errorDialogService.visivel" id="section-feedback">
   <span class="span-gear" (click)="goToMenu()">
     <img src="./assets/icons/gear-fill.svg">
   </span>

@@ -8,6 +8,10 @@ export declare class RefeicaoResultadoController {
         avaliacao: string;
         motivo: import(".prisma/client").refeicao_avaliacao_motivo[];
     }[]>;
+    pegarAvaliacaoPorDataEHora(query: {
+        data: Date;
+        horario_id: number;
+    }): Promise<unknown>;
     pegarTodasAvaliacoesPorRefeicao(refe_id: number): Promise<import(".prisma/client").refeicao_resultado[]>;
     cadastrarRefeicaoResultado(body: {
         refe_id: number;

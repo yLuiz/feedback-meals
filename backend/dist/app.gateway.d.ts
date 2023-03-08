@@ -1,7 +1,7 @@
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RefeicaoHorarioService } from './refeicoes/refeicao-horario/services/refeicao-horario.service';
-import { RefeicaoService } from './refeicoes/refeicao/services/refeicao.service';
+import { RefeicaoResultadoService } from './refeicoes/refeicao_resultado/services/refeicao_resultado.service';
 import { RefeicaoOpcoes, RefeicaoTexto } from './types/types';
 interface IRefeicaoStore {
     nome: RefeicaoTexto;
@@ -10,8 +10,8 @@ interface IRefeicaoStore {
 }
 export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     private refeicaoHorarioService;
-    private refeicaoService;
-    constructor(refeicaoHorarioService: RefeicaoHorarioService, refeicaoService: RefeicaoService);
+    private refeicaoResultadoService;
+    constructor(refeicaoHorarioService: RefeicaoHorarioService, refeicaoResultadoService: RefeicaoResultadoService);
     private refeicaoAtual;
     private ultimaRefeicaoVariavel;
     server: Server;
@@ -24,8 +24,10 @@ export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, O
         refeicao: RefeicaoOpcoes;
         horarioId: number;
     }): void;
+    emitirRefeicao(client: Socket, payload: {}): void;
     emitMudarRefeicao(refeicao: RefeicaoOpcoes, horarioId: number): void;
     atualizarValorGrafico(refe_id: number, reav_id: number): void;
+    atualizarValorGraficoMotivos(): Promise<void>;
     afterInit(server: Server): void;
     handleConnection(client: any, ...args: any[]): void;
     handleDisconnect(client: any): void;

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { RefeicaoResultadoService } from '../services/refeicao_resultado.service';
 
 @Controller('refeicao-resultado')
@@ -16,6 +16,12 @@ export class RefeicaoResultadoController {
   @Get('detalhes')
   pegarDetalhesRefeicaoResultado() {
     return this.refeicaoResultadoService.pegarDetalhesRefeicaoResultado();
+  }
+
+  @Get('motivos')
+  pegarAvaliacaoPorDataEHora(@Query() query: { data: Date, horario_id: number }) {
+    const { data, horario_id: horarioId } = query;
+    return this.refeicaoResultadoService.pegarAvaliacaoPorDataEHora(data, horarioId);
   }
 
   @Get(':refe_id')

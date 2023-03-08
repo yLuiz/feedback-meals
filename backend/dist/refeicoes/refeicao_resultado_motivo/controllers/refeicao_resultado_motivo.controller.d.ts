@@ -6,5 +6,7 @@ export declare class RefeicaoResultadoMotivoController {
     pegarMotivosAvaliacao(): import(".prisma/client").Prisma.PrismaPromise<import(".prisma/client").refeicao_resultado_motivo[]>;
     cadastrarMotivoAvaliacao(body: {
         motivos: ICadastroMotivo[];
-    }): Promise<import(".prisma/client").Prisma.BatchPayload>;
+    }): Promise<{
+        message: string;
+    }>;
 }

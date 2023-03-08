@@ -11,6 +11,7 @@ import { Socket } from 'ngx-socket-io';
 import { IRefeicaoHorario } from 'src/app/interfaces/IRefeicaoHorario';
 import { RefeicaoService } from 'src/app/references/refeicao.service';
 import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
+import { ErrorDialogService } from '../error-dialog/error-dialog.service';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class FeedbackRefeicaoComponent implements OnInit {
     private messageService: MessageService,
     private feedbackRefeicaoService: FeedbackRefeicaoService,
     public motivoAvaliacaoService: MotivoAvaliacaoService,
-    private refeicaoService: RefeicaoService
+    private refeicaoService: RefeicaoService,
+    public errorDialogService: ErrorDialogService
   ) { }
 
   horarios: IRefeicaoHorario[] = [];
@@ -40,7 +42,9 @@ export class FeedbackRefeicaoComponent implements OnInit {
     if (this.store.refeicao.id === 0) return;
     if (this.motivoAvaliacaoService.visibility) return;
 
-    if (feedbackKey !== 'otimo') this.loadingMotivos = true;
+    // if (feedbackKey !== 'otimo') this.loadingMotivos = true;
+
+    this.loadingMotivos = true;
 
     this.messageService.show();
     setTimeout(() => {
@@ -60,19 +64,20 @@ export class FeedbackRefeicaoComponent implements OnInit {
       rere_refe_id: this.store.feedback.refeicao.id,
       rere_reho_id: this.store.refeicao.horarioId
     }).then(response => {
-      if(feedbackKey !== "otimo") {
-        this.motivoAvaliacaoService.mostrar(response.data.rere_id);
         this.loadingMotivos = false;
+        if(feedbackKey !== "otimo") {
+          this.motivoAvaliacaoService.mostrar(response.data.rere_id);
+          
 
-        setTimeout(() => {
-          if (!this.motivoAvaliacaoService.motivosEnviados) {
-            this.motivoAvaliacaoService.esconder(1000);
-          }
+          setTimeout(() => {
+            if (!this.motivoAvaliacaoService.motivosEnviados) {
+              this.motivoAvaliacaoService.esconder(1000);
+            }
 
-          this.motivoAvaliacaoService.motivosEnviados = false;
-        }, 12000);
-      }
-    });
+            this.motivoAvaliacaoService.motivosEnviados = false;
+          }, 12000);
+        }
+      });
   }
 
   goToMenu() {
@@ -81,6 +86,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
+    // this.refeicao = { desjejum: 1, almoco: 2, lanche: 3 };
     this.refeicao = await this.refeicaoService.consultarRefeicoes();
 
     this.title = this.store.refeicao.nome

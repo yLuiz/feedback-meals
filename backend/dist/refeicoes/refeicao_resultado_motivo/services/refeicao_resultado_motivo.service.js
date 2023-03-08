@@ -11,16 +11,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RefeicaoResultadoMotivoService = void 0;
 const common_1 = require("@nestjs/common");
+const app_gateway_1 = require("../../../app.gateway");
 const prisma_service_1 = require("../../../prisma/prisma.service");
 let RefeicaoResultadoMotivoService = class RefeicaoResultadoMotivoService {
-    constructor(prisma) {
+    constructor(prisma, appGateway) {
         this.prisma = prisma;
+        this.appGateway = appGateway;
     }
     async cadastrarMotivoAvaliacao(motivos) {
-        const motivosRegistrados = await this.prisma.refeicao_resultado_motivo.createMany({
+        await this.prisma.refeicao_resultado_motivo.createMany({
             data: [...motivos]
         });
-        return motivosRegistrados;
+        this.appGateway.atualizarValorGraficoMotivos();
+        return {
+            message: "Motivos registrados."
+        };
     }
     pegarMotivos() {
         return this.prisma.refeicao_resultado_motivo.findMany();
@@ -28,7 +33,8 @@ let RefeicaoResultadoMotivoService = class RefeicaoResultadoMotivoService {
 };
 RefeicaoResultadoMotivoService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        app_gateway_1.AppGateway])
 ], RefeicaoResultadoMotivoService);
 exports.RefeicaoResultadoMotivoService = RefeicaoResultadoMotivoService;
 //# sourceMappingURL=refeicao_resultado_motivo.service.js.map

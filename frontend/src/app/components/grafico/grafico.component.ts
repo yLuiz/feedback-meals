@@ -1,14 +1,17 @@
-import { AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 import api from 'src/api/api';
+import { IDadosFusionChartScrollColumn2D } from 'src/app/interfaces/IFusionChart';
 import { refeicaoOpcao } from 'src/app/interfaces/IRefeicao';
 import { IAvaliacaoMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
+import { IMotivos } from 'src/app/interfaces/IRefeicaoResultado';
 import { ITipoAvaliacao } from 'src/app/interfaces/ITipoAvaliacao';
 import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
 import { RefeicaoService } from 'src/app/references/refeicao.service';
-import { IRefeicaoStore, StoreService } from 'src/app/store/store.service';
-import { RefeicaoOpcoes, RefeicaoTexto, RefeicaoType } from 'src/app/types/types';
+import { StoreService } from 'src/app/store/store.service';
+import { RefeicaoType } from 'src/app/types/types';
+import { ErrorDialogService } from '../error-dialog/error-dialog.service';
 import { GraficoService } from './grafico.service';
 
 interface SocketResponse {
@@ -31,11 +34,15 @@ export class GraficoComponent implements OnInit {
 
   avaliacoes: any;
   refeicao!: RefeicaoType;
-
-  dataSource!: any;
-  dataSourceAv!: any;
+  
+  dataSource!: IDadosFusionChartScrollColumn2D;
+  dataSourceMotivos!: IDadosFusionChartScrollColumn2D;
   chartData: Array<{ label: string, value: number}> = [];
   chartDataAv: Array<{ label: string, value: number}> = [];
+  
+  carregandoGraficos: boolean = true;
+  conexaoFeita: boolean = false;
+  // motivosResultado!: AxiosResponse<IMotivos[], any>;
 
   goToFeedback() {
     this.router.navigate(['/feedback'])
@@ -48,9 +55,11 @@ export class GraficoComponent implements OnInit {
   constructor(
     private router: Router,
     private socket: Socket,
-    public store: StoreService,
     private graficoService: GraficoService,
-    private refeicaoService: RefeicaoService
+    private refeicaoService: RefeicaoService,
+    public store: StoreService,
+    public errorDialogService: ErrorDialogService
+
   ) {
     // Chart Configuration
     this.dataSource = {
@@ -63,25 +72,30 @@ export class GraficoComponent implements OnInit {
         numberSuffix: '',
         palettecolors: `${this.avalicaoColor.otimo}, ${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
         theme: 'fusion',
+        rotatelabels: '0'
       },
       data: this.chartData,
     };
 
-    this.dataSourceAv = {
+    this.dataSourceMotivos = {
       chart: {
-        caption: `Melhoras`,
+        caption: `O que pode melhorar`,
         showValues: true,
         subCaption: '',
         xAxisName: '',
         yAxisName: '',
         numberSuffix: '',
-        labeldisplay: 'Slant',
-        
         palettecolors: `${this.avalicaoColor.otimo}, ${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
         theme: 'fusion',
+        rotatelabels: '0',
+        labelFontSize: 11
       },
       data: this.chartData,
     };
+  }
+
+  primeiraPalavraDeMotivos(value: string) {
+    return value.split(' ')[0].split('(')[0];
   }
 
   setDadosGrafico(captionChart: string, refe_id: number): void {
@@ -96,8 +110,43 @@ export class GraficoComponent implements OnInit {
     });
   }
 
+  async setDadosGraficoMotivos(motivos?: IMotivos[]) {
+
+    let motivosResultado: IMotivos[] = [];
+    if (!motivos)
+      motivosResultado = (await this.graficoService.pegarMotivosAvaliacaoPorDataHora(new Date(), this.store.ultimaRefeicao.horarioId)).data;
+    else
+      motivosResultado = motivos;
+
+    this.chartDataAv.forEach(motivo => {
+      motivo.value = 0;
+      motivosResultado.forEach(resultado => {
+
+        let resultadoFiltrado: string;
+
+        if(resultado.ream_motivo === 'Sem refeição') {
+          resultadoFiltrado = 'Sem refeição'
+        } else {
+          resultadoFiltrado = this.primeiraPalavraDeMotivos(resultado.ream_motivo)
+        }
+
+        if (motivo.label.includes(resultadoFiltrado)) motivo.value += 1;
+      })
+    })
+
+  }
+
   async ngOnInit(): Promise<void> {
+
+    this.socket.on('atualizarMotivos', (payload: { motivos: IMotivos[] }) => {
+      this.setDadosGraficoMotivos(payload.motivos)
+    })
+
     this.refeicao = await this.refeicaoService.consultarRefeicoes();
+    if (this.refeicao) {
+      this.conexaoFeita = true;
+      this.carregandoGraficos = false;
+    }
 
     const tipos = await api.get<ITipoAvaliacao[]>('refeicao-avaliacao');
     this.chartData = tipos.data.map(tipo => {
@@ -118,14 +167,15 @@ export class GraficoComponent implements OnInit {
       }
 
       return {
-        label: motivo.ream_motivo.split(' ')[0].split('(')[0],
+        label: this.primeiraPalavraDeMotivos(motivo.ream_motivo),
         value: 0
       }
     });
     
+
     this.socket.on("pegarRefeicao", (payload: IPegarRefeicaoEvent) => {
 
-      console.log(this.store.ultimaRefeicao);
+      // console.log(this.store.ultimaRefeicao);
 
       if (payload.refeicao !== 'aguardando') {
         this.store.ultimaRefeicao = payload.ultimaRefeicao;
@@ -134,21 +184,23 @@ export class GraficoComponent implements OnInit {
         this.setDadosGrafico(payload.ultimaRefeicao.nome, payload.ultimaRefeicao.id);
       }
     });
-
+    
     this.setDadosGrafico(this.store.ultimaRefeicao.nome, this.store.ultimaRefeicao.id);
 
-    this.socket.on("atualizarValorGrafico", (response: SocketResponse) => {
-      this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id)
+    await this.setDadosGraficoMotivos();
+
+    this.socket.on("atualizarValorGrafico", async (response: SocketResponse) => {
+      await this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id)
         .then(response => {
           this.chartData.forEach(data => data.value = 0);
           response.data.map(avaliacao => {
             this.incrementarValoresGrafico(avaliacao.rere_reav_id);
             this.dataSource.data = this.chartData;
           })
-        });
+        });      
     });
 
-    this.dataSourceAv.data = this.chartDataAv;
+    this.dataSourceMotivos.data = this.chartDataAv;
   }
 
   

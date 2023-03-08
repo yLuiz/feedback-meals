@@ -19,8 +19,11 @@ import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { MotivoAvaliacaoComponent } from './components/motivo-avaliacao/motivo-avaliacao.component';
 import { environment } from 'src/environments/environment';
+import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 
-const config: SocketIoConfig = { url: environment.api_url, options: {}};
+const config: SocketIoConfig = { url: environment.api_url, options: {
+  reconnection: false
+}};
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
 @NgModule({
@@ -37,7 +40,8 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
     FeedbackRefeicaoComponent,
     MessageComponent,
     GraficoComponent,
-    MotivoAvaliacaoComponent
+    MotivoAvaliacaoComponent,
+    ErrorDialogComponent,
   ],
   providers: [
     StoreService,

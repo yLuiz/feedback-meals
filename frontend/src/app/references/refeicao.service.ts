@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import api from 'src/api/api';
+import { ErrorDialogService } from '../components/error-dialog/error-dialog.service';
 import { IRefeicao } from '../interfaces/IRefeicao';
+import { RefeicaoType } from '../types/types';
 
 
 @Injectable({
@@ -8,27 +10,37 @@ import { IRefeicao } from '../interfaces/IRefeicao';
 })
 export class RefeicaoService {
 
-  constructor() { 
+  constructor(
+    private errorDialogService: ErrorDialogService
+  ) { 
     this._refeicao = {...this._refeicao, aguardando: 0};
   }
 
-  private _refeicao = {};
+  private _refeicao: RefeicaoType = {}; // { [refeicao: string]: id: number }
 
   get refeicao() {
     return this._refeicao;
   }
 
   public async consultarRefeicoes() {
-    const refeicoes = await api.get<IRefeicao[]>('refeicao');
+    let refeicoes: IRefeicao[];
+    await api.get<IRefeicao[]>('refeicao')
+      .then(response => {
 
-    refeicoes.data.forEach(refeicao => {
-      const refeicaoNome = refeicao.refe_refeicao.split('/')[0];
-      
-      this._refeicao = {
-        ...this._refeicao,
-        [refeicaoNome]: refeicao.refe_id
-      }
-    });
+        refeicoes = response.data
+        refeicoes.forEach(refeicao => {
+          const refeicaoNome = refeicao.refe_refeicao.split('/')[0];
+          
+          this._refeicao = {
+            ...this._refeicao,
+            [refeicaoNome]: refeicao.refe_id
+          }
+        });
+      })
+      .catch(err =>  {
+        this.errorDialogService.visivel = true;
+        console.log(err)
+      });
 
     return this._refeicao;
   }

@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
 import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
+import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
+import { RefeicaoService } from 'src/app/references/refeicao.service';
 import { StoreService } from 'src/app/store/store.service';
+import { RefeicaoType } from 'src/app/types/types';
 import { MotivoAvaliacaoService } from './motivo-avaliacao.service';
 
 @Component({
@@ -12,12 +16,15 @@ export class MotivoAvaliacaoComponent implements OnInit {
 
   constructor(
     public motivoAvaliacaoService: MotivoAvaliacaoService,
-    private store: StoreService
+    private store: StoreService,
+    private socket: Socket,
+    private refeicaoService: RefeicaoService
   ) { }
 
   enviandoMotivos = false;
   motivosEnviados = false;
   podeEnviarMotivos = true;
+  refeicoes!: RefeicaoType;
 
   motivosSelecionados: IAvaliacaoMotivo[] = [];
   avaliacaoMotivos: IAvaliacaoMotivo[] = [];
@@ -45,12 +52,19 @@ export class MotivoAvaliacaoComponent implements OnInit {
     }
   }
 
-  setMotivos() {
-    this.motivoAvaliacaoService.pegarMotivosAvaliacao()
-      .then(response => {
-        this.avaliacaoMotivos = response.data.filter(motivo => motivo.ream_refe_id === this.store.refeicao.id || motivo.ream_refe_id === null);
-      })
-      .catch(err => console.log(err));
+  async setMotivos() {
+    this.refeicoes = await this.refeicaoService.consultarRefeicoes();
+
+    this.socket.on('pegarRefeicao', (payload: IPegarRefeicaoEvent) => {
+      this.motivoAvaliacaoService.pegarMotivosAvaliacao()
+        .then(response => {
+          this.avaliacaoMotivos = response.data.filter(motivo => {
+            // console.log(this.refeicoes[payload.refeicao]);
+            return motivo.ream_refe_id === this.refeicoes[payload.refeicao] || motivo.ream_refe_id === null;
+          });
+        })
+        .catch(err => console.log(err));
+    });  
   }
 
   enviarMotivos() {
@@ -85,7 +99,8 @@ export class MotivoAvaliacaoComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {
-    this.setMotivos();
+  async ngOnInit(): Promise<void> {
+    this.socket.emit('pegarRefeicao');
+    await this.setMotivos();
   }
 }

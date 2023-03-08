@@ -11,3 +11,11 @@ export interface IRefeicaoResultadoResponse {
   rere_data_registro: Date;
   rere_status: number;
 }
+
+export interface IMotivos {
+  rere_id: number,
+  rere_reho_id: number,
+  reav_tipo: string,
+  ream_id: number,
+  ream_motivo: string
+}

@@ -1,9 +1,11 @@
 import { forwardRef, Inject, Logger } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { refeicaoOpcoes, refeicao } from './interfaces/IRefeicao';
+import { refeicao, refeicaoOpcoes } from './interfaces/IRefeicao';
 import { RefeicaoHorarioService } from './refeicoes/refeicao-horario/services/refeicao-horario.service';
 import { RefeicaoService } from './refeicoes/refeicao/services/refeicao.service';
+import { RefeicaoResultadoService } from './refeicoes/refeicao_resultado/services/refeicao_resultado.service';
+import { RefeicaoResultadoMotivoService } from './refeicoes/refeicao_resultado_motivo/services/refeicao_resultado_motivo.service';
 import { RefeicaoOpcoes, RefeicaoTexto } from './types/types';
 
 interface IRefeicaoStore {
@@ -12,8 +14,8 @@ interface IRefeicaoStore {
   horarioId: number;
 }
 
-// const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
-const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
+const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
+// const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
 
 const options = {
   cors: {
@@ -30,7 +32,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   constructor(
     @Inject(forwardRef(() => RefeicaoHorarioService))
     private refeicaoHorarioService: RefeicaoHorarioService,
-    private refeicaoService: RefeicaoService
+    @Inject(forwardRef(() => RefeicaoResultadoService))
+    private refeicaoResultadoService: RefeicaoResultadoService
   ) {}
 
   private refeicaoAtual: RefeicaoOpcoes = 'aguardando';
@@ -72,7 +75,12 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
       };
     }
 
-    this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual, horarioId: payload.horarioId, ultimaRefeicao: this.ultimaRefeicao });
+    this.emitMudarRefeicao(this.refeicaoAtual, payload.horarioId);
+  }
+
+  @SubscribeMessage('pegarRefeicao')
+  emitirRefeicao(client: Socket, payload: {}) {
+    this.refeicaoHorarioService.consultarHorario();
   }
 
   emitMudarRefeicao(refeicao: RefeicaoOpcoes , horarioId: number) {
@@ -86,22 +94,20 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     });
   }
 
-  // async emitPegarRefeicao() {
+  async atualizarValorGraficoMotivos() {
 
-  //   const horario = await this.refeicaoHorarioService.pegarRefeicaoAtual();
+    const motivos = await this.refeicaoResultadoService.pegarAvaliacaoPorDataEHora(new Date(), this.ultimaRefeicao.horarioId);
 
-  //   this.server.emit('pegarRefeicao', { refeicao: this.refeicaoAtual, horarioId: horario?.reho_id || 0, ultimaRefeicao: this.ultimaRefeicao });
-  // }
+    this.server.emit('atualizarMotivos', { payload: motivos });
+  }
 
   afterInit(server: Server) {
     this.logger.log("Init");
   }
 
   handleConnection(client: any, ...args: any[]) {
-
-    // this.emitPegarRefeicao();
+    
     this.refeicaoHorarioService.consultarHorario();
-
     this.logger.log("Connected " + client.id);
   }
 

@@ -8,15 +8,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RefeicaoResultadoService = void 0;
 const common_1 = require("@nestjs/common");
 const app_gateway_1 = require("../../../app.gateway");
 const prisma_service_1 = require("../../../prisma/prisma.service");
 let RefeicaoResultadoService = class RefeicaoResultadoService {
-    constructor(prisma, AppGateway) {
+    constructor(prisma, appGateway) {
         this.prisma = prisma;
-        this.AppGateway = AppGateway;
+        this.appGateway = appGateway;
     }
     async pegarTodas() {
         return await this.prisma.refeicao_resultado.findMany();
@@ -31,17 +34,26 @@ let RefeicaoResultadoService = class RefeicaoResultadoService {
                 rere_reho_id: reho_id,
             }
         });
-        this.AppGateway.atualizarValorGrafico(refe_id, reav_id);
-        console.log(refeicao_resultado);
+        this.appGateway.atualizarValorGrafico(refe_id, reav_id);
         return { rere_id: refeicao_resultado.rere_id, rere_data_registro: refeicao_resultado.rere_data_registro };
     }
     async pegarAvaliacoesPorRefeicao(refe_id) {
+        if (!refe_id)
+            throw new common_1.HttpException({ message: 'Id da refeição é necessário.' }, common_1.HttpStatus.UNPROCESSABLE_ENTITY);
         const avaliacoes = await this.prisma.refeicao_resultado.findMany({
             where: {
                 rere_refe_id: refe_id,
             }
         });
-        return avaliacoes.filter(avaliacao => avaliacao.rere_data_registro.getDate() === new Date().getDate());
+        return avaliacoes.filter(avaliacao => {
+            const av_data = avaliacao.rere_data_registro;
+            const dia = new Date().getDate();
+            const mes = new Date().getMonth();
+            const ano = new Date().getFullYear();
+            const datasIguais = av_data.getDate() === dia && av_data.getMonth() === mes && av_data.getFullYear() === ano;
+            if (datasIguais)
+                return avaliacao;
+        });
     }
     async pegarDetalhesRefeicaoResultado() {
         const motivos = await this.prisma.refeicao_avaliacao_motivo.findMany();
@@ -64,9 +76,34 @@ let RefeicaoResultadoService = class RefeicaoResultadoService {
         });
         return resultadosRetorno;
     }
+    async pegarAvaliacaoPorDataEHora(date, reho_id) {
+        if (!date || !reho_id)
+            throw new common_1.HttpException({
+                message: "É necessário informar a data e horário."
+            }, common_1.HttpStatus.UNPROCESSABLE_ENTITY);
+        function zeroSuffix(numero, tamanho) {
+            let numeroString = numero.toString();
+            while (numeroString.length < tamanho)
+                numeroString = "0" + numeroString;
+            return numeroString;
+        }
+        const dia = zeroSuffix(new Date().getDate(), 2);
+        const mes = zeroSuffix(new Date().getMonth() + 1, 2);
+        const ano = zeroSuffix(new Date().getFullYear(), 2);
+        const data = `${ano}-${mes}-${dia}`;
+        return this.prisma.$queryRaw `
+      SELECT rere.rere_id, rere.rere_reho_id, reav.reav_tipo, ream.ream_id, ream.ream_motivo FROM refeicao_resultado rere
+      INNER JOIN refeicao_avaliacao reav ON reav.reav_id = rere.rere_reav_id
+      INNER JOIN refeicao_resultado_motivo rerm ON rere.rere_id = rerm.rerm_rere_id
+      INNER JOIN refeicao_avaliacao_motivo ream ON rerm.rerm_ream_id = ream.ream_id
+      WHERE DATE(rere_data_registro) = ${data} AND rere.rere_reho_id = ${reho_id}
+      ORDER BY ream_motivo
+    `;
+    }
 };
 RefeicaoResultadoService = __decorate([
     (0, common_1.Injectable)(),
+    __param(1, (0, common_1.Inject)((0, common_1.forwardRef)(() => app_gateway_1.AppGateway))),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         app_gateway_1.AppGateway])
 ], RefeicaoResultadoService);

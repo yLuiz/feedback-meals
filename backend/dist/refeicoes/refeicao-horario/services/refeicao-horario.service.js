@@ -26,7 +26,6 @@ let RefeicaoHorarioService = class RefeicaoHorarioService {
     }
     async consultarHorario() {
         let refeicaoAtual = await this.pegarRefeicaoAtual();
-        this.logger.debug(refeicaoAtual);
         if (!refeicaoAtual) {
             this.appGateway.emitMudarRefeicao('aguardando', 0);
             this.appGateway.refeicao = 'aguardando';
