@@ -84,6 +84,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   }
 
   emitMudarRefeicao(refeicao: RefeicaoOpcoes , horarioId: number) {
+    this.atualizarValorGraficoMotivos();
     this.server.emit('pegarRefeicao', { refeicao, horarioId, ultimaRefeicao: this.ultimaRefeicao });
   }
 

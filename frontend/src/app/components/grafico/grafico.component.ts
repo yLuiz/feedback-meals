@@ -42,7 +42,6 @@ export class GraficoComponent implements OnInit {
   
   carregandoGraficos: boolean = true;
   conexaoFeita: boolean = false;
-  // motivosResultado!: AxiosResponse<IMotivos[], any>;
 
   goToFeedback() {
     this.router.navigate(['/feedback'])
@@ -85,7 +84,8 @@ export class GraficoComponent implements OnInit {
         xAxisName: '',
         yAxisName: '',
         numberSuffix: '',
-        palettecolors: `${this.avalicaoColor.otimo}, ${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
+
+        palettecolors: `#ffae00`,
         theme: 'fusion',
         rotatelabels: '0',
         labelFontSize: 11
@@ -138,10 +138,6 @@ export class GraficoComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
-    this.socket.on('atualizarMotivos', (payload: { motivos: IMotivos[] }) => {
-      this.setDadosGraficoMotivos(payload.motivos)
-    })
-
     this.refeicao = await this.refeicaoService.consultarRefeicoes();
     if (this.refeicao) {
       this.conexaoFeita = true;
@@ -172,14 +168,22 @@ export class GraficoComponent implements OnInit {
       }
     });
     
+    this.socket.on('atualizarMotivos', async (payload: { motivos: IMotivos[] }) => {
+      await this.setDadosGraficoMotivos(payload.motivos)
+    })
 
     this.socket.on("pegarRefeicao", (payload: IPegarRefeicaoEvent) => {
-
-      // console.log(this.store.ultimaRefeicao);
-
       if (payload.refeicao !== 'aguardando') {
         this.store.ultimaRefeicao = payload.ultimaRefeicao;
         this.setDadosGrafico(refeicaoOpcao[payload.refeicao], this.refeicao[payload.refeicao]);
+
+        console.log(this.refeicao[payload.refeicao])
+
+        if (this.store.refeicao.id !== this.refeicao[payload.refeicao]) {
+          this.chartDataAv.forEach(data => {
+            data.value = 0;
+          })
+        }
       } else {
         this.setDadosGrafico(payload.ultimaRefeicao.nome, payload.ultimaRefeicao.id);
       }
