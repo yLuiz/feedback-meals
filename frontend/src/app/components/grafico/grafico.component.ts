@@ -72,6 +72,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
         palettecolors: `${this.avalicaoColor.otimo}, ${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
         theme: 'fusion',
         rotatelabels: '0',
+        showYAxisValues: "0"
       },
       data: this.chartData,
     };
@@ -90,7 +91,8 @@ export class GraficoComponent implements OnInit, OnDestroy {
         palettecolors: `${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
         theme: 'fusion',
         rotatelabels: '0',
-        labelFontSize: 11
+        labelFontSize: 11,
+        showYAxisValues: "0"
       },
       categories: [{
         category: [{ label: "Recarregue...🔁" }]

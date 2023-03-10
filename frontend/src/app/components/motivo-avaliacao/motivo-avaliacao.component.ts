@@ -102,7 +102,8 @@ export class MotivoAvaliacaoComponent implements OnInit {
 
     this.motivoPopupSubscribe = this.motivoAvaliacaoService.eventPopupEscondida.subscribe(popupEscondida => {      
       popupEscondida ? this.motivosSelecionados = [] : null;
-    })
+    });
+
     this.socket.emit('pegarRefeicao');
     await this.setMotivos();
   }

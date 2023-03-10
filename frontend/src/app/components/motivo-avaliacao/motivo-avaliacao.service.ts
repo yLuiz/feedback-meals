@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import api from 'src/api/api';
 import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
 
@@ -8,9 +8,12 @@ import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoA
 })
 export class MotivoAvaliacaoService {
 
-  constructor() { }
+  constructor() {}
 
   eventPopupEscondida = new BehaviorSubject<boolean>(false);
+
+  event = new Subject<boolean>();
+  event$ = this.event.asObservable();
 
   private refeicaoResultadoId: number = 0;
   private motivoClasse = 'motivo-container';

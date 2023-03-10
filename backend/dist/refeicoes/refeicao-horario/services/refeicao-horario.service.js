@@ -31,6 +31,7 @@ let RefeicaoHorarioService = class RefeicaoHorarioService {
             this.appGateway.refeicao = 'aguardando';
             return;
         }
+        ;
         const refeicao = refeicaoAtual.refe_refeicao.split('/')[0];
         refeicaoAtual.refe_refeicao = refeicao;
         this.appGateway.ultimaRefeicao = {

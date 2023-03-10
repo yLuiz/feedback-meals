@@ -27,7 +27,8 @@ export interface IDadosFusionChartScrollColumn2D {
     exportMode?: string,
     exportShowMenuItem?: string,
     palettecolors: string,
-    labelFontSize?: number
+    labelFontSize?: number,
+    showYAxisValues?: string
   },
   data?: {
     label: string,

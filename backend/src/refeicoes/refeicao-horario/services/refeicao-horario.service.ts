@@ -35,7 +35,7 @@ export class RefeicaoHorarioService {
       this.appGateway.emitMudarRefeicao('aguardando' , 0);
       this.appGateway.refeicao = 'aguardando';
       return;
-    }
+    };
     
     const refeicao = refeicaoAtual.refe_refeicao.split('/')[0];
     refeicaoAtual.refe_refeicao = refeicao;
