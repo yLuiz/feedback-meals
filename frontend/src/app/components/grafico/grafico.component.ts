@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
+import { from } from 'rxjs';
 import api from 'src/api/api';
 import { IDadosFusionChartScrollColumn2D } from 'src/app/interfaces/IFusionChart';
 import { refeicaoOpcao } from 'src/app/interfaces/IRefeicao';
@@ -24,7 +25,7 @@ interface SocketResponse {
   templateUrl: './grafico.component.html',
   styleUrls: ['./grafico.component.scss'],
 })
-export class GraficoComponent implements OnInit {
+export class GraficoComponent implements OnInit, OnDestroy {
 
   avalicaoColor = {
     otimo: "1AAE9E",
@@ -38,7 +39,6 @@ export class GraficoComponent implements OnInit {
   dataSource!: IDadosFusionChartScrollColumn2D;
   dataSourceMotivos!: IDadosFusionChartScrollColumn2D;
   chartData: Array<{ label: string, value: number}> = [];
-  chartDataAv: Array<{ label: string, value: number}> = [];
   
   carregandoGraficos: boolean = true;
   conexaoFeita: boolean = false;
@@ -71,7 +71,7 @@ export class GraficoComponent implements OnInit {
         numberSuffix: '',
         palettecolors: `${this.avalicaoColor.otimo}, ${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
         theme: 'fusion',
-        rotatelabels: '0'
+        rotatelabels: '0',
       },
       data: this.chartData,
     };
@@ -84,19 +84,33 @@ export class GraficoComponent implements OnInit {
         xAxisName: '',
         yAxisName: '',
         numberSuffix: '',
-
-        palettecolors: `#ffae00`,
+        numberPrefix: '',
+        formatNumber: "1",
+        plotToolText: "<b>$dataValue</b> votos $label em <b>$seriesName</b>",
+        palettecolors: `${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
         theme: 'fusion',
         rotatelabels: '0',
         labelFontSize: 11
       },
-      data: this.chartData,
+      categories: [{
+        category: [{ label: "Recarregue...🔁" }]
+      }],
+      dataset: [
+        {
+          seriesname: "Bom",
+          data: [{ value: 0 }]
+        },
+        {
+          seriesname: "Regular",
+          data: [{ value: 0 }]
+        },
+      ],
     };
   }
 
   primeiraPalavraDeMotivos(value: string) {
     return value.split(' ')[0].split('(')[0];
-  }
+  };
 
   setDadosGrafico(captionChart: string, refe_id: number): void {
 
@@ -110,6 +124,43 @@ export class GraficoComponent implements OnInit {
     });
   }
 
+  async setGraficoMotivosLabels() {
+    const motivos: IAvaliacaoMotivo[] = (await api.get<IAvaliacaoMotivo[]>('refeicao-avaliacao-motivo')).data;
+
+    const categorias = motivos.map(motivo => {
+
+      if(motivo.ream_motivo === "Sem refeição")
+        return {
+          label: motivo.ream_motivo
+        }
+
+      return {
+        label: this.primeiraPalavraDeMotivos(motivo.ream_motivo)
+      }
+    })
+
+    this.dataSourceMotivos = {
+      ...this.dataSourceMotivos,
+      categories: [
+        {
+          category: [...categorias]
+        }
+      ]
+    }
+
+    this.dataSourceMotivos.dataset?.forEach(dataset => {
+      this.dataSourceMotivos.categories?.forEach(categoria => {
+        dataset.data = [];
+        categoria.category.forEach(item => {
+          dataset.data = [
+            ...dataset.data,
+            { value: 0 }
+          ]
+        })
+      })
+    });
+  }
+
   async setDadosGraficoMotivos(motivos?: IMotivos[]) {
 
     let motivosResultado: IMotivos[] = [];
@@ -118,22 +169,29 @@ export class GraficoComponent implements OnInit {
     else
       motivosResultado = motivos;
 
-    this.chartDataAv.forEach(motivo => {
-      motivo.value = 0;
-      motivosResultado.forEach(resultado => {
+    this.dataSourceMotivos.dataset?.forEach(dataset => {
+      this.dataSourceMotivos.categories?.forEach(categoria => {
+        dataset.data = [];
+        categoria.category.forEach(item => {
+          dataset.data = [
+            ...dataset.data,
+            { value: 0 }
+          ]
+        })
+      })
+    });
 
-        let resultadoFiltrado: string;
+    motivosResultado.map(motivo => {
+      let motivoFiltrado = motivo.ream_motivo === 'Sem refeição' ? 'Sem refeição' : this.primeiraPalavraDeMotivos(motivo.ream_motivo);
 
-        if(resultado.ream_motivo === 'Sem refeição') {
-          resultadoFiltrado = 'Sem refeição'
-        } else {
-          resultadoFiltrado = this.primeiraPalavraDeMotivos(resultado.ream_motivo)
-        }
+      this.dataSourceMotivos.categories?.forEach(c => {
+        let index = c.category.map((item, index) => item.label === motivoFiltrado && index).filter(indice => indice !== false)[0];
 
-        if (motivo.label.includes(resultadoFiltrado)) motivo.value += 1;
+        this.dataSourceMotivos.dataset?.forEach(dataset => {
+          if(motivo.reav_tipo === dataset.seriesname) dataset.data[+index].value += 1;
+        })
       })
     })
-
   }
 
   async ngOnInit(): Promise<void> {
@@ -151,47 +209,24 @@ export class GraficoComponent implements OnInit {
         value: 0
       }
     });
-    
-    const motivos = await api.get<IAvaliacaoMotivo[]>('refeicao-avaliacao-motivo');
-    this.chartDataAv = motivos.data.map(motivo => {
 
-      if (motivo.ream_motivo === 'Sem refeição') {
-        return {
-          label: motivo.ream_motivo,
-          value: 0
-        }
-      }
+    await this.setGraficoMotivosLabels();
+    await this.setDadosGraficoMotivos();
 
-      return {
-        label: this.primeiraPalavraDeMotivos(motivo.ream_motivo),
-        value: 0
-      }
-    });
+    this.setDadosGrafico(this.store.ultimaRefeicao.nome, this.store.ultimaRefeicao.id);
     
     this.socket.on('atualizarMotivos', async (payload: { motivos: IMotivos[] }) => {
-      await this.setDadosGraficoMotivos(payload.motivos)
+      await this.setDadosGraficoMotivos();
     })
 
     this.socket.on("pegarRefeicao", (payload: IPegarRefeicaoEvent) => {
       if (payload.refeicao !== 'aguardando') {
         this.store.ultimaRefeicao = payload.ultimaRefeicao;
         this.setDadosGrafico(refeicaoOpcao[payload.refeicao], this.refeicao[payload.refeicao]);
-
-        console.log(this.refeicao[payload.refeicao])
-
-        if (this.store.refeicao.id !== this.refeicao[payload.refeicao]) {
-          this.chartDataAv.forEach(data => {
-            data.value = 0;
-          })
-        }
       } else {
         this.setDadosGrafico(payload.ultimaRefeicao.nome, payload.ultimaRefeicao.id);
       }
     });
-    
-    this.setDadosGrafico(this.store.ultimaRefeicao.nome, this.store.ultimaRefeicao.id);
-
-    await this.setDadosGraficoMotivos();
 
     this.socket.on("atualizarValorGrafico", async (response: SocketResponse) => {
       await this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id)
@@ -203,9 +238,7 @@ export class GraficoComponent implements OnInit {
           })
         });      
     });
-
-    this.dataSourceMotivos.data = this.chartDataAv;
   }
 
-  
+  ngOnDestroy() {} 
 }

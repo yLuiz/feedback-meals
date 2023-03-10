@@ -29,7 +29,7 @@ export interface IDadosFusionChartScrollColumn2D {
     palettecolors: string,
     labelFontSize?: number
   },
-  data: {
+  data?: {
     label: string,
     value: number
   }[],
@@ -40,7 +40,7 @@ export interface IDadosFusionChartScrollColumn2D {
   }[],
   dataset?: {
     data: {
-      value: string, 
+      value: number, 
       consumo?: string, 
       tooltext?: string, 
       displayValue?: string, 

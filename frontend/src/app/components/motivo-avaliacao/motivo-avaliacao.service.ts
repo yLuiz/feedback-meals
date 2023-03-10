@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import api from 'src/api/api';
 import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
 
@@ -8,6 +9,8 @@ import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoA
 export class MotivoAvaliacaoService {
 
   constructor() { }
+
+  eventPopupEscondida = new BehaviorSubject<boolean>(false);
 
   private refeicaoResultadoId: number = 0;
   private motivoClasse = 'motivo-container';
@@ -43,13 +46,14 @@ export class MotivoAvaliacaoService {
     this.rereId = rere_id;
 
     this.motivoVisibility = true;
+    this.eventPopupEscondida.next(false)
     this.motivoClasse = 'motivo-container show-container';
-    
   }
 
   public esconder(timer: number) {
     setTimeout(() => {
       this.motivoClasse = 'motivo-container hide-container';
+      this.eventPopupEscondida.next(true)
     }, timer);
 
     setTimeout(() => {

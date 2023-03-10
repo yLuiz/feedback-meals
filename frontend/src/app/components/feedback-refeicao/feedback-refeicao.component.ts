@@ -26,8 +26,8 @@ export class FeedbackRefeicaoComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private feedbackRefeicaoService: FeedbackRefeicaoService,
-    public motivoAvaliacaoService: MotivoAvaliacaoService,
     private refeicaoService: RefeicaoService,
+    public motivoAvaliacaoService: MotivoAvaliacaoService,
     public errorDialogService: ErrorDialogService
   ) { }
 
@@ -41,8 +41,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
     if (this.store.refeicao.id === 0) return;
     if (this.motivoAvaliacaoService.visibility) return;
-
-    // if (feedbackKey !== 'otimo') this.loadingMotivos = true;
 
     this.loadingMotivos = true;
 
@@ -73,7 +71,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
             if (!this.motivoAvaliacaoService.motivosEnviados) {
               this.motivoAvaliacaoService.esconder(1000);
             }
-
             this.motivoAvaliacaoService.motivosEnviados = false;
           }, 12000);
         }

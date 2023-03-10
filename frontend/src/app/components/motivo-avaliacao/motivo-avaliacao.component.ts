@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { Subscription } from 'rxjs';
 import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
 import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
 import { RefeicaoService } from 'src/app/references/refeicao.service';
@@ -21,6 +22,7 @@ export class MotivoAvaliacaoComponent implements OnInit {
     private refeicaoService: RefeicaoService
   ) { }
 
+  motivoPopupSubscribe!: Subscription;
   enviandoMotivos = false;
   motivosEnviados = false;
   podeEnviarMotivos = true;
@@ -59,7 +61,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
       this.motivoAvaliacaoService.pegarMotivosAvaliacao()
         .then(response => {
           this.avaliacaoMotivos = response.data.filter(motivo => {
-            // console.log(this.refeicoes[payload.refeicao]);
             return motivo.ream_refe_id === this.refeicoes[payload.refeicao] || motivo.ream_refe_id === null;
           });
         })
@@ -82,8 +83,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
     this.motivoAvaliacaoService.cadastrarMotivoAvaliacao({ motivos: motivosCadastro })
       .then(() => {
         const time = 50;
-        
-        this.motivosSelecionados = [];
 
         this.enviandoMotivos = false;
         this.motivosEnviados = true;
@@ -100,7 +99,15 @@ export class MotivoAvaliacaoComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+
+    this.motivoPopupSubscribe = this.motivoAvaliacaoService.eventPopupEscondida.subscribe(popupEscondida => {      
+      popupEscondida ? this.motivosSelecionados = [] : null;
+    })
     this.socket.emit('pegarRefeicao');
     await this.setMotivos();
+  }
+
+  ngOnDestroy() {
+    this.motivoPopupSubscribe.unsubscribe();
   }
 }

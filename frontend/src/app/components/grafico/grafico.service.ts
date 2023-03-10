@@ -24,6 +24,6 @@ export class GraficoService {
         data,
         horario_id
       }
-    })
+    });
   }
 }
