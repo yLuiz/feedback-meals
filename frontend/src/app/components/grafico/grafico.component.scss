@@ -68,4 +68,24 @@ section {
 
   width: 100%;
   height: calc(100vh - 1px);
+
+  .loader {
+    width: 48px;
+    height: 48px;
+  }
+  .loader::before , .loader::after {
+    border: 3px solid #FFF;
+  }
+
+  .loader::after{
+    border-color: #007bff;
+  }
+
+  > div {
+    margin-right: 2em;
+
+    p {
+      color: #FFF;
+    }
+  }
 }

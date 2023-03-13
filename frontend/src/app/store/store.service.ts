@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { IRefeicao, refeicaoOpcao } from '../interfaces/IRefeicao';
 import { IRefeicaoHorario } from '../interfaces/IRefeicaoHorario';
 import { RefeicaoTexto } from '../types/types';
@@ -11,7 +12,8 @@ export interface IRefeicaoStore {
 
 const refeicao = { aguardando: 0 }
 
-interface IStore {
+export interface IStore {
+  ultimaRefeicaoGrafico: IRefeicaoStore,
   ultimaRefeicao: IRefeicaoStore,
   avaliacaoHabilitada: boolean;
   refeicao: IRefeicaoStore;
@@ -31,14 +33,15 @@ interface IStore {
   providedIn: 'root'
 })
 export class StoreService {
+
+  constructor() {}
   
-  private refeicoes: IRefeicao[];
-
-  constructor() {
-    this.refeicoes = [];
-  }
-
   private globalVariables: IStore = {
+    ultimaRefeicaoGrafico: {
+      horarioId: 1,
+      id: 1,
+      nome: refeicaoOpcao['desjejum'] as RefeicaoTexto
+    },
     ultimaRefeicao: {
       horarioId: 1,
       id: 1,
@@ -72,6 +75,14 @@ export class StoreService {
 
   set ultimaRefeicao(value: IRefeicaoStore) {
     this.globalVariables.ultimaRefeicao = value;
+  }
+
+  get ultimaRefeicaoGrafico() {
+    return this.globalVariables.ultimaRefeicaoGrafico;
+  }
+
+  set ultimaRefeicaoGrafico(value: IRefeicaoStore) {
+    this.globalVariables.ultimaRefeicaoGrafico = value;
   }
 
   get avaliacaoHabilitada() {

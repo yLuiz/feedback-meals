@@ -5,7 +5,6 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MenuRefeicaoComponent } from './components/menu-refeicao/menu-refeicao.component';
 import { FeedbackRefeicaoComponent } from './components/feedback-refeicao/feedback-refeicao.component';
 import { StoreService } from './store/store.service';
 import { MessageComponent } from './components/message/message.component';
@@ -21,9 +20,7 @@ import { MotivoAvaliacaoComponent } from './components/motivo-avaliacao/motivo-a
 import { environment } from 'src/environments/environment';
 import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
 
-const config: SocketIoConfig = { url: environment.api_url, options: {
-  reconnection: false
-}};
+const config: SocketIoConfig = { url: environment.api_url, options: {}};
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
 @NgModule({
@@ -36,7 +33,6 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme)
   ],
   declarations: [
     AppComponent,
-    MenuRefeicaoComponent,
     FeedbackRefeicaoComponent,
     MessageComponent,
     GraficoComponent,

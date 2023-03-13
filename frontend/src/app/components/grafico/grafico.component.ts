@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
-import { from } from 'rxjs';
 import api from 'src/api/api';
 import { IDadosFusionChartScrollColumn2D } from 'src/app/interfaces/IFusionChart';
 import { refeicaoOpcao } from 'src/app/interfaces/IRefeicao';
@@ -10,7 +9,7 @@ import { IMotivos } from 'src/app/interfaces/IRefeicaoResultado';
 import { ITipoAvaliacao } from 'src/app/interfaces/ITipoAvaliacao';
 import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
 import { RefeicaoService } from 'src/app/references/refeicao.service';
-import { StoreService } from 'src/app/store/store.service';
+import { IStore, StoreService } from 'src/app/store/store.service';
 import { RefeicaoType } from 'src/app/types/types';
 import { ErrorDialogService } from '../error-dialog/error-dialog.service';
 import { GraficoService } from './grafico.service';
@@ -81,7 +80,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
       chart: {
         caption: `O que pode melhorar`,
         showValues: true,
-        subCaption: '',
+        subCaption: 'Case demore para carregar os dados, recarregue a página...🔃',
         xAxisName: '',
         yAxisName: '',
         numberSuffix: '',
@@ -95,7 +94,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
         showYAxisValues: "0"
       },
       categories: [{
-        category: [{ label: "Recarregue...🔁" }]
+        category: [{ label: "Carregando...⏳" }]
       }],
       dataset: [
         {
@@ -114,7 +113,18 @@ export class GraficoComponent implements OnInit, OnDestroy {
     return value.split(' ')[0].split('(')[0];
   };
 
-  setDadosGrafico(captionChart: string, refe_id: number): void {
+  labelFilter(motivo: string) {
+    if(motivo === "Sem refeição")
+      return {
+        label: motivo
+      }
+
+    return {
+      label: this.primeiraPalavraDeMotivos(motivo)
+    }
+  }
+
+  setDadosDeGraficoAvaliacao(captionChart: string, refe_id: number): void {
 
     this.dataSource.chart.caption = captionChart;
     this.graficoService.pegarAvaliacoesPorRefeicao(refe_id).then((response) => {
@@ -124,22 +134,33 @@ export class GraficoComponent implements OnInit, OnDestroy {
       });
       this.dataSource.data = this.chartData;
     });
+
+    // this.carregandoGraficos = false;
   }
 
-  async setGraficoMotivosLabels() {
+  async setLabelsDeGraficoMotivos() {
     const motivos: IAvaliacaoMotivo[] = (await api.get<IAvaliacaoMotivo[]>('refeicao-avaliacao-motivo')).data;
+    const refeicaoReference = await this.refeicaoService.consultarRefeicoes();
+    
+    let categorias: { label: string }[] = [];
 
-    const categorias = motivos.map(motivo => {
+    if (this.store.ultimaRefeicao.id !== refeicaoReference['almoco']) {
+      categorias = motivos.map(motivo => {
+        const objectLabel = this.labelFilter(motivo.ream_motivo);
+  
+        if (motivo.ream_refe_id === this.store.ultimaRefeicao.id || motivo.ream_refe_id === null)
+          return {
+            label: objectLabel.label
+          }
 
-      if(motivo.ream_motivo === "Sem refeição")
-        return {
-          label: motivo.ream_motivo
-        }
-
-      return {
-        label: this.primeiraPalavraDeMotivos(motivo.ream_motivo)
-      }
-    })
+        return { label: "" };
+      }).filter(item => item.label !== "")
+    } 
+    else {
+      categorias = motivos.map(motivo => {
+        return this.labelFilter(motivo.ream_motivo);
+      })
+    }
 
     this.dataSourceMotivos = {
       ...this.dataSourceMotivos,
@@ -161,9 +182,11 @@ export class GraficoComponent implements OnInit, OnDestroy {
         })
       })
     });
+
+    this.carregandoGraficos = false;
   }
 
-  async setDadosGraficoMotivos(motivos?: IMotivos[]) {
+  async setDadosDeGraficoMotivos(motivos?: IMotivos[]) {
 
     let motivosResultado: IMotivos[] = [];
     if (!motivos)
@@ -186,14 +209,16 @@ export class GraficoComponent implements OnInit, OnDestroy {
     motivosResultado.map(motivo => {
       let motivoFiltrado = motivo.ream_motivo === 'Sem refeição' ? 'Sem refeição' : this.primeiraPalavraDeMotivos(motivo.ream_motivo);
 
-      this.dataSourceMotivos.categories?.forEach(c => {
-        let index = c.category.map((item, index) => item.label === motivoFiltrado && index).filter(indice => indice !== false)[0];
+      this.dataSourceMotivos.categories?.forEach(categories => {
+        let index = categories.category.map((item, index) => item.label === motivoFiltrado && index).filter(indice => indice !== false)[0];
 
         this.dataSourceMotivos.dataset?.forEach(dataset => {
           if(motivo.reav_tipo === dataset.seriesname) dataset.data[+index].value += 1;
         })
       })
     })
+
+    this.dataSourceMotivos.chart.subCaption = '';
   }
 
   async ngOnInit(): Promise<void> {
@@ -201,7 +226,6 @@ export class GraficoComponent implements OnInit, OnDestroy {
     this.refeicao = await this.refeicaoService.consultarRefeicoes();
     if (this.refeicao) {
       this.conexaoFeita = true;
-      this.carregandoGraficos = false;
     }
 
     const tipos = await api.get<ITipoAvaliacao[]>('refeicao-avaliacao');
@@ -212,22 +236,31 @@ export class GraficoComponent implements OnInit, OnDestroy {
       }
     });
 
-    await this.setGraficoMotivosLabels();
-    await this.setDadosGraficoMotivos();
+    let socketResponseCounter = 0;
 
-    this.setDadosGrafico(this.store.ultimaRefeicao.nome, this.store.ultimaRefeicao.id);
-    
-    this.socket.on('atualizarMotivos', async (payload: { motivos: IMotivos[] }) => {
-      await this.setDadosGraficoMotivos();
-    })
+    this.setDadosDeGraficoAvaliacao(this.store.ultimaRefeicao.nome, this.store.ultimaRefeicao.id);
+    this.socket.on("pegarRefeicao", async (payload: IPegarRefeicaoEvent) => {
 
-    this.socket.on("pegarRefeicao", (payload: IPegarRefeicaoEvent) => {
+      const refeicaoDiferenteDaUltima = payload.refeicao !== 'aguardando' && this.refeicao[payload.refeicao] !== this.store.ultimaRefeicaoGrafico.id;
+
+      if (!socketResponseCounter || refeicaoDiferenteDaUltima) {
+        await this.setLabelsDeGraficoMotivos();
+        await this.setDadosDeGraficoMotivos();
+
+        socketResponseCounter = refeicaoDiferenteDaUltima ? 0 : 1;
+      }
+
       if (payload.refeicao !== 'aguardando') {
         this.store.ultimaRefeicao = payload.ultimaRefeicao;
-        this.setDadosGrafico(refeicaoOpcao[payload.refeicao], this.refeicao[payload.refeicao]);
+        this.setDadosDeGraficoAvaliacao(refeicaoOpcao[payload.refeicao], this.refeicao[payload.refeicao]);
+
       } else {
-        this.setDadosGrafico(payload.ultimaRefeicao.nome, payload.ultimaRefeicao.id);
+        this.setDadosDeGraficoAvaliacao(payload.ultimaRefeicao.nome, payload.ultimaRefeicao.id);
       }
+    });
+
+    this.socket.on('atualizarMotivos', async (payload: { motivos: IMotivos[] }) => {
+      await this.setDadosDeGraficoMotivos();
     });
 
     this.socket.on("atualizarValorGrafico", async (response: SocketResponse) => {

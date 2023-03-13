@@ -51,6 +51,15 @@ export class AppComponent implements OnInit {
 
       this.store.ultimaRefeicao = payload.ultimaRefeicao;
 
+      setTimeout(() => {
+        console.log("Before Set");
+        console.log(this.store.ultimaRefeicaoGrafico);
+        this.store.ultimaRefeicaoGrafico = payload.ultimaRefeicao;
+        console.log("After Set");
+        console.log(this.store.ultimaRefeicaoGrafico);
+
+      }, 1000);
+
       this.store.feedback = {
         ...this.store.feedback,
         refeicao: {

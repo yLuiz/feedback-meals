@@ -1,4 +1,4 @@
-<app-motivo-avaliacao></app-motivo-avaliacao>
+<app-motivo-avaliacao *ngIf="motivoAvaliacaoService.visibility"></app-motivo-avaliacao>
 <app-error-dialog></app-error-dialog>
 
 <div *ngIf="(!errorDialogService.visivel && !refeicao) || loadingMotivos" class="background-disable">
@@ -7,14 +7,14 @@
   </div>
 </div>
 <section *ngIf="!errorDialogService.visivel" id="section-feedback">
-  <span class="span-gear" (click)="goToMenu()">
+  <span class="span-gear" (click)="irParaGrafico()">
     <img src="./assets/icons/gear-fill.svg">
   </span>
   <div class="title">
     <h1>{{ title }}</h1>
   </div>
   <div id="feedback-buttons" class="feedback-buttons">
-    <button (click)="submitFeedback('otimo')" 
+    <button (click)="submitAvaliacao('otimo')" 
       class="feedback-button-card card-green shine"
     >
       <div class="image-container">
@@ -22,7 +22,7 @@
       </div>
       <p>ÓTIMO</p>
     </button>
-    <button (click)="submitFeedback('bom')" 
+    <button (click)="submitAvaliacao('bom')" 
       class="feedback-button-card card-blue shine"
     >
       <div class="image-container">
@@ -30,7 +30,7 @@
       </div>
       <p>BOM</p>
     </button>
-    <button (click)="submitFeedback('regular')" 
+    <button (click)="submitAvaliacao('regular')" 
       class="feedback-button-card card-red shine"
     >
       <div class="image-container">

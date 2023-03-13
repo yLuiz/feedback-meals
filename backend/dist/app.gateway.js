@@ -67,7 +67,6 @@ let AppGateway = class AppGateway {
         this.refeicaoHorarioService.consultarHorario();
     }
     emitMudarRefeicao(refeicao, horarioId) {
-        this.atualizarValorGraficoMotivos();
         this.server.emit('pegarRefeicao', { refeicao, horarioId, ultimaRefeicao: this.ultimaRefeicao });
     }
     atualizarValorGrafico(refe_id, reav_id) {
@@ -85,6 +84,8 @@ let AppGateway = class AppGateway {
     }
     handleConnection(client, ...args) {
         this.refeicaoHorarioService.consultarHorario();
+        setTimeout(() => {
+        }, 500);
         this.logger.log("Connected " + client.id);
     }
     handleDisconnect(client) {

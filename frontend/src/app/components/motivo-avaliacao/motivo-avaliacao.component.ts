@@ -54,20 +54,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
     }
   }
 
-  async setMotivos() {
-    this.refeicoes = await this.refeicaoService.consultarRefeicoes();
-
-    this.socket.on('pegarRefeicao', (payload: IPegarRefeicaoEvent) => {
-      this.motivoAvaliacaoService.pegarMotivosAvaliacao()
-        .then(response => {
-          this.avaliacaoMotivos = response.data.filter(motivo => {
-            return motivo.ream_refe_id === this.refeicoes[payload.refeicao] || motivo.ream_refe_id === null;
-          });
-        })
-        .catch(err => console.log(err));
-    });  
-  }
-
   enviarMotivos() {
     if (!this.podeEnviarMotivos) return;
 
@@ -104,11 +90,26 @@ export class MotivoAvaliacaoComponent implements OnInit {
       popupEscondida ? this.motivosSelecionados = [] : null;
     });
 
-    this.socket.emit('pegarRefeicao');
-    await this.setMotivos();
+    this.refeicoes = await this.refeicaoService.consultarRefeicoes();
+
+    this.socket.on('pegarRefeicao', (payload: IPegarRefeicaoEvent) => {
+
+
+      console.log(this.store.refeicao.id);
+      if (!this.avaliacaoMotivos.length || this.refeicoes[payload.refeicao] !== this.store.refeicao.id) {
+
+        this.motivoAvaliacaoService.pegarMotivosAvaliacao()
+        .then(response => {
+          this.avaliacaoMotivos = response.data.filter(motivo => {
+            return motivo.ream_refe_id === this.refeicoes[payload.refeicao] || motivo.ream_refe_id === null;
+          });
+        })
+        .catch(err => console.log(err));
+      } else if (payload.refeicao === 'aguardando') {
+        this.avaliacaoMotivos = [];
+      }
+    });  
   }
 
-  ngOnDestroy() {
-    this.motivoPopupSubscribe.unsubscribe();
-  }
+  ngOnDestroy() { this.motivoPopupSubscribe.unsubscribe(); }
 }

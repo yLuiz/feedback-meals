@@ -84,7 +84,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   }
 
   emitMudarRefeicao(refeicao: RefeicaoOpcoes , horarioId: number) {
-    this.atualizarValorGraficoMotivos();
     this.server.emit('pegarRefeicao', { refeicao, horarioId, ultimaRefeicao: this.ultimaRefeicao });
   }
 
@@ -108,7 +107,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
   handleConnection(client: any, ...args: any[]) {
     
-    this.refeicaoHorarioService.consultarHorario();
+    this.refeicaoHorarioService.consultarHorario(); 
+    setTimeout(() => {
+    }, 500);
     this.logger.log("Connected " + client.id);
   }
 

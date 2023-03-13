@@ -5,7 +5,7 @@ import { MessageService } from '../message/message.service';
 import { FeedbackRefeicaoService } from './feedback-refeicao.service';
 import { refeicao_avaliacao } from '../../references/refeicao';
 import { MotivoAvaliacaoService } from '../motivo-avaliacao/motivo-avaliacao.service';
-import { AvaliacaoOpcoes, RefeicaoOpcoes, RefeicaoTexto, RefeicaoType } from 'src/app/types/types';
+import { AvaliacaoOpcoes, RefeicaoTexto, RefeicaoType } from 'src/app/types/types';
 import { refeicaoOpcao } from 'src/app/interfaces/IRefeicao';
 import { Socket } from 'ngx-socket-io';
 import { IRefeicaoHorario } from 'src/app/interfaces/IRefeicaoHorario';
@@ -37,7 +37,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
   avaliacaoHabilitada: boolean = false;
   refeicao!: RefeicaoType;
 
-  async submitFeedback(feedbackKey: AvaliacaoOpcoes) {
+  async submitAvaliacao(feedbackKey: AvaliacaoOpcoes) {
 
     if (this.store.refeicao.id === 0) return;
     if (this.motivoAvaliacaoService.visibility) return;
@@ -77,7 +77,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
       });
   }
 
-  goToMenu() {
+  irParaGrafico() {
     this.router.navigate(['grafico']);
   }
 
