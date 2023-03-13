@@ -3,9 +3,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessa
 import { Server, Socket } from 'socket.io';
 import { refeicao, refeicaoOpcoes } from './interfaces/IRefeicao';
 import { RefeicaoHorarioService } from './refeicoes/refeicao-horario/services/refeicao-horario.service';
-import { RefeicaoService } from './refeicoes/refeicao/services/refeicao.service';
 import { RefeicaoResultadoService } from './refeicoes/refeicao_resultado/services/refeicao_resultado.service';
-import { RefeicaoResultadoMotivoService } from './refeicoes/refeicao_resultado_motivo/services/refeicao_resultado_motivo.service';
 import { RefeicaoOpcoes, RefeicaoTexto } from './types/types';
 
 interface IRefeicaoStore {
@@ -14,8 +12,8 @@ interface IRefeicaoStore {
   horarioId: number;
 }
 
-const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
-// const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
+// const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
+const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
 
 const options = {
   cors: {
