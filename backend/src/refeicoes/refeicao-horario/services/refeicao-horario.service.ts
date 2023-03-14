@@ -26,7 +26,7 @@ export class RefeicaoHorarioService {
     private appGateway: AppGateway,
   ) {}
 
-  @Cron('*/5 * * * * *')
+  @Cron('0 * * * * *')
   async consultarHorario() {
 
     let refeicaoAtual = await this.pegarRefeicaoAtual();

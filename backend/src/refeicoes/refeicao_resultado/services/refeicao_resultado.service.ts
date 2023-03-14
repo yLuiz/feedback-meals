@@ -43,13 +43,13 @@ export class RefeicaoResultadoService {
 
     return avaliacoes.filter(avaliacao => {
 
-      const av_data = avaliacao.rere_data_registro;
+      const avaliacao_data = avaliacao.rere_data_registro;
 
       const dia = new Date().getDate();
       const mes = new Date().getMonth();
       const ano = new Date().getFullYear();
       
-      const datasIguais = av_data.getDate() === dia && av_data.getMonth() === mes && av_data.getFullYear() === ano;
+      const datasIguais = avaliacao_data.getDate() === dia && avaliacao_data.getMonth() === mes && avaliacao_data.getFullYear() === ano;
 
       if (datasIguais) return avaliacao;
     });
@@ -99,7 +99,7 @@ export class RefeicaoResultadoService {
     const mes = zeroSuffix(new Date().getMonth() + 1, 2);
     const ano = zeroSuffix(new Date().getFullYear(), 2);
     
-    const data = `${ano}-${mes}-${dia}`
+    const data = `${ano}-${mes}-${dia}`;
 
     return this.prisma.$queryRaw`
       SELECT rere.rere_id, rere.rere_reho_id, reav.reav_tipo, ream.ream_id, ream.ream_motivo FROM refeicao_resultado rere

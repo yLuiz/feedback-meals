@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
 import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
 import { RefeicaoService } from 'src/app/references/refeicao.service';
@@ -94,15 +94,15 @@ export class MotivoAvaliacaoComponent implements OnInit {
 
     this.socket.on('pegarRefeicao', (payload: IPegarRefeicaoEvent) => {
 
-
-      console.log(this.store.refeicao.id);
-      if (!this.avaliacaoMotivos.length || this.refeicoes[payload.refeicao] !== this.store.refeicao.id) {
+      if (!this.avaliacaoMotivos.length) {
 
         this.motivoAvaliacaoService.pegarMotivosAvaliacao()
         .then(response => {
           this.avaliacaoMotivos = response.data.filter(motivo => {
             return motivo.ream_refe_id === this.refeicoes[payload.refeicao] || motivo.ream_refe_id === null;
           });
+
+          this.motivoAvaliacaoService.carregandoMotivos.next(false);
         })
         .catch(err => console.log(err));
       } else if (payload.refeicao === 'aguardando') {

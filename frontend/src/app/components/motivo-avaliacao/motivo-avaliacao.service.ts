@@ -11,6 +11,7 @@ export class MotivoAvaliacaoService {
   constructor() {}
 
   eventPopupEscondida = new BehaviorSubject<boolean>(false);
+  carregandoMotivos = new BehaviorSubject(true);
 
   private refeicaoResultadoId: number = 0;
   private motivoClasse = 'motivo-container';

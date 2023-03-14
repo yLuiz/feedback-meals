@@ -6,7 +6,7 @@ import { GraficoComponent } from './components/grafico/grafico.component';
 const routes: Routes = [
   { path: 'feedback', component: FeedbackRefeicaoComponent },
   { path: 'grafico', component: GraficoComponent },
-  { path: '**', redirectTo: '/feedback' }
+  { path: '**', redirectTo: '/grafico' }
 ];
 
 @NgModule({

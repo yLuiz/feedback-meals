@@ -22,27 +22,28 @@ import { ErrorDialogService } from '../error-dialog/error-dialog.service';
 export class FeedbackRefeicaoComponent implements OnInit {
   constructor(
     private socket: Socket,
-    public store: StoreService,
     private router: Router,
     private messageService: MessageService,
     private feedbackRefeicaoService: FeedbackRefeicaoService,
     private refeicaoService: RefeicaoService,
+    
+    public store: StoreService,
     public motivoAvaliacaoService: MotivoAvaliacaoService,
     public errorDialogService: ErrorDialogService
   ) { }
 
   horarios: IRefeicaoHorario[] = [];
-  title!: string;
-  loadingMotivos: boolean = false;
-  avaliacaoHabilitada: boolean = false;
   refeicao!: RefeicaoType;
+  title!: string;
+  salvandoAvaliacao: boolean = false;
+  avaliacaoHabilitada: boolean = false;
 
   async submitAvaliacao(feedbackKey: AvaliacaoOpcoes) {
 
     if (this.store.refeicao.id === 0) return;
     if (this.motivoAvaliacaoService.visibility) return;
 
-    this.loadingMotivos = true;
+    this.salvandoAvaliacao = true;
 
     this.messageService.show();
     setTimeout(() => {
@@ -62,18 +63,22 @@ export class FeedbackRefeicaoComponent implements OnInit {
       rere_refe_id: this.store.feedback.refeicao.id,
       rere_reho_id: this.store.refeicao.horarioId
     }).then(response => {
-        this.loadingMotivos = false;
-        if(feedbackKey !== "otimo") {
-          this.motivoAvaliacaoService.mostrar(response.data.rere_id);
-          
+        this.motivoAvaliacaoService.carregandoMotivos.subscribe(carregando => {
+          if (!carregando) {
+            this.salvandoAvaliacao = false;
+            if(feedbackKey !== "otimo") {
+              this.motivoAvaliacaoService.mostrar(response.data.rere_id);
+              
 
-          setTimeout(() => {
-            if (!this.motivoAvaliacaoService.motivosEnviados) {
-              this.motivoAvaliacaoService.esconder(1000);
+              setTimeout(() => {
+                if (!this.motivoAvaliacaoService.motivosEnviados) {
+                  this.motivoAvaliacaoService.esconder(1000);
+                }
+                this.motivoAvaliacaoService.motivosEnviados = false;
+              }, 12000);
             }
-            this.motivoAvaliacaoService.motivosEnviados = false;
-          }, 12000);
-        }
+          }
+        })
       });
   }
 

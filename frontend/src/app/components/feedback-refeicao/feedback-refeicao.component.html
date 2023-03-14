@@ -1,7 +1,7 @@
-<app-motivo-avaliacao *ngIf="motivoAvaliacaoService.visibility"></app-motivo-avaliacao>
+<app-motivo-avaliacao></app-motivo-avaliacao>
 <app-error-dialog></app-error-dialog>
 
-<div *ngIf="(!errorDialogService.visivel && !refeicao) || loadingMotivos" class="background-disable">
+<div *ngIf="(!errorDialogService.visivel && !refeicao) || salvandoAvaliacao" class="background-disable">
   <div class="loader-row">
     <span class="loading"></span>
   </div>
@@ -13,8 +13,8 @@
   <div class="title">
     <h1>{{ title }}</h1>
   </div>
-  <div id="feedback-buttons" class="feedback-buttons">
-    <button (click)="submitAvaliacao('otimo')" 
+  <div  id="feedback-buttons" class="feedback-buttons">
+    <button (click)="submitAvaliacao('otimo')"
       class="feedback-button-card card-green shine"
     >
       <div class="image-container">

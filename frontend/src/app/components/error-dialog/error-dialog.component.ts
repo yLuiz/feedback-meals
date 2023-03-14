@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ErrorDialogService } from './error-dialog.service';
 
 @Component({
@@ -8,11 +8,12 @@ import { ErrorDialogService } from './error-dialog.service';
 })
 export class ErrorDialogComponent implements OnInit {
 
+  @Input() textoMensagem: string = '';
+
   constructor(
     public errorDialogService: ErrorDialogService
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }
