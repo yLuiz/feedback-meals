@@ -1,6 +1,13 @@
-<div class={{motivoAvaliacaoService.classe}}>
+<div *ngIf="motivoAvaliacaoService.visibility" class={{motivoAvaliacaoService.classe}}>
+
   <div>
     <h1>O que podemos melhorar?</h1>
+  </div>
+  <div *ngIf="motivoAvaliacaoService.carregandoMotivos | async" class="loader-row">
+    <span class="loader"></span>
+    <div>
+      <p>Carregando...⌛</p>
+    </div>
   </div>
   <ul>
     <li class="motivo-item" *ngFor="let avaliacao_motivo of avaliacaoMotivos">
