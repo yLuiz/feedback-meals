@@ -71,8 +71,9 @@ export class GraficoComponent implements OnInit, OnDestroy {
         palettecolors: `${this.avalicaoColor.otimo}, ${this.avalicaoColor.bom}, ${this.avalicaoColor.regular}`,
         theme: 'fusion',
         rotatelabels: '0',
-        showYAxisValues: "0"
+        showYAxisValues: "0",
       },
+      dataset: [],
       data: this.chartData,
     };
 
@@ -109,6 +110,49 @@ export class GraficoComponent implements OnInit, OnDestroy {
     };
   }
 
+  ordenarGraficaDeMotivos() {
+    let soma;
+    let arraySomas: {index: number, value: number}[] = [];
+    if (this.dataSourceMotivos.dataset) {
+      this.dataSourceMotivos.dataset[0].data.forEach((item, index) => {
+        if (this.dataSourceMotivos.dataset) {
+          soma = item.value + this.dataSourceMotivos.dataset[1].data[index].value;
+          arraySomas.push({ index, value: soma });
+        }
+      })
+    }
+
+    arraySomas = arraySomas.sort((a, b) => {
+      if (a.value < b.value) return 1;
+      if (a.value > b.value) return -1;
+      return 0;
+    });
+
+    let categoryOrdenado: { label: string }[]= [];
+    let valuesBom: { value: number }[] = [];
+    let valuesRegular: { value: number }[] = [];
+    arraySomas.map((item) => {
+      if (this.dataSourceMotivos.categories) {
+
+        categoryOrdenado.push(this.dataSourceMotivos.categories[0].category[item.index])
+        valuesBom.push(this.dataSourceMotivos.dataset[0].data[item.index])
+        valuesRegular.push(this.dataSourceMotivos.dataset[1].data[item.index])
+
+        console.log(this.dataSourceMotivos.dataset[0].data[item.index])
+        console.log(this.dataSourceMotivos.dataset[1].data[item.index])
+      }
+    })
+
+    if (this.dataSourceMotivos.categories)
+      this.dataSourceMotivos.categories[0].category = categoryOrdenado;
+
+      this.dataSourceMotivos.dataset[0].data = valuesBom;
+      this.dataSourceMotivos.dataset[1].data = valuesRegular;
+
+
+    // console.log(arraySomas)
+  }
+
   primeiraPalavraDeMotivos(value: string) {
     return value.split(' ')[0].split('(')[0];
   };
@@ -134,8 +178,6 @@ export class GraficoComponent implements OnInit, OnDestroy {
       });
       this.dataSource.data = this.chartData;
     });
-
-    // this.carregandoGraficos = false;
   }
 
   async setLabelsDeGraficoMotivos() {
@@ -219,6 +261,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
     })
 
     this.dataSourceMotivos.chart.subCaption = '';
+    this.ordenarGraficaDeMotivos()
   }
 
   async ngOnInit(): Promise<void> {
@@ -273,6 +316,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
           })
         });      
     });
+
   }
 
   ngOnDestroy() {} 

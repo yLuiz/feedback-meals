@@ -88,8 +88,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
-    // this.refeicao = { desjejum: 1, almoco: 2, lanche: 3 };
-    this.refeicao = await this.refeicaoService.consultarRefeicoes();
+    this.refeicao = await this.refeicaoService.consultarRefeicoes(); // { desjejum: 1, almoco: 2, lanche: 3 }
 
     this.title = this.store.refeicao.nome
     if (!this.store.refeicao.id) {
