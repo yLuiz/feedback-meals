@@ -46,11 +46,11 @@ let RefeicaoResultadoService = class RefeicaoResultadoService {
             }
         });
         return avaliacoes.filter(avaliacao => {
-            const av_data = avaliacao.rere_data_registro;
+            const avaliacao_data = avaliacao.rere_data_registro;
             const dia = new Date().getDate();
             const mes = new Date().getMonth();
             const ano = new Date().getFullYear();
-            const datasIguais = av_data.getDate() === dia && av_data.getMonth() === mes && av_data.getFullYear() === ano;
+            const datasIguais = avaliacao_data.getDate() === dia && avaliacao_data.getMonth() === mes && avaliacao_data.getFullYear() === ano;
             if (datasIguais)
                 return avaliacao;
         });
