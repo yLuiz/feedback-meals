@@ -3,12 +3,14 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.3. <br>
 This project was generated with [Nest CLI](https://github.com/nestjs/nest-cli) version 8.2.8.
 
+# FRONT-END
+
 ## Instalação
 ``` bash
  npm install
 ```
 
-# FRONT-END
+## Configuração
 
 <br><br> Na pasta envrionment terá dois arquivos: `environment.ts` e `environment.prod.ts`
 <br>Ambos terão a mesma estrutura: 
@@ -19,6 +21,23 @@ export const environment = {
 };
 ```
 <br> No atributo `api_url` coloque a url de sua API. <br>
+
+## Inicializar localmente
+Basta dá o seguinte comando no terminal
+``` bash
+ npm run start:local
+```
+
+O comando `npm run start` está configurado para iniciar no ip da máquina que você define.<br>
+Para alterar, vá até o arquivo package.json e modifique o atributo "start". 
+``` bash
+"scripts": {
+    "ng": "ng",
+    "start:local": "ng serve --host=localhost --port 3002",
+    "start": "ng serve --host=0.0.0.0 --port 3002", // coloque seu IP aqui caso queira expor sua aplicação para rede local.
+    ...
+  },
+```
 
 ## Build
 Para fazer o build rode o comando `ng build` ou `npm run build`. Após isso, será gerado o diretório `dist/`.
