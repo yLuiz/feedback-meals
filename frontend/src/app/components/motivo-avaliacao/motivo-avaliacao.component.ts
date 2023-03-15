@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
 import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
 import { RefeicaoService } from 'src/app/references/refeicao.service';
-import { StoreService } from 'src/app/store/store.service';
 import { RefeicaoType } from 'src/app/types/types';
 import { MotivoAvaliacaoService } from './motivo-avaliacao.service';
 
@@ -17,7 +16,6 @@ export class MotivoAvaliacaoComponent implements OnInit {
 
   constructor(
     public motivoAvaliacaoService: MotivoAvaliacaoService,
-    private store: StoreService,
     private socket: Socket,
     private refeicaoService: RefeicaoService
   ) { }
@@ -94,10 +92,11 @@ export class MotivoAvaliacaoComponent implements OnInit {
 
     this.socket.on('pegarRefeicao', (payload: IPegarRefeicaoEvent) => {
 
-      if (!this.avaliacaoMotivos.length) {
+      if (!this.avaliacaoMotivos.length && payload.refeicao !== 'aguardando') {
 
         this.motivoAvaliacaoService.pegarMotivosAvaliacao()
         .then(response => {
+          console.log(this.refeicoes[payload.refeicao]);
           this.avaliacaoMotivos = response.data.filter(motivo => {
             return motivo.ream_refe_id === this.refeicoes[payload.refeicao] || motivo.ream_refe_id === null;
           });

@@ -9,7 +9,11 @@ export class RefeicaoAvaliacaoMotivoService {
   ) {}
 
   pegarAvaliacaoMotivos() {
-    return this.prisma.refeicao_avaliacao_motivo.findMany();
+    return this.prisma.refeicao_avaliacao_motivo.findMany({
+      orderBy: {
+        ream_motivo: 'asc'
+      }
+    });
   }
 
 }

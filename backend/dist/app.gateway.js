@@ -84,8 +84,6 @@ let AppGateway = class AppGateway {
     }
     handleConnection(client, ...args) {
         this.refeicaoHorarioService.consultarHorario();
-        setTimeout(() => {
-        }, 500);
         this.logger.log("Connected " + client.id);
     }
     handleDisconnect(client) {

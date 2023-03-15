@@ -24,9 +24,9 @@ export class RefeicaoResultadoController {
     return this.refeicaoResultadoService.pegarAvaliacaoPorDataEHora(data, horarioId);
   }
 
-  @Get(':refe_id')
-  pegarTodasAvaliacoesPorRefeicao(@Param('refe_id') refe_id: number) {
-    return this.refeicaoResultadoService.pegarAvaliacoesPorRefeicao(Number(refe_id));
+  @Get(':reho_id')
+  pegarTodasAvaliacoesPorRefeicao(@Param('reho_id') reho_id: number) {
+    return this.refeicaoResultadoService.pegarAvaliacoesPorRefeicao(Number(reho_id));
   }
 
   @Post()

@@ -39,7 +39,7 @@ export interface IDadosFusionChartScrollColumn2D {
       label: string
     }[]
   }[],
-  dataset?: {
+  dataset: {
     data: {
       value: number, 
       consumo?: string, 

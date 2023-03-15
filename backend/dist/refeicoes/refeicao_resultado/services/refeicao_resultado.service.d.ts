@@ -9,7 +9,7 @@ export declare class RefeicaoResultadoService {
         rere_id: number;
         rere_data_registro: Date;
     }>;
-    pegarAvaliacoesPorRefeicao(refe_id: number): Promise<import(".prisma/client").refeicao_resultado[]>;
+    pegarAvaliacoesPorRefeicao(reho_id: number): Promise<import(".prisma/client").refeicao_resultado[]>;
     pegarDetalhesRefeicaoResultado(): Promise<{
         refeicao: string;
         avaliacao: string;

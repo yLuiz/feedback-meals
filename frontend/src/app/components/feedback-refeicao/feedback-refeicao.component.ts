@@ -63,12 +63,11 @@ export class FeedbackRefeicaoComponent implements OnInit {
       rere_refe_id: this.store.feedback.refeicao.id,
       rere_reho_id: this.store.refeicao.horarioId
     }).then(response => {
-        this.motivoAvaliacaoService.carregandoMotivos.subscribe(carregando => {
+        const subscrition = this.motivoAvaliacaoService.carregandoMotivos.subscribe(carregando => {
           if (!carregando) {
             this.salvandoAvaliacao = false;
             if(feedbackKey !== "otimo") {
               this.motivoAvaliacaoService.mostrar(response.data.rere_id);
-              
 
               setTimeout(() => {
                 if (!this.motivoAvaliacaoService.motivosEnviados) {
@@ -79,6 +78,8 @@ export class FeedbackRefeicaoComponent implements OnInit {
             }
           }
         })
+
+        subscrition.unsubscribe();
       });
   }
 
@@ -88,8 +89,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
-    // this.refeicao = { desjejum: 1, almoco: 2, lanche: 3 };
-    this.refeicao = await this.refeicaoService.consultarRefeicoes();
+    this.refeicao = await this.refeicaoService.consultarRefeicoes(); // { desjejum: 1, almoco: 2, lanche: 3 }
 
     this.title = this.store.refeicao.nome
     if (!this.store.refeicao.id) {

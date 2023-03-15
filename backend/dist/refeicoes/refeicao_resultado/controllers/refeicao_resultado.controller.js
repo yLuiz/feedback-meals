@@ -29,8 +29,8 @@ let RefeicaoResultadoController = class RefeicaoResultadoController {
         const { data, horario_id: horarioId } = query;
         return this.refeicaoResultadoService.pegarAvaliacaoPorDataEHora(data, horarioId);
     }
-    pegarTodasAvaliacoesPorRefeicao(refe_id) {
-        return this.refeicaoResultadoService.pegarAvaliacoesPorRefeicao(Number(refe_id));
+    pegarTodasAvaliacoesPorRefeicao(reho_id) {
+        return this.refeicaoResultadoService.pegarAvaliacoesPorRefeicao(Number(reho_id));
     }
     cadastrarRefeicaoResultado(body) {
         const { refe_id, reav_id, reho_id } = body;
@@ -57,8 +57,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], RefeicaoResultadoController.prototype, "pegarAvaliacaoPorDataEHora", null);
 __decorate([
-    (0, common_1.Get)(':refe_id'),
-    __param(0, (0, common_1.Param)('refe_id')),
+    (0, common_1.Get)(':reho_id'),
+    __param(0, (0, common_1.Param)('reho_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)

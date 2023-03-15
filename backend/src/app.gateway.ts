@@ -106,8 +106,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   handleConnection(client: any, ...args: any[]) {
     
     this.refeicaoHorarioService.consultarHorario(); 
-    setTimeout(() => {
-    }, 500);
     this.logger.log("Connected " + client.id);
   }
 
