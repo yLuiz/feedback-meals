@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import api from 'src/api/api';
-import { IRefeicaoResultadoRequest, IRefeicaoResultadoResponse } from 'src/app/interfaces/IRefeicaoResultado';
+import { IRefeicaoResultadoRequest } from 'src/app/interfaces/IRefeicaoResultado';
 
 interface IRequestFeedback {
   refe_id: number;

@@ -9,7 +9,7 @@ import { IMotivos } from 'src/app/interfaces/IRefeicaoResultado';
 import { ITipoAvaliacao } from 'src/app/interfaces/ITipoAvaliacao';
 import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
 import { RefeicaoService } from 'src/app/references/refeicao.service';
-import { IStore, StoreService } from 'src/app/store/store.service';
+import { StoreService } from 'src/app/store/store.service';
 import { RefeicaoType } from 'src/app/types/types';
 import { ErrorDialogService } from '../error-dialog/error-dialog.service';
 import { GraficoService } from './grafico.service';
@@ -110,49 +110,6 @@ export class GraficoComponent implements OnInit, OnDestroy {
     };
   }
 
-  ordenarGraficaDeMotivos() {
-    let soma;
-    let arraySomas: {index: number, value: number}[] = [];
-    if (this.dataSourceMotivos.dataset) {
-      this.dataSourceMotivos.dataset[0].data.forEach((item, index) => {
-        if (this.dataSourceMotivos.dataset) {
-          soma = item.value + this.dataSourceMotivos.dataset[1].data[index].value;
-          arraySomas.push({ index, value: soma });
-        }
-      })
-    }
-
-    arraySomas = arraySomas.sort((a, b) => {
-      if (a.value < b.value) return 1;
-      if (a.value > b.value) return -1;
-      return 0;
-    });
-
-    let categoryOrdenado: { label: string }[]= [];
-    let valuesBom: { value: number }[] = [];
-    let valuesRegular: { value: number }[] = [];
-    arraySomas.map((item) => {
-      if (this.dataSourceMotivos.categories) {
-
-        categoryOrdenado.push(this.dataSourceMotivos.categories[0].category[item.index])
-        valuesBom.push(this.dataSourceMotivos.dataset[0].data[item.index])
-        valuesRegular.push(this.dataSourceMotivos.dataset[1].data[item.index])
-
-        console.log(this.dataSourceMotivos.dataset[0].data[item.index])
-        console.log(this.dataSourceMotivos.dataset[1].data[item.index])
-      }
-    })
-
-    if (this.dataSourceMotivos.categories)
-      this.dataSourceMotivos.categories[0].category = categoryOrdenado;
-
-      this.dataSourceMotivos.dataset[0].data = valuesBom;
-      this.dataSourceMotivos.dataset[1].data = valuesRegular;
-
-
-    // console.log(arraySomas)
-  }
-
   primeiraPalavraDeMotivos(value: string) {
     return value.split(' ')[0].split('(')[0];
   };
@@ -168,10 +125,10 @@ export class GraficoComponent implements OnInit, OnDestroy {
     }
   }
 
-  setDadosDeGraficoAvaliacao(captionChart: string, refe_id: number): void {
+  setDadosDeGraficoAvaliacao(captionChart: string, reho_id: number): void {
 
     this.dataSource.chart.caption = captionChart;
-    this.graficoService.pegarAvaliacoesPorRefeicao(refe_id).then((response) => {
+    this.graficoService.pegarAvaliacoesPorRefeicao(reho_id).then((response) => {
       this.chartData.forEach(data => data.value = 0);
       response.data.map(avaliacao => {
         this.incrementarValoresGrafico(avaliacao.rere_reav_id);
@@ -261,7 +218,6 @@ export class GraficoComponent implements OnInit, OnDestroy {
     })
 
     this.dataSourceMotivos.chart.subCaption = '';
-    this.ordenarGraficaDeMotivos()
   }
 
   async ngOnInit(): Promise<void> {
@@ -272,6 +228,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
     }
 
     const tipos = await api.get<ITipoAvaliacao[]>('refeicao-avaliacao');
+
     this.chartData = tipos.data.map(tipo => {
       return {
         label: tipo.reav_tipo,
@@ -279,26 +236,34 @@ export class GraficoComponent implements OnInit, OnDestroy {
       }
     });
 
+    await this.setLabelsDeGraficoMotivos();
+    await this.setDadosDeGraficoMotivos();
+    
     let socketResponseCounter = 0;
 
-    this.setDadosDeGraficoAvaliacao(this.store.ultimaRefeicao.nome, this.store.ultimaRefeicao.id);
+    this.setDadosDeGraficoAvaliacao(this.store.ultimaRefeicao.nome, this.store.ultimaRefeicao.horarioId);
     this.socket.on("pegarRefeicao", async (payload: IPegarRefeicaoEvent) => {
 
-      const refeicaoDiferenteDaUltima = payload.refeicao !== 'aguardando' && this.refeicao[payload.refeicao] !== this.store.ultimaRefeicaoGrafico.id;
+      console.log('pegarRefeicao');
+
+      const refeicaoDiferenteDaUltima = payload.refeicao !== 'aguardando' && payload.horarioId !== this.store.ultimaRefeicaoGrafico.horarioId;
 
       if (!socketResponseCounter || refeicaoDiferenteDaUltima) {
         await this.setLabelsDeGraficoMotivos();
         await this.setDadosDeGraficoMotivos();
+
+        if (!socketResponseCounter) console.log('socketResponse');
+        if (refeicaoDiferenteDaUltima) console.log('refeicaoDirenteDaUltima');
 
         socketResponseCounter = refeicaoDiferenteDaUltima ? 0 : 1;
       }
 
       if (payload.refeicao !== 'aguardando') {
         this.store.ultimaRefeicao = payload.ultimaRefeicao;
-        this.setDadosDeGraficoAvaliacao(refeicaoOpcao[payload.refeicao], this.refeicao[payload.refeicao]);
+        this.setDadosDeGraficoAvaliacao(refeicaoOpcao[payload.refeicao], payload.horarioId);
 
       } else {
-        this.setDadosDeGraficoAvaliacao(payload.ultimaRefeicao.nome, payload.ultimaRefeicao.id);
+        this.setDadosDeGraficoAvaliacao(payload.ultimaRefeicao.nome, payload.ultimaRefeicao.horarioId);
       }
     });
 
@@ -307,8 +272,9 @@ export class GraficoComponent implements OnInit, OnDestroy {
     });
 
     this.socket.on("atualizarValorGrafico", async (response: SocketResponse) => {
-      await this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.id)
+      await this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.horarioId)
         .then(response => {
+
           this.chartData.forEach(data => data.value = 0);
           response.data.map(avaliacao => {
             this.incrementarValoresGrafico(avaliacao.rere_reav_id);

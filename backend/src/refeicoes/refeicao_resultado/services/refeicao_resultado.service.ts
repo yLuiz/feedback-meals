@@ -31,15 +31,16 @@ export class RefeicaoResultadoService {
     return { rere_id: refeicao_resultado.rere_id, rere_data_registro: refeicao_resultado.rere_data_registro };
   }
 
-  async pegarAvaliacoesPorRefeicao(refe_id: number) {
+  async pegarAvaliacoesPorRefeicao(reho_id: number) {
 
-    if (!refe_id) throw new HttpException({ message: 'Id da refeição é necessário.'}, HttpStatus.UNPROCESSABLE_ENTITY);
+    if (!reho_id) throw new HttpException({ message: 'Id do horário da refeição é necessário.'}, HttpStatus.UNPROCESSABLE_ENTITY);
 
     const avaliacoes = await this.prisma.refeicao_resultado.findMany({
       where: {
-        rere_refe_id: refe_id,
-      }
+        rere_reho_id: reho_id,
+      },
     });
+    
 
     return avaliacoes.filter(avaliacao => {
 

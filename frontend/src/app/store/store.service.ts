@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { IRefeicao, refeicaoOpcao } from '../interfaces/IRefeicao';
+import { refeicaoOpcao } from '../interfaces/IRefeicao';
 import { IRefeicaoHorario } from '../interfaces/IRefeicaoHorario';
 import { RefeicaoTexto } from '../types/types';
 

@@ -37,13 +37,13 @@ let RefeicaoResultadoService = class RefeicaoResultadoService {
         this.appGateway.atualizarValorGrafico(refe_id, reav_id);
         return { rere_id: refeicao_resultado.rere_id, rere_data_registro: refeicao_resultado.rere_data_registro };
     }
-    async pegarAvaliacoesPorRefeicao(refe_id) {
-        if (!refe_id)
-            throw new common_1.HttpException({ message: 'Id da refeição é necessário.' }, common_1.HttpStatus.UNPROCESSABLE_ENTITY);
+    async pegarAvaliacoesPorRefeicao(reho_id) {
+        if (!reho_id)
+            throw new common_1.HttpException({ message: 'Id do horário da refeição é necessário.' }, common_1.HttpStatus.UNPROCESSABLE_ENTITY);
         const avaliacoes = await this.prisma.refeicao_resultado.findMany({
             where: {
-                rere_refe_id: refe_id,
-            }
+                rere_reho_id: reho_id,
+            },
         });
         return avaliacoes.filter(avaliacao => {
             const avaliacao_data = avaliacao.rere_data_registro;

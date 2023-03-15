@@ -10,8 +10,8 @@ export class GraficoService {
 
   constructor() { }
 
-  pegarAvaliacoesPorRefeicao(refe_id: number) {
-    return api.get<IRefeicaoResultadoResponse[]>(`refeicao-resultado/${refe_id}`);
+  pegarAvaliacoesPorRefeicao(reho_id: number) {
+    return api.get<IRefeicaoResultadoResponse[]>(`refeicao-resultado/${reho_id}`);
   }
 
   pegarTiposAvaliacoes() {
