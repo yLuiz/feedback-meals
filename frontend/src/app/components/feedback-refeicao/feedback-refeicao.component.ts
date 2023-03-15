@@ -63,12 +63,11 @@ export class FeedbackRefeicaoComponent implements OnInit {
       rere_refe_id: this.store.feedback.refeicao.id,
       rere_reho_id: this.store.refeicao.horarioId
     }).then(response => {
-        this.motivoAvaliacaoService.carregandoMotivos.subscribe(carregando => {
+        const subscrition = this.motivoAvaliacaoService.carregandoMotivos.subscribe(carregando => {
           if (!carregando) {
             this.salvandoAvaliacao = false;
             if(feedbackKey !== "otimo") {
               this.motivoAvaliacaoService.mostrar(response.data.rere_id);
-              
 
               setTimeout(() => {
                 if (!this.motivoAvaliacaoService.motivosEnviados) {
@@ -79,6 +78,8 @@ export class FeedbackRefeicaoComponent implements OnInit {
             }
           }
         })
+
+        subscrition.unsubscribe();
       });
   }
 

@@ -244,16 +244,11 @@ export class GraficoComponent implements OnInit, OnDestroy {
     this.setDadosDeGraficoAvaliacao(this.store.ultimaRefeicao.nome, this.store.ultimaRefeicao.horarioId);
     this.socket.on("pegarRefeicao", async (payload: IPegarRefeicaoEvent) => {
 
-      console.log('pegarRefeicao');
-
       const refeicaoDiferenteDaUltima = payload.refeicao !== 'aguardando' && payload.horarioId !== this.store.ultimaRefeicaoGrafico.horarioId;
 
       if (!socketResponseCounter || refeicaoDiferenteDaUltima) {
         await this.setLabelsDeGraficoMotivos();
         await this.setDadosDeGraficoMotivos();
-
-        if (!socketResponseCounter) console.log('socketResponse');
-        if (refeicaoDiferenteDaUltima) console.log('refeicaoDirenteDaUltima');
 
         socketResponseCounter = refeicaoDiferenteDaUltima ? 0 : 1;
       }
