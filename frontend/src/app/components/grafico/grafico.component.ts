@@ -115,7 +115,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
     return value.split(' ')[0].split('(')[0];
   };
 
-  labelFilter(motivo: string) {
+  filtrarLabel(motivo: string) {
     if(motivo === "Sem refeição")
       return {
         label: motivo
@@ -127,8 +127,6 @@ export class GraficoComponent implements OnInit, OnDestroy {
   }
 
   setDadosDeGraficoAvaliacao(captionChart: string, reho_id: number): void {
-    this.carregandoGraficos = true;
-
     this.dataSource.chart.caption = captionChart;
     this.graficoService.pegarAvaliacoesPorRefeicao(reho_id).then((response) => {
       this.chartData.forEach(data => data.value = 0);
@@ -149,11 +147,11 @@ export class GraficoComponent implements OnInit, OnDestroy {
 
     if (this.store.ultimaRefeicao.id !== refeicaoReference['almoco']) {
       categorias = motivos.map(motivo => {
-        const objectLabel = this.labelFilter(motivo.ream_motivo);
+        const objetoLabel = this.filtrarLabel(motivo.ream_motivo);
   
         if (motivo.ream_refe_id === this.store.ultimaRefeicao.id || motivo.ream_refe_id === null)
           return {
-            label: objectLabel.label
+            label: objetoLabel.label
           }
 
         return { label: "" };
@@ -161,7 +159,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
     } 
     else {
       categorias = motivos.map(motivo => {
-        return this.labelFilter(motivo.ream_motivo);
+        return this.filtrarLabel(motivo.ream_motivo);
       })
     }
 
@@ -193,10 +191,10 @@ export class GraficoComponent implements OnInit, OnDestroy {
     let motivosResultado: IMotivos[] = [];
     if (!motivos) {
       motivosResultado = (await this.graficoService.pegarMotivosAvaliacaoPorDataHora(new Date(), this.store.ultimaRefeicao.horarioId)).data;
-      console.log(this.store.ultimaRefeicao.horarioId);
     }
     else
       motivosResultado = motivos;
+
 
     this.dataSourceMotivos.dataset?.forEach(dataset => {
       this.dataSourceMotivos.categories?.forEach(categoria => {
@@ -210,28 +208,27 @@ export class GraficoComponent implements OnInit, OnDestroy {
       })
     });
 
+    let dadosCarregados = true;
     motivosResultado.map(motivo => {
-      let motivoFiltrado = motivo.ream_motivo === 'Sem refeição' ? 'Sem refeição' : this.primeiraPalavraDeMotivos(motivo.ream_motivo);
+      let motivoFiltrado = motivo.ream_motivo === 'Sem refeição' ? motivo.ream_motivo : this.primeiraPalavraDeMotivos(motivo.ream_motivo);
 
       this.dataSourceMotivos.categories?.forEach(categories => {
         let index = categories.category.map((item, index) => item.label === motivoFiltrado ? index : -1).filter(indice => indice !== -1)[0];
 
         this.dataSourceMotivos.dataset?.forEach(dataset => {
-          if(motivo.reav_tipo === dataset.seriesname) {
-            if(dataset.data[+index]) {
-              dataset.data[+index].value += 1;
-            }
-            else {
-              console.log('Erro ao fazer requisição para o backend');
-              this.mensagemError = "Houve um error ao tentar carregar os dados do gráfico... 🙁"
-              this.errorDialogService.visivel = true;
-            }
+          if(motivo.reav_tipo === dataset.seriesname && index !== undefined) {
+            dataset.data[+index].value += 1;
+          } 
+          else if (index === undefined) {
+            console.log('Erro ao fazer requisição para o backend');
+            dadosCarregados = false;
           }
         })
       })
     })
 
-    this.dataSourceMotivos.chart.subCaption = '';
+    this.dataSourceMotivos.chart.subCaption = dadosCarregados ? "" : "Houve um error ao tentar carregar os dados do gráfico... 🙁";
+    
   }
 
   async ngOnInit(): Promise<void> {
@@ -249,9 +246,6 @@ export class GraficoComponent implements OnInit, OnDestroy {
         value: 0
       }
     });
-
-    await this.setLabelsDeGraficoMotivos();
-    await this.setDadosDeGraficoMotivos();
     
     let socketResponseCounter = 0;
 
@@ -261,10 +255,13 @@ export class GraficoComponent implements OnInit, OnDestroy {
       const refeicaoDiferenteDaUltima = payload.refeicao !== 'aguardando' && payload.horarioId !== this.store.ultimaRefeicaoGrafico.horarioId;
 
       if (!socketResponseCounter || refeicaoDiferenteDaUltima) {
+
         await this.setLabelsDeGraficoMotivos();
         await this.setDadosDeGraficoMotivos();
 
+        this.carregandoGraficos = refeicaoDiferenteDaUltima;
         socketResponseCounter = refeicaoDiferenteDaUltima ? 0 : 1;
+
       }
 
       if (payload.refeicao !== 'aguardando') {
@@ -276,7 +273,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.socket.on('atualizarMotivos', async (payload: { motivos: IMotivos[] }) => {
+    this.socket.on('atualizarGraficoMotivos', async (payload: { motivos: IMotivos[] }) => {
       await this.setDadosDeGraficoMotivos();
     });
 
@@ -292,6 +289,8 @@ export class GraficoComponent implements OnInit, OnDestroy {
         });      
     });
 
+    await this.setLabelsDeGraficoMotivos();
+    await this.setDadosDeGraficoMotivos();
   }
 
   ngOnDestroy() {} 

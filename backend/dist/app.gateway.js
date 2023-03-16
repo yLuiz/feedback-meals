@@ -19,7 +19,7 @@ const socket_io_1 = require("socket.io");
 const IRefeicao_1 = require("./interfaces/IRefeicao");
 const refeicao_horario_service_1 = require("./refeicoes/refeicao-horario/services/refeicao-horario.service");
 const refeicao_resultado_service_1 = require("./refeicoes/refeicao_resultado/services/refeicao_resultado.service");
-const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
+const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
 const options = {
     cors: {
         origin: corsOrigins,
@@ -77,7 +77,7 @@ let AppGateway = class AppGateway {
     }
     async atualizarValorGraficoMotivos() {
         const motivos = await this.refeicaoResultadoService.pegarAvaliacaoPorDataEHora(new Date(), this.ultimaRefeicao.horarioId);
-        this.server.emit('atualizarMotivos', { payload: motivos });
+        this.server.emit('atualizarGraficoMotivos', { payload: motivos });
     }
     afterInit(server) {
         this.logger.log("Init");

@@ -5,7 +5,7 @@
   <span class="loader"></span>
 </div>
 <app-error-dialog [textoMensagem]="mensagemError"></app-error-dialog>
-<section *ngIf="!carregandoGraficos && conexaoFeita">
+<section *ngIf="!carregandoGraficos && conexaoFeita && !errorDialogService.visivel">
 
   <button (click)="goToFeedback()" class="button btn-blue absolute">Voltar</button>
   

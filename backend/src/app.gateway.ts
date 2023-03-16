@@ -12,8 +12,8 @@ interface IRefeicaoStore {
   horarioId: number;
 }
 
-const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
-// const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
+// const corsOrigins = ["http://localhost:3002", "http://147.1.5.47:3002"];
+const corsOrigins = ["http://147.1.0.84", "http://147.1.40.158", "http://147.1.0.85"];
 
 const options = {
   cors: {
@@ -96,7 +96,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
     const motivos = await this.refeicaoResultadoService.pegarAvaliacaoPorDataEHora(new Date(), this.ultimaRefeicao.horarioId);
 
-    this.server.emit('atualizarMotivos', { payload: motivos });
+    this.server.emit('atualizarGraficoMotivos', { payload: motivos });
   }
 
   afterInit(server: Server) {
