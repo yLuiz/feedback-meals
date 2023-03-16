@@ -195,7 +195,6 @@ export class GraficoComponent implements OnInit, OnDestroy {
     else
       motivosResultado = motivos;
 
-
     this.dataSourceMotivos.dataset?.forEach(dataset => {
       this.dataSourceMotivos.categories?.forEach(categoria => {
         dataset.data = [];
@@ -273,10 +272,6 @@ export class GraficoComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.socket.on('atualizarGraficoMotivos', async (payload: { motivos: IMotivos[] }) => {
-      await this.setDadosDeGraficoMotivos();
-    });
-
     this.socket.on("atualizarValorGrafico", async (response: SocketResponse) => {
       await this.graficoService.pegarAvaliacoesPorRefeicao(this.store.refeicao.horarioId)
         .then(response => {
@@ -287,6 +282,10 @@ export class GraficoComponent implements OnInit, OnDestroy {
             this.dataSource.data = this.chartData;
           })
         });      
+    });
+
+    this.socket.on('atualizarGraficoMotivos', async (payload: { motivos: IMotivos[] }) => {
+      await this.setDadosDeGraficoMotivos();
     });
 
     await this.setLabelsDeGraficoMotivos();
