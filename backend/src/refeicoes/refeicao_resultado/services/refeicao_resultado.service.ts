@@ -96,7 +96,7 @@ export class RefeicaoResultadoService {
 
     const dia = zeroSuffix(new Date().getDate(), 2);
 
-    // new Date().getMonth() + 1 porque o metodo getMonth() devolve um valor de 0 à 11, sendo 0 o primeiro mes;
+    // O "new Date().getMonth() + 1" é colocado porque o metodo getMonth() devolve um valor de 0 à 11, sendo 0 o primeiro mes;
     const mes = zeroSuffix(new Date().getMonth() + 1, 2);
     const ano = zeroSuffix(new Date().getFullYear(), 2);
     

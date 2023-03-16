@@ -1,7 +1,7 @@
 <app-motivo-avaliacao></app-motivo-avaliacao>
 <app-error-dialog></app-error-dialog>
 
-<div *ngIf="(!errorDialogService.visivel && !refeicao) || salvandoAvaliacao" class="background-disable">
+<div *ngIf="(!errorDialogService.visivel && !avaliacaoHabilitada) || salvandoAvaliacao" class="background-disable">
   <div class="loader-row">
     <span class="loading"></span>
   </div>

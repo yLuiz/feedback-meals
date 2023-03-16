@@ -34,6 +34,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
 
   avaliacoes: any;
   refeicao!: RefeicaoType;
+  mensagemError: string = '';
   
   dataSource!: IDadosFusionChartScrollColumn2D;
   dataSourceMotivos!: IDadosFusionChartScrollColumn2D;
@@ -126,6 +127,7 @@ export class GraficoComponent implements OnInit, OnDestroy {
   }
 
   setDadosDeGraficoAvaliacao(captionChart: string, reho_id: number): void {
+    this.carregandoGraficos = true;
 
     this.dataSource.chart.caption = captionChart;
     this.graficoService.pegarAvaliacoesPorRefeicao(reho_id).then((response) => {
@@ -134,6 +136,8 @@ export class GraficoComponent implements OnInit, OnDestroy {
         this.incrementarValoresGrafico(avaliacao.rere_reav_id);
       });
       this.dataSource.data = this.chartData;
+
+      this.carregandoGraficos = false;
     });
   }
 
@@ -182,14 +186,15 @@ export class GraficoComponent implements OnInit, OnDestroy {
       })
     });
 
-    this.carregandoGraficos = false;
   }
 
   async setDadosDeGraficoMotivos(motivos?: IMotivos[]) {
 
     let motivosResultado: IMotivos[] = [];
-    if (!motivos)
+    if (!motivos) {
       motivosResultado = (await this.graficoService.pegarMotivosAvaliacaoPorDataHora(new Date(), this.store.ultimaRefeicao.horarioId)).data;
+      console.log(this.store.ultimaRefeicao.horarioId);
+    }
     else
       motivosResultado = motivos;
 
@@ -209,10 +214,19 @@ export class GraficoComponent implements OnInit, OnDestroy {
       let motivoFiltrado = motivo.ream_motivo === 'Sem refeição' ? 'Sem refeição' : this.primeiraPalavraDeMotivos(motivo.ream_motivo);
 
       this.dataSourceMotivos.categories?.forEach(categories => {
-        let index = categories.category.map((item, index) => item.label === motivoFiltrado && index).filter(indice => indice !== false)[0];
+        let index = categories.category.map((item, index) => item.label === motivoFiltrado ? index : -1).filter(indice => indice !== -1)[0];
 
         this.dataSourceMotivos.dataset?.forEach(dataset => {
-          if(motivo.reav_tipo === dataset.seriesname) dataset.data[+index].value += 1;
+          if(motivo.reav_tipo === dataset.seriesname) {
+            if(dataset.data[+index]) {
+              dataset.data[+index].value += 1;
+            }
+            else {
+              console.log('Erro ao fazer requisição para o backend');
+              this.mensagemError = "Houve um error ao tentar carregar os dados do gráfico... 🙁"
+              this.errorDialogService.visivel = true;
+            }
+          }
         })
       })
     })

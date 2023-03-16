@@ -4,7 +4,7 @@
   </div>
   <span class="loader"></span>
 </div>
-<app-error-dialog></app-error-dialog>
+<app-error-dialog [textoMensagem]="mensagemError"></app-error-dialog>
 <section *ngIf="!carregandoGraficos && conexaoFeita">
 
   <button (click)="goToFeedback()" class="button btn-blue absolute">Voltar</button>

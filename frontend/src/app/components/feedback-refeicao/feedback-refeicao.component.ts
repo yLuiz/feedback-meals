@@ -107,6 +107,8 @@ export class FeedbackRefeicaoComponent implements OnInit {
         horarioId: response.horarioId,
       }
 
+      this.avaliacaoHabilitada = true;
+
       if (response.refeicao === 'aguardando') {
         const container = document.getElementById('feedback-buttons');
         if (container) {
@@ -115,7 +117,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
         }
       } else {
 
-        this.store.avaliacaoHabilitada = true;
+        // this.store.avaliacaoHabilitada = true;
 
         const container = document.getElementById('feedback-buttons');
         if (container) {
