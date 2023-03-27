@@ -4,6 +4,8 @@
 <div *ngIf="(!errorDialogService.visivel && !avaliacaoHabilitada) || salvandoAvaliacao" class="background-disable">
   <div class="loader-row">
     <span class="loading"></span>
+    <p>{{textoDeCarregamento}}</p>
+    <p>🔃 Caso demore mais que o normal, recarregue a página! 🔃</p>
   </div>
 </div>
 <section *ngIf="!errorDialogService.visivel" id="section-feedback">

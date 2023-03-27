@@ -37,6 +37,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
   title!: string;
   salvandoAvaliacao: boolean = false;
   avaliacaoHabilitada: boolean = false;
+  textoDeCarregamento = "Carregando refeição...";
 
   async submitAvaliacao(feedbackKey: AvaliacaoOpcoes) {
 
@@ -44,6 +45,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
     if (this.motivoAvaliacaoService.visibility) return;
 
     this.salvandoAvaliacao = true;
+    this.textoDeCarregamento = "Registrando avaliação...";
 
     this.messageService.show();
     setTimeout(() => {
@@ -66,6 +68,7 @@ export class FeedbackRefeicaoComponent implements OnInit {
         const subscrition = this.motivoAvaliacaoService.carregandoMotivos.subscribe(carregando => {
           if (!carregando) {
             this.salvandoAvaliacao = false;
+            this.textoDeCarregamento = "Carregando refeição...";
             if(feedbackKey !== "otimo") {
               this.motivoAvaliacaoService.mostrar(response.data.rere_id);
 
@@ -116,8 +119,6 @@ export class FeedbackRefeicaoComponent implements OnInit {
           document.getElementById('section-feedback')!.style.justifyContent = 'center';
         }
       } else {
-
-        // this.store.avaliacaoHabilitada = true;
 
         const container = document.getElementById('feedback-buttons');
         if (container) {

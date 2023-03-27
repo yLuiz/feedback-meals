@@ -1,7 +1,10 @@
 <div *ngIf="motivoAvaliacaoService.visibility" class={{motivoAvaliacaoService.classe}}>
-
   <div>
     <h1>O que podemos melhorar?</h1>
+  </div>
+  <div *ngIf="!avaliacaoMotivos.length" class="loader-row">
+    <span class="loader"></span>
+    <p>Carregando motivos...</p>
   </div>
   <ul>
     <li class="motivo-item" *ngFor="let avaliacao_motivo of avaliacaoMotivos">
