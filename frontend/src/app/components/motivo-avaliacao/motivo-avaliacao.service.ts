@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import api from 'src/api/api';
 import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
 
@@ -7,11 +8,23 @@ import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoA
 })
 export class MotivoAvaliacaoService {
 
-  constructor() { }
+  constructor() {}
+
+  eventPopupEscondida = new BehaviorSubject<boolean>(false);
+  carregandoMotivos = new BehaviorSubject(true);
 
   private refeicaoResultadoId: number = 0;
   private motivoClasse = 'motivo-container';
   private motivoVisibility = false;
+  private motivosEnviadosVariavel = false;
+
+  set motivosEnviados(value: boolean) {
+    this.motivosEnviadosVariavel = value;
+  }
+
+  get motivosEnviados() {
+    return this.motivosEnviadosVariavel;
+  }
 
   get classe() {
     return this.motivoClasse;
@@ -34,14 +47,19 @@ export class MotivoAvaliacaoService {
     this.rereId = rere_id;
 
     this.motivoVisibility = true;
+    this.eventPopupEscondida.next(false)
     this.motivoClasse = 'motivo-container show-container';
   }
 
   public esconder(timer: number) {
-    this.motivoClasse = 'motivo-container hide-container';
+    setTimeout(() => {
+      this.motivoClasse = 'motivo-container hide-container';
+      this.eventPopupEscondida.next(true)
+    }, timer);
+
     setTimeout(() => {
       this.motivoVisibility = false;
-    }, timer);
+    }, timer + 1000);
   }
 
   public cadastrarMotivoAvaliacao(data: { motivos: ICadastroMotivo[] }) {
@@ -49,7 +67,7 @@ export class MotivoAvaliacaoService {
   }
 
   public pegarMotivosAvaliacao() {
-    return api.get<IAvaliacaoMotivo[]>('refeicao-avaliacao-motivo');
+    return api.get<IAvaliacaoMotivo[]>(`refeicao-avaliacao-motivo`);
   }
 
 }

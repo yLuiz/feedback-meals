@@ -4,15 +4,16 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = "mysql://root:my@teste@localhost:3306/refeicoes?schema=public"
 }
 
 model refeicao {
-  refe_id            Int                   @id @default(autoincrement())
-  refe_refeicao      String?               @db.VarChar(45)
-  refe_status        refeicao_refe_status? @default(ATIVO)
-  refeicao_horarios  refeicao_horarios[]
-  refeicao_resultado refeicao_resultado[]
+  refe_id                   Int                         @id @default(autoincrement())
+  refe_refeicao             String?                     @db.VarChar(45)
+  refe_status               refeicao_refe_status?       @default(dbgenerated("1"))
+  refeicao_avaliacao_motivo refeicao_avaliacao_motivo[]
+  refeicao_horarios         refeicao_horarios[]
+  refeicao_resultado        refeicao_resultado[]
 }
 
 model refeicao_avaliacao {
@@ -25,37 +26,12 @@ model refeicao_avaliacao {
 model refeicao_avaliacao_motivo {
   ream_id                   Int                                    @id @default(autoincrement())
   ream_motivo               String?                                @db.VarChar(45)
-  ream_status               refeicao_avaliacao_motivo_ream_status? @default(ATIVO)
-  refeicao_resultado_motivo refeicao_resultado_motivo[]            @ignore
-}
-
-model refeicao_resultado {
-  rere_id                   Int                             @id @default(autoincrement())
-  rere_refe_id              Int
-  rere_reav_id              Int
-  rere_data_registro        DateTime?                       @db.DateTime(0)
-  rere_status               refeicao_resultado_rere_status? @default(ATIVO)
-  rere_reho_id              Int?
-  refeicao                  refeicao                        @relation(fields: [rere_refe_id], references: [refe_id], onDelete: NoAction, map: "fk_refeicao_resultado_refeicao")
-  refeicao_avaliacao        refeicao_avaliacao              @relation(fields: [rere_reav_id], references: [reav_id], onDelete: NoAction, map: "fk_refeicao_resultado_refeicao_avaliacao1")
-  refeicao_horarios         refeicao_horarios?              @relation(fields: [rere_reho_id], references: [reho_id], onDelete: NoAction, map: "fk_refeicao_resultado_refeicao_horarios_id")
+  ream_status               refeicao_avaliacao_motivo_ream_status? @default(dbgenerated("1"))
+  ream_refe_id              Int?
+  refeicao                  refeicao?                              @relation(fields: [ream_refe_id], references: [refe_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_refeicao_refe_id")
   refeicao_resultado_motivo refeicao_resultado_motivo[]
 
-  @@index([rere_reav_id], map: "fk_refeicao_resultado_refeicao_avaliacao1_idx")
-  @@index([rere_refe_id], map: "fk_refeicao_resultado_refeicao_idx")
-  @@index([rere_reho_id], map: "fk_refeicao_resultado_refeicao_horarios_id")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model refeicao_resultado_motivo {
-  rerm_rere_id              Int
-  rerm_ream_id              Int
-  refeicao_resultado        refeicao_resultado?        @relation(fields: [rerm_rere_id], references: [rere_id], onDelete: Cascade, map: "FK1_rere_id")
-  refeicao_avaliacao_motivo refeicao_avaliacao_motivo? @relation(fields: [rerm_ream_id], references: [ream_id], onDelete: Cascade, map: "FK2_ream_id")
-
-  @@id([rerm_ream_id, rerm_rere_id])
-  @@index([rerm_ream_id], map: "rerm_ream_id")
-  @@index([rerm_rere_id], map: "rerm_reav_id")
+  @@index([ream_refe_id], map: "FK_refeicao_refe_id")
 }
 
 model refeicao_horarios {
@@ -67,6 +43,34 @@ model refeicao_horarios {
   refeicao_resultado refeicao_resultado[]
 
   @@index([reho_refe_id], map: "FK1_refeicao_horarios_refe_id")
+}
+
+model refeicao_resultado {
+  rere_id                   Int                             @id @default(autoincrement())
+  rere_refe_id              Int
+  rere_reav_id              Int
+  rere_data_registro        DateTime?                       @db.DateTime()
+  rere_status               refeicao_resultado_rere_status? @default(dbgenerated("1"))
+  rere_reho_id              Int?
+  refeicao                  refeicao                        @relation(fields: [rere_refe_id], references: [refe_id], onDelete: NoAction, map: "fk_refeicao_resultado_refeicao")
+  refeicao_avaliacao        refeicao_avaliacao              @relation(fields: [rere_reav_id], references: [reav_id], onDelete: NoAction, map: "fk_refeicao_resultado_refeicao_avaliacao1")
+  refeicao_horarios         refeicao_horarios?              @relation(fields: [rere_reho_id], references: [reho_id], onDelete: NoAction, map: "fk_refeicao_resultado_refeicao_horarios_id")
+  refeicao_resultado_motivo refeicao_resultado_motivo[]
+
+  @@index([rere_reav_id], map: "fk_refeicao_resultado_refeicao_avaliacao1_idx")
+  @@index([rere_reho_id], map: "fk_refeicao_resultado_refeicao_horarios_id")
+  @@index([rere_refe_id], map: "fk_refeicao_resultado_refeicao_idx")
+}
+
+model refeicao_resultado_motivo {
+  rerm_rere_id              Int
+  rerm_ream_id              Int
+  refeicao_resultado        refeicao_resultado        @relation(fields: [rerm_rere_id], references: [rere_id], onDelete: Cascade, map: "FK1_rere_id")
+  refeicao_avaliacao_motivo refeicao_avaliacao_motivo @relation(fields: [rerm_ream_id], references: [ream_id], onDelete: Cascade, map: "FK2_ream_id")
+
+  @@id([rerm_ream_id, rerm_rere_id])
+  @@index([rerm_ream_id], map: "rerm_ream_id")
+  @@index([rerm_rere_id], map: "rerm_reav_id")
 }
 
 enum refeicao_refe_status {

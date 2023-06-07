@@ -1,17 +1,23 @@
 import { Injectable } from '@angular/core';
+import { refeicaoOpcao } from '../interfaces/IRefeicao';
 import { IRefeicaoHorario } from '../interfaces/IRefeicaoHorario';
-import { MealsText } from '../types/types';
+import { RefeicaoTexto } from '../types/types';
 
-interface IStore {
-  refeicao: {
-    nome: MealsText,
-    id: number
-  },
+export interface IRefeicaoStore {
+  nome: RefeicaoTexto;
+  id: number;
+  horarioId: number;
+}
+
+const refeicao = { aguardando: 0 }
+
+export interface IStore {
+  ultimaRefeicaoGrafico: IRefeicaoStore,
+  ultimaRefeicao: IRefeicaoStore,
+  avaliacaoHabilitada: boolean;
+  refeicao: IRefeicaoStore;
   feedback: {
-    refeicao: {
-      nome: MealsText,
-      id: number
-    };
+    refeicao: IRefeicaoStore;
     avaliacao: {
       otimo: number,
       bom: number,
@@ -26,18 +32,31 @@ interface IStore {
   providedIn: 'root'
 })
 export class StoreService {
-  
-  constructor() {}
 
+  constructor() {}
+  
   private globalVariables: IStore = {
+    ultimaRefeicaoGrafico: {
+      horarioId: 1,
+      id: 1,
+      nome: refeicaoOpcao['desjejum'] as RefeicaoTexto
+    },
+    ultimaRefeicao: {
+      horarioId: 1,
+      id: 1,
+      nome: refeicaoOpcao['desjejum'] as RefeicaoTexto
+    },
+    avaliacaoHabilitada: false,
     refeicao: {
-      nome: "Desjejum",
-      id: 1
+      nome: refeicaoOpcao['aguardando'] as RefeicaoTexto,
+      id: refeicao['aguardando'],
+      horarioId: 0
     },
     feedback: {
       refeicao: {
-        nome: "Desjejum",
-        id: 1
+        nome: refeicaoOpcao['aguardando'] as RefeicaoTexto,
+        id: refeicao['aguardando'],
+        horarioId: 0
       },
       avaliacao: {
         otimo: 0,
@@ -49,14 +68,39 @@ export class StoreService {
     horarios: []
   };
 
+  get ultimaRefeicao() {
+    return this.globalVariables.ultimaRefeicao;
+  }
+
+  set ultimaRefeicao(value: IRefeicaoStore) {
+    this.globalVariables.ultimaRefeicao = value;
+  }
+
+  get ultimaRefeicaoGrafico() {
+    return this.globalVariables.ultimaRefeicaoGrafico;
+  }
+
+  set ultimaRefeicaoGrafico(value: IRefeicaoStore) {
+    this.globalVariables.ultimaRefeicaoGrafico = value;
+  }
+
+  get avaliacaoHabilitada() {
+    return this.globalVariables.avaliacaoHabilitada;
+  }
+
+  set avaliacaoHabilitada(value: boolean) {
+    this.globalVariables.avaliacaoHabilitada = value;
+  }
+
   get refeicao() {
     return this.globalVariables.refeicao;
   }
 
-  set refeicao(refeicao: { nome: MealsText, id: number }) {
+  set refeicao(refeicao: { nome: RefeicaoTexto, id: number, horarioId: number }) {
     this.globalVariables.refeicao = {
       id: refeicao.id,
-      nome: refeicao.nome
+      nome: refeicao.nome,
+      horarioId: refeicao.horarioId
     };
   }
 
@@ -82,8 +126,9 @@ export class StoreService {
   public feedbackClear() {
     this.globalVariables.feedback = {
       refeicao: {
-        nome: "Desjejum",
-        id: 1
+        nome: refeicaoOpcao['aguardando'] as RefeicaoTexto,
+        id: refeicao['aguardando'],
+        horarioId: 0
       },
       avaliacao: {
         otimo: 0,
@@ -93,6 +138,4 @@ export class StoreService {
       }
     }
   }
-
-
 }

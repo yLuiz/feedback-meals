@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
+import { Subscription } from 'rxjs';
 import { IAvaliacaoMotivo, ICadastroMotivo } from 'src/app/interfaces/IRefeicaoAvaliacaoMotivo';
+import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
+import { RefeicaoService } from 'src/app/references/refeicao.service';
+import { RefeicaoType } from 'src/app/types/types';
 import { MotivoAvaliacaoService } from './motivo-avaliacao.service';
 
 @Component({
@@ -10,19 +15,24 @@ import { MotivoAvaliacaoService } from './motivo-avaliacao.service';
 export class MotivoAvaliacaoComponent implements OnInit {
 
   constructor(
-    public motivoAvaliacaoService: MotivoAvaliacaoService
+    public motivoAvaliacaoService: MotivoAvaliacaoService,
+    private socket: Socket,
+    private refeicaoService: RefeicaoService
   ) { }
 
+  motivoPopupSubscribe!: Subscription;
   enviandoMotivos = false;
-  motivosEnviado = false;
+  motivosEnviados = false;
   podeEnviarMotivos = true;
+  refeicoes!: RefeicaoType;
 
   motivosSelecionados: IAvaliacaoMotivo[] = [];
   avaliacaoMotivos: IAvaliacaoMotivo[] = [];
 
   fecharPopUp() {
-    this.motivoAvaliacaoService.esconder(500);
+    this.motivoAvaliacaoService.esconder(50);
     this.motivosSelecionados = [];
+    this.motivoAvaliacaoService.motivosEnviados = true;
   };
 
   selecionarMotivo(motivo: IAvaliacaoMotivo) {
@@ -42,15 +52,7 @@ export class MotivoAvaliacaoComponent implements OnInit {
     }
   }
 
-  setMotivos() {
-    this.motivoAvaliacaoService.pegarMotivosAvaliacao()
-      .then(response => {
-        this.avaliacaoMotivos = response.data;
-      })
-  }
-
   enviarMotivos() {
-
     if (!this.podeEnviarMotivos) return;
 
     this.podeEnviarMotivos = false;
@@ -63,25 +65,50 @@ export class MotivoAvaliacaoComponent implements OnInit {
       } as ICadastroMotivo;
     })
     this.motivoAvaliacaoService.cadastrarMotivoAvaliacao({ motivos: motivosCadastro })
-      .then((response) => {
-        const time = 500;
-        
-        this.motivosSelecionados = [];
+      .then(() => {
+        const time = 50;
 
-        this.motivosEnviado = true;
         this.enviandoMotivos = false;
+        this.motivosEnviados = true;
+        this.motivoAvaliacaoService.motivosEnviados = true;
 
         setTimeout(() => {
           this.motivoAvaliacaoService.esconder(time);
           setTimeout(() => {
-            this.motivosEnviado = false;
+            this.motivosEnviados = false;
             this.podeEnviarMotivos = true;
-          }, time);
+          }, 500);
         }, time);
       });
   }
 
-  ngOnInit(): void {
-    this.setMotivos();
+  async ngOnInit(): Promise<void> {
+
+    this.motivoPopupSubscribe = this.motivoAvaliacaoService.eventPopupEscondida.subscribe(popupEscondida => {      
+      popupEscondida ? this.motivosSelecionados = [] : null;
+    });
+
+    this.refeicoes = await this.refeicaoService.consultarRefeicoes();
+
+    this.socket.on('pegarRefeicao', (payload: IPegarRefeicaoEvent) => {
+
+      if (!this.avaliacaoMotivos.length && payload.refeicao !== 'aguardando') {
+
+        this.motivoAvaliacaoService.pegarMotivosAvaliacao()
+        .then(response => {
+          console.log(this.refeicoes[payload.refeicao]);
+          this.avaliacaoMotivos = response.data.filter(motivo => {
+            return motivo.ream_refe_id === this.refeicoes[payload.refeicao] || motivo.ream_refe_id === null;
+          });
+
+          this.motivoAvaliacaoService.carregandoMotivos.next(false);
+        })
+        .catch(err => console.log(err));
+      } else if (payload.refeicao === 'aguardando') {
+        this.avaliacaoMotivos = [];
+      }
+    });  
   }
+
+  ngOnDestroy() { this.motivoPopupSubscribe.unsubscribe(); }
 }

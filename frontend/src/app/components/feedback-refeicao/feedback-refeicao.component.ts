@@ -3,11 +3,15 @@ import { Router } from '@angular/router';
 import { StoreService } from 'src/app/store/store.service';
 import { MessageService } from '../message/message.service';
 import { FeedbackRefeicaoService } from './feedback-refeicao.service';
-import { refeicao, refeicao_avaliacao } from '../../references/refeicao';
+import { refeicao_avaliacao } from '../../references/refeicao';
 import { MotivoAvaliacaoService } from '../motivo-avaliacao/motivo-avaliacao.service';
-import { FeedbackOptions, MealsOption, MealsText } from 'src/app/types/types';
-import { mealsOption } from 'src/app/interfaces/IRefeicao';
+import { AvaliacaoOpcoes, RefeicaoTexto, RefeicaoType } from 'src/app/types/types';
+import { refeicaoOpcao } from 'src/app/interfaces/IRefeicao';
 import { Socket } from 'ngx-socket-io';
+import { IRefeicaoHorario } from 'src/app/interfaces/IRefeicaoHorario';
+import { RefeicaoService } from 'src/app/references/refeicao.service';
+import { IPegarRefeicaoEvent } from 'src/app/interfaces/Socket.interfaces';
+import { ErrorDialogService } from '../error-dialog/error-dialog.service';
 
 
 @Component({
@@ -16,23 +20,37 @@ import { Socket } from 'ngx-socket-io';
   styleUrls: ['./feedback-refeicao.component.scss']
 })
 export class FeedbackRefeicaoComponent implements OnInit {
-  
-
   constructor(
     private socket: Socket,
-    public store: StoreService,
     private router: Router,
     private messageService: MessageService,
     private feedbackRefeicaoService: FeedbackRefeicaoService,
-    public motivoAvaliacaoService: MotivoAvaliacaoService
+    private refeicaoService: RefeicaoService,
+    
+    public store: StoreService,
+    public motivoAvaliacaoService: MotivoAvaliacaoService,
+    public errorDialogService: ErrorDialogService
   ) { }
 
-  timer!: ReturnType<typeof setTimeout>;
+  horarios: IRefeicaoHorario[] = [];
+  refeicao!: RefeicaoType;
   title!: string;
+  salvandoAvaliacao: boolean = false;
+  avaliacaoHabilitada: boolean = false;
+  textoDeCarregamento = "Carregando refeição...";
 
-  submitFeedback(feedbackKey: FeedbackOptions) {
+  async submitAvaliacao(feedbackKey: AvaliacaoOpcoes) {
 
-    if (this.messageService.visibility) return;
+    if (this.store.refeicao.id === 0) return;
+    if (this.motivoAvaliacaoService.visibility) return;
+
+    this.salvandoAvaliacao = true;
+    this.textoDeCarregamento = "Registrando avaliação...";
+
+    this.messageService.show();
+    setTimeout(() => {
+      this.messageService.hide();
+    }, 800);
         
     this.store.feedback = {
       refeicao: this.store.refeicao,
@@ -44,40 +62,75 @@ export class FeedbackRefeicaoComponent implements OnInit {
 
     this.feedbackRefeicaoService.submitFeedback({ 
       rere_reav_id: refeicao_avaliacao[feedbackKey],
-      rere_refe_id: this.store.feedback.refeicao.id
+      rere_refe_id: this.store.feedback.refeicao.id,
+      rere_reho_id: this.store.refeicao.horarioId
     }).then(response => {
-      if(feedbackKey !== "otimo") {
-        this.motivoAvaliacaoService.mostrar(response.data.rere_id);
-      }
-    })
+        const subscrition = this.motivoAvaliacaoService.carregandoMotivos.subscribe(carregando => {
+          if (!carregando) {
+            this.salvandoAvaliacao = false;
+            this.textoDeCarregamento = "Carregando refeição...";
+            if(feedbackKey !== "otimo") {
+              this.motivoAvaliacaoService.mostrar(response.data.rere_id);
 
-    if (!this.messageService.visibility) {
-      this.messageService.show();
+              setTimeout(() => {
+                if (!this.motivoAvaliacaoService.motivosEnviados) {
+                  this.motivoAvaliacaoService.esconder(1000);
+                }
+                this.motivoAvaliacaoService.motivosEnviados = false;
+              }, 12000);
+            }
+          }
+        })
 
-      this.timer = setTimeout(() => {
-        this.messageService.hide();
-      }, 2000);
-    }
+        subscrition.unsubscribe();
+      });
   }
 
-  goToMenu() {
-    this.router.navigate(['menu']);
+  irParaGrafico() {
+    this.router.navigate(['grafico']);
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+
+    this.refeicao = await this.refeicaoService.consultarRefeicoes(); // { desjejum: 1, almoco: 2, lanche: 3 }
 
     this.title = this.store.refeicao.nome
+    if (!this.store.refeicao.id) {
+      const container = document.getElementById('feedback-buttons');
+      if (container) {
+        container.style.display = 'none';
+        document.getElementById('section-feedback')!.style.justifyContent = 'center';
+      }
+    }
 
-    this.socket.on('pegarRefeicao', (response: { refeicao: MealsOption }) => {
+    this.socket.on('pegarRefeicao', (response: IPegarRefeicaoEvent) => {
       const refeicaoPropriedades = {
-        nome: mealsOption[response.refeicao] as MealsText,
-        id: refeicao[response.refeicao]
+        nome: refeicaoOpcao[response.refeicao] as RefeicaoTexto,
+        id: this.refeicao[response.refeicao],
+        horarioId: response.horarioId,
+      }
+
+      this.avaliacaoHabilitada = true;
+
+      if (response.refeicao === 'aguardando') {
+        const container = document.getElementById('feedback-buttons');
+        if (container) {
+          container.style.display = 'none';
+          document.getElementById('section-feedback')!.style.justifyContent = 'center';
+        }
+      } else {
+
+        const container = document.getElementById('feedback-buttons');
+        if (container) {
+          container.style.display = 'flex';
+          document.getElementById('section-feedback')!.style.justifyContent = 'flex-start';
+        }
       }
   
       this.store.refeicao = refeicaoPropriedades;
       this.store.feedback.refeicao = refeicaoPropriedades;
 
-      this.title = mealsOption[response.refeicao];
+      this.title = refeicaoOpcao[response.refeicao];
     });
   }
 

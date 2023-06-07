@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import api from 'src/api/api';
-import { mealsOption } from './interfaces/IRefeicao';
+import { refeicaoOpcao } from './interfaces/IRefeicao';
 import { IRefeicaoHorario } from './interfaces/IRefeicaoHorario';
-import { refeicao } from './references/refeicao';
+import { IPegarRefeicaoEvent } from './interfaces/Socket.interfaces';
+import { RefeicaoService } from './references/refeicao.service';
 import { StoreService } from './store/store.service';
-import { MealsOption, MealsText } from './types/types';
+import { RefeicaoTexto, RefeicaoType } from './types/types';
 
 @Component({
   selector: 'app-root',
@@ -14,18 +15,20 @@ import { MealsOption, MealsText } from './types/types';
 export class AppComponent implements OnInit {
 
   title = 'feedback-meals';
+  refeicao!: RefeicaoType;
 
   constructor(
     private socket: Socket,
-    private store: StoreService
+    private store: StoreService,
+    private refeicaoService: RefeicaoService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
-    api.get<IRefeicaoHorario[]>('/refeicao-horario')
+    this.refeicao = await this.refeicaoService.consultarRefeicoes();
+
+    api.get<IRefeicaoHorario[]>('refeicao-horario')
       .then(response => {
-
-        console.log(response.data)
         
         this.store.horarios = response.data.map(horario => {
           return {
@@ -34,33 +37,30 @@ export class AppComponent implements OnInit {
             reho_hora_fim: new Date(`${horario.reho_hora_fim}`)
           }
         });
-
-        // Aqui é apenas testes de manipulação de data.
-
-        
-
-
-        const hora = this.store.horarios[0].reho_hora_inicio.getUTCHours();
-        const minutos = this.store.horarios[0].reho_hora_inicio.getUTCMinutes();
-
-        const horaAtual = new Date().getHours();
-        const minutoAtual = new Date().getMinutes();
-
-        console.log(`${hora}:${minutos}`);
-        console.log(`${horaAtual}:${minutoAtual}`);
       })
 
-    this.socket.on('pegarRefeicao', (response: { refeicao: MealsOption }) => {
+    this.socket.on('pegarRefeicao', (payload: IPegarRefeicaoEvent) => {
+
+      if (payload.refeicao !== 'aguardando') this.store.avaliacaoHabilitada = true;
+
       this.store.refeicao = {
-        id: refeicao[response.refeicao],
-        nome: mealsOption[response.refeicao] as MealsText
+        id: this.refeicao[payload.refeicao],
+        nome: refeicaoOpcao[payload.refeicao] as RefeicaoTexto,
+        horarioId: payload.horarioId
       }
+
+      this.store.ultimaRefeicao = payload.ultimaRefeicao;
+
+      setTimeout(() => {
+        this.store.ultimaRefeicaoGrafico = payload.ultimaRefeicao;
+      }, 1000);
 
       this.store.feedback = {
         ...this.store.feedback,
         refeicao: {
-          id: refeicao[response.refeicao],
-          nome: mealsOption[response.refeicao] as MealsText
+          id: this.refeicao[payload.refeicao],
+          nome: refeicaoOpcao[payload.refeicao] as RefeicaoTexto,
+          horarioId: payload.horarioId
         }
       }
     })

@@ -1,3 +1,16 @@
+.loader-row {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  > div {
+    p {
+      color: #FFF;
+    }
+  }
+}
+
 .motivo-container {
   position: absolute;
   display: flex;
@@ -8,6 +21,7 @@
   border: 2px solid var(--bg-blue);
 
   width: 60%;
+  padding-bottom: 20px;
 
   top: 5%;
   right: 50%;
@@ -22,11 +36,23 @@
     height: auto;
   }
 
-  @media (max-height: 552px) {
+  @media (max-height: 682px) {
     width: 100%;
     height: 100%;
 
     top: 0;
+  }
+
+  > div {
+
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+
+    h1 {
+      font-size: 1.4rem;
+      color: #FFF;
+    }
   }
 
   ul {
@@ -38,57 +64,57 @@
 
     align-items: center;
     justify-content: center;
-    gap: 40px;
 
     width: 100%;
-    padding: 50px 10px;
+    padding: 0px 10px;
 
     overflow-y: auto;
+
+    li {
+      margin: 10px;
+    }
+
   }
 
   .acao {
     position: relative;
     display: flex;
-    align-self: flex-end;
-    justify-content: flex-end;
+    align-self: center;
+    justify-content: center;
     padding: 10px;
     width: 100%;
     min-height: 70px;
   }
 
-  .botao-confirmar {
-    position: absolute;
+  .botao-fechar, .botao-confirmar {
     display: flex;
     
     align-items: center;
     justify-content: center;
 
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #38bf38;
-    border: 1px solid #66bc66;
+    margin: 0 15px;
+
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    max-width: 300px;
+    max-width: 200px;
     height: 50px;
   }
 
-  .botao-confirmar.disabled {
-    background-color: #0092005f;
-    border: 1px solid #0092005f;
+  .botao-fechar {
+    background-color: var(--bg-red);
+    border: 1px solid var(--bg-red-200);
   }
-}
 
-.btn-fechar {
-  align-self: flex-end;
-
-  margin-top: 10px;
-  margin-right: 10px;
-
-  background-color: var(--bg-red);
-  max-width: 40px;
-  color: #FFF;
+  .botao-confirmar {
+    background-color: #38bf38;
+    border: 1px solid #66bc66;
+  
+    .botao-confirmar.disabled {
+      background-color: #0092005f;
+      border: 1px solid #0092005f;
+    }
+  }
+  
 }
 
 .motivo-item {

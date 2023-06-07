@@ -1,3 +1,4 @@
-export type MealsOption = 'desjejum' | 'almoco' | 'lanche';
-export type MealsText = "Desjejum" | "Almoço / Janta" | "Lanche";
-export type FeedbackOptions = "otimo" | "bom" | "regular";
+export type RefeicaoOpcoes = 'desjejum' | 'almoco' | 'lanche' | 'aguardando';
+export type RefeicaoTexto = "Desjejum" | "Almoço / Janta" | "Lanche" | "Aguardando Refeição";
+export type AvaliacaoOpcoes = "otimo" | "bom" | "regular";
+export type RefeicaoType = { [key: string]: number } // ==> [key: RefeicaoOpcoes]: id

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { RefeicaoResultadoService } from '../services/refeicao_resultado.service';
 
 @Controller('refeicao-resultado')
@@ -18,20 +18,26 @@ export class RefeicaoResultadoController {
     return this.refeicaoResultadoService.pegarDetalhesRefeicaoResultado();
   }
 
-  @Get(':refe_id')
-  pegarTodasAvaliacoesPorRefeicao(@Param('refe_id') refe_id: number) {
-    return this.refeicaoResultadoService.pegarAvaliacoesPorRefeicao(Number(refe_id));
+  @Get('motivos')
+  pegarAvaliacaoPorDataEHora(@Query() query: { data: Date, horario_id: number }) {
+    const { data, horario_id: horarioId } = query;
+    return this.refeicaoResultadoService.pegarAvaliacaoPorDataEHora(data, horarioId);
+  }
+
+  @Get(':reho_id')
+  pegarTodasAvaliacoesPorRefeicao(@Param('reho_id') reho_id: number) {
+    return this.refeicaoResultadoService.pegarAvaliacoesPorRefeicao(Number(reho_id));
   }
 
   @Post()
   cadastrarRefeicaoResultado(@Body() body: { 
     refe_id: number,
     reav_id: number,
-    rere_reho_id: number
+    reho_id: number
   }) {
 
-    const { refe_id, reav_id, rere_reho_id } = body;
+    const { refe_id, reav_id, reho_id } = body;
 
-    return this.refeicaoResultadoService.cadastrarAvaliacao(refe_id, reav_id, rere_reho_id);
+    return this.refeicaoResultadoService.cadastrarAvaliacao(refe_id, reav_id, reho_id);
   }
 }
