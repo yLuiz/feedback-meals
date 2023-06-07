@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { AppGateway } from 'src/app.gateway';
 import { ICadastroMotivo } from 'src/interfaces/ICadastroMotivo';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { RefeicaoResultadoService } from 'src/refeicoes/refeicao_resultado/services/refeicao_resultado.service';
-import { adicionarZeroEsquerda } from 'src/utils/utilities';
 
 @Injectable()
 export class RefeicaoResultadoMotivoService {

@@ -1,5 +1,4 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { RefeicaoService } from '../services/refeicao.service';
 
 @Controller('refeicao')
