@@ -1,7 +1,9 @@
 # Feedback Meals
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.3. <br>
-This project was generated with [Nest CLI](https://github.com/nestjs/nest-cli) version 8.2.8.
+Este projeto foi gerado utilizando [Angular CLI](https://github.com/angular/angular-cli) versão 13.0.3. <br>
+Este projeto foi gerado utilizando [Nest CLI](https://github.com/nestjs/nest-cli) versão 8.2.8.
+
+O projeto ainda não funcional, pois o servido não está em produção, porém você pode seguir o passo a passo e instalar em sua máquina.
 
 # FRONT-END
 
